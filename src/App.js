@@ -8,7 +8,7 @@ function App() {
     <div className="show-fake-browser sidebar-page">
       <Container>
         <SideNavInternal />
-        <Container>
+        <Container style={{ paddingLeft: 30 }}>
           <Header>
             <h2>Decisions</h2>
           </Header>
