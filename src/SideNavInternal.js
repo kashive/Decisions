@@ -9,10 +9,13 @@ const headerStyles = {
   padding: 18,
   fontSize: 16,
   height: 56,
-  background: "#34c3ff",
-  color: " #fff",
   whiteSpace: "nowrap",
-  overflow: "hidden"
+  overflow: "hidden",
+  color: "white"
+};
+
+const blackBackground = {
+  background: "black"
 };
 
 const sideBarStyles = {
@@ -54,7 +57,7 @@ class SideNavInternal extends React.Component {
     const { expand } = this.state;
     return (
       <Sidebar
-        style={sideBarStyles}
+        style={(sideBarStyles, blackBackground)}
         width={expand ? expandWidth : collapseWidth}
         collapsible
       >
@@ -74,7 +77,7 @@ class SideNavInternal extends React.Component {
               <Dropdown
                 eventKey="4"
                 trigger="hover"
-                title="My Decisions"
+                title="Decisions"
                 icon={<Icon icon="list" />}
                 placement="rightStart"
               >
