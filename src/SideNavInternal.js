@@ -3,15 +3,15 @@ import React from "react";
 import { Sidenav, Nav, Dropdown, Icon, Navbar, Sidebar } from "rsuite";
 
 const collapseWidth = 56;
-const expandWidth = 200;
+const expandWidth = 225;
 
 const headerStyles = {
   padding: 18,
   fontSize: 16,
-  height: 56,
+  fontWeight: "bold",
   whiteSpace: "nowrap",
   overflow: "hidden",
-  color: "white"
+  color: "#f8f9fa"
 };
 
 const blackBackground = {
