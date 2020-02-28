@@ -10,21 +10,31 @@ function App() {
         <SideNavInternal />
         <Container
           style={{
-            paddingLeft: 80,
-            paddingRight: 80,
             backgroundColor: "#f8f9fa",
             minHeight: "100vh"
           }}
         >
-          <Content>
-            <Header style={{ paddingBottom: "20px", paddingTop: "10px" }}>
-              <h2>Decisions</h2>
-            </Header>
+          <Header
+            style={{
+              backgroundColor: "white",
+              height: "8vh",
+              borderBottom: "1px solid",
+              borderColor: "#dbdce0"
+            }}
+          >
+            <h3 style={{ marginLeft: "30px", marginTop: "1vh" }}>Decisions</h3>
+          </Header>
+          <Content
+            style={{
+              marginTop: 20,
+              marginLeft: 80,
+              marginRight: 80
+            }}
+          >
             <PanelGroup
               style={{
                 background: "white",
                 height: "85vh",
-                paddingTop: "10px",
                 overflowY: "scroll"
               }}
               accordion
