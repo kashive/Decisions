@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import FroalaEditor from "react-froala-wysiwyg";
 
 class ContextTextEdit extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <FroalaEditor

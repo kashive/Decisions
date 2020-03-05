@@ -12,8 +12,8 @@ class InlineTextEditWithHighlight extends Component {
   }
 
   handleKeyUp(event) {
-    const editor = this.editorRef.current.editor;
     if (event.key === "Enter") {
+      const editor = this.editorRef.current.editor;
       editor.edit.off();
       editor.edit.on();
       this.props.handleEnter();
