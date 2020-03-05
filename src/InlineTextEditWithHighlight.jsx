@@ -11,6 +11,8 @@ const Bordered = styled.div`
   border-radius: 4px;
   font-weight: 400;
   color: black;
+  width: ${props =>
+    props.isPlaceholderVisible ? props.placeholderTextWidth : "inherit"};
   display: inline-block;
   border: ${props => (props.isInFocus ? borderOnFocus : "none")};
   &:hover {
@@ -22,22 +24,24 @@ class InlineTextEditWithHighlight extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isInFocus: false
+      isInFocus: false,
+      isPlaceholderVisible: false
     };
     this.editorRef = React.createRef();
   }
 
   handleKeyUp = event => {
-    const editor = this.editorRef.current.editor;
+    const editor = this.getEditorFromReactRef();
     if (event.key === "Enter") {
-      editor.edit.off();
-      editor.edit.on();
-      this.handleEnter();
+      this.handleEnter(editor);
     }
   };
 
-  handleEnter = () => {
+  handleEnter = editor => {
+    editor.edit.off();
+    editor.edit.on();
     this.handleBlur();
+    this.handlePlaceholderVisible(editor);
   };
 
   handleFocus = () => {
@@ -46,11 +50,26 @@ class InlineTextEditWithHighlight extends Component {
 
   handleBlur = () => {
     this.setState({ isInFocus: false });
+    this.handlePlaceholderVisible(this.getEditorFromReactRef());
   };
+
+  handlePlaceholderVisible(editor) {
+    if (editor.placeholder.isVisible()) {
+      this.setState({ isPlaceholderVisible: true });
+    }
+  }
+
+  getEditorFromReactRef() {
+    return this.editorRef.current.editor;
+  }
 
   render() {
     return (
-      <Bordered isInFocus={this.state.isInFocus}>
+      <Bordered
+        isInFocus={this.state.isInFocus}
+        isPlaceholderVisible={this.state.isPlaceholderVisible}
+        placeholderTextWidth={this.props.placeholderTextWidth}
+      >
         <FroalaEditor
           ref={this.editorRef}
           model={this.props.text}
@@ -60,7 +79,7 @@ class InlineTextEditWithHighlight extends Component {
             multiLine: false,
             toolbarInline: true,
             toolbarButtons: [],
-            placeholderText: "Untitled Decision",
+            placeholderText: this.props.placeholderText,
             events: {
               blur: this.handleBlur,
               keyup: this.handleKeyUp,

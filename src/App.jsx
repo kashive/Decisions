@@ -78,6 +78,8 @@ class App extends React.Component {
               <StyledTitle>
                 <InlineTextEditWithHighlight
                   text={decision.title}
+                  placeholderText="Untitled decision"
+                  placeholderTextWidth="150px"
                   handleTextChange={this.handleTitleChange}
                 />
               </StyledTitle>
