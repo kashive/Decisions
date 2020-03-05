@@ -41,19 +41,28 @@ class InlineTextEditWithHighlight extends Component {
     editor.edit.off();
     editor.edit.on();
     this.handleBlur();
-    this.handlePlaceholderVisible(editor);
+    this.handlePlaceholderVisibleOnBlur(editor);
   };
 
   handleFocus = () => {
     this.setState({ isInFocus: true });
+    this.handlePlaceholderVisibleOnFocus(this.getEditorFromReactRef());
   };
 
   handleBlur = () => {
     this.setState({ isInFocus: false });
-    this.handlePlaceholderVisible(this.getEditorFromReactRef());
+    this.handlePlaceholderVisibleOnBlur(this.getEditorFromReactRef());
   };
 
-  handlePlaceholderVisible(editor) {
+  handlePlaceholderVisibleOnFocus(editor) {
+    if (editor.placeholder.isVisible()) {
+      editor.html.set(this.props.placeholderText);
+      editor.commands.selectAll();
+      this.setState({ isPlaceholderVisible: false });
+    }
+  }
+
+  handlePlaceholderVisibleOnBlur(editor) {
     if (editor.placeholder.isVisible()) {
       this.setState({ isPlaceholderVisible: true });
     }
