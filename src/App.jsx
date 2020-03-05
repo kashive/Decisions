@@ -6,8 +6,6 @@ import styled from "styled-components";
 import InlineTextEditWithHighlight from "./InlineTextEditWithHighlight";
 import ContextTextEdit from "./ContextTextEdit";
 
-const classNames = require("classnames");
-
 const StyledTitle = styled.div`
   margin-left: 30px;
   margin-top: 10px;
@@ -16,6 +14,7 @@ const StyledTitle = styled.div`
   overflow: hidden; //ensures that the overflow hides after max-width is hit
   white-space: nowrap; //ensures that there is no multi line
 `;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -27,17 +26,8 @@ class App extends React.Component {
           context: "This is why we need to make this decision"
         }
       ],
-      currentDecisionId: "1",
-      isTitleInFocus: false
+      currentDecisionId: "1"
     };
-  }
-
-  enableTitleFocusState() {
-    this.setState({ isTitleInFocus: true });
-  }
-
-  disableTitleFocusState() {
-    this.setState({ isTitleInFocus: false });
   }
 
   getCurrentDecision() {
@@ -65,10 +55,6 @@ class App extends React.Component {
     this.setState({ decisions });
   };
 
-  handleTitleFocus = () => this.enableTitleFocusState();
-  handleTitleBlur = () => this.disableTitleFocusState();
-  handleEnter = () => this.disableTitleFocusState();
-
   render() {
     var decision = this.getCurrentDecision();
     return (
@@ -91,17 +77,8 @@ class App extends React.Component {
             >
               <StyledTitle>
                 <InlineTextEditWithHighlight
-                  model={decision.title}
-                  handleTitleFocus={this.handleTitleFocus}
-                  handleTitleBlur={this.handleTitleBlur}
-                  handleTitleChange={this.handleTitleChange}
-                  handleEnter={this.handleEnter}
-                  isInFocus={this.state.isTitleInFocus}
-                  classNames={classNames({
-                    "title-input-text": true,
-                    "border-on-hover": !this.state.isTitleInFocus,
-                    "border-on-focus": this.state.isTitleInFocus
-                  })}
+                  text={decision.title}
+                  handleTextChange={this.handleTitleChange}
                 />
               </StyledTitle>
             </Header>

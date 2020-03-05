@@ -21,26 +21,40 @@ const Bordered = styled.div`
 class InlineTextEditWithHighlight extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isInFocus: false
+    };
     this.editorRef = React.createRef();
-    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
-  handleKeyUp(event) {
+  handleKeyUp = event => {
     const editor = this.editorRef.current.editor;
     if (event.key === "Enter") {
       editor.edit.off();
       editor.edit.on();
-      this.props.handleEnter();
+      this.handleEnter();
     }
-  }
+  };
+
+  handleEnter = () => {
+    this.handleBlur();
+  };
+
+  handleFocus = () => {
+    this.setState({ isInFocus: true });
+  };
+
+  handleBlur = () => {
+    this.setState({ isInFocus: false });
+  };
 
   render() {
     return (
-      <Bordered isInFocus={this.props.isInFocus}>
+      <Bordered isInFocus={this.state.isInFocus}>
         <FroalaEditor
           ref={this.editorRef}
-          model={this.props.model}
-          onModelChange={this.props.handleTitleChange}
+          model={this.props.text}
+          onModelChange={this.props.handleTextChange}
           config={{
             enter: "", //this disables the auto adding of the <p> tag
             multiLine: false,
@@ -48,9 +62,9 @@ class InlineTextEditWithHighlight extends Component {
             toolbarButtons: [],
             placeholderText: "Untitled Decision",
             events: {
-              blur: this.props.handleTitleBlur,
+              blur: this.handleBlur,
               keyup: this.handleKeyUp,
-              click: this.props.handleTitleFocus
+              click: this.handleFocus
             }
           }}
         />
