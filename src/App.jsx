@@ -2,12 +2,20 @@ import React from "react";
 import SideNavInternal from "./SideNavInternal";
 
 import { Container, Header, Content, PanelGroup, Panel } from "rsuite";
-
+import styled from "styled-components";
 import InlineTextEditWithHighlight from "./InlineTextEditWithHighlight";
 import ContextTextEdit from "./ContextTextEdit";
 
-let classNames = require("classnames");
+const classNames = require("classnames");
 
+const StyledTitle = styled.div`
+  margin-left: 30px;
+  margin-top: 10px;
+  font-size: 18px;
+  max-width: 78vw;
+  overflow: hidden; //ensures that the overflow hides after max-width is hit
+  white-space: nowrap; //ensures that there is no multi line
+`;
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -81,18 +89,21 @@ class App extends React.Component {
                 borderColor: "#dbdce0"
               }}
             >
-              <InlineTextEditWithHighlight
-                model={decision.title}
-                handleTitleFocus={this.handleTitleFocus}
-                handleTitleBlur={this.handleTitleBlur}
-                handleTitleChange={this.handleTitleChange}
-                handleEnter={this.handleEnter}
-                classNames={classNames({
-                  "title-input-text": true,
-                  "border-on-hover": !this.state.isTitleInFocus,
-                  "border-on-focus": this.state.isTitleInFocus
-                })}
-              />
+              <StyledTitle>
+                <InlineTextEditWithHighlight
+                  model={decision.title}
+                  handleTitleFocus={this.handleTitleFocus}
+                  handleTitleBlur={this.handleTitleBlur}
+                  handleTitleChange={this.handleTitleChange}
+                  handleEnter={this.handleEnter}
+                  isInFocus={this.state.isTitleInFocus}
+                  classNames={classNames({
+                    "title-input-text": true,
+                    "border-on-hover": !this.state.isTitleInFocus,
+                    "border-on-focus": this.state.isTitleInFocus
+                  })}
+                />
+              </StyledTitle>
             </Header>
             <Content
               style={{
