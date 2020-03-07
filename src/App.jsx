@@ -149,8 +149,7 @@ class App extends React.Component {
                           </CustomBorder>
                         </td>
                         <td>
-                          Maria AndersMaria AndersMaria AndersMaria AndersMaria
-                          AndersMaria Anders
+                          <CustomSlider value={5} />
                         </td>
                         <td>
                           <CustomBorder expandWithContent={false}>
