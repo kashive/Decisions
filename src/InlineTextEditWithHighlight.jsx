@@ -4,11 +4,11 @@ import FroalaEditor from "react-froala-wysiwyg";
 import styled from "styled-components";
 
 const CustomStyle = styled.div`
-  background-color: ${props => (props.isEditOn ? "white" : "none")};
+  background-color: ${props => (props.isEditOn ? "white" : "unset")};
   padding: ${props => props.padding || "2px"};
   width: ${props =>
     props.width ||
-    (props.isPlaceholderVisible ? props.placeholderTextWidth : "none")};
+    (props.isPlaceholderVisible ? props.placeholderTextWidth : "unset")};
   white-space: ${props => (props.multiLine ? "wrap" : "nowrap")};
 `;
 
