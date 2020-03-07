@@ -3,36 +3,32 @@ import React, { Component } from "react";
 import FroalaEditor from "react-froala-wysiwyg";
 import styled from "styled-components";
 
-const borderOnFocus = "solid 2px rgb(22, 21, 21)";
-const borderOnHover = "solid 1px #dbdce0";
-
-const Bordered = styled.div`
-  padding: 5px;
-  border-radius: 4px;
-  font-weight: 400;
-  color: black;
+const CustomStyle = styled.div`
+  background-color: ${props => (props.isEditOn ? "white" : "none")};
+  padding: ${props => props.padding || "2px"};
   width: ${props =>
-    props.isPlaceholderVisible ? props.placeholderTextWidth : "inherit"};
-  display: inline-block;
-  border: ${props => (props.isInFocus ? borderOnFocus : "none")};
-  &:hover {
-    border: ${props => (props.isInFocus ? borderOnFocus : borderOnHover)};
-  }
+    props.width ||
+    (props.isPlaceholderVisible ? props.placeholderTextWidth : "none")};
+  white-space: ${props => (props.multiLine ? "wrap" : "nowrap")};
 `;
 
+/**
+ * This component wraps the FroalaEditor.
+ * Puts some padding and dymaically adjusts the width in case of having a placeholder
+ */
 class InlineTextEditWithHighlight extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isInFocus: false,
-      isPlaceholderVisible: false
+      isPlaceholderVisible: false,
+      isEditOn: false
     };
     this.editorRef = React.createRef();
   }
 
   handleKeyUp = event => {
     const editor = this.getEditorFromReactRef();
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !this.props.multiLine) {
       this.handleEnter(editor);
     }
   };
@@ -44,13 +40,16 @@ class InlineTextEditWithHighlight extends Component {
     this.handlePlaceholderVisibleOnBlur(editor);
   };
 
+  //todo: consolidate the setState to one call as it renders everytime
   handleFocus = () => {
-    this.setState({ isInFocus: true });
+    this.props.handleFocusOn();
+    this.setState({ isEditOn: true });
     this.handlePlaceholderVisibleOnFocus(this.getEditorFromReactRef());
   };
 
   handleBlur = () => {
-    this.setState({ isInFocus: false });
+    this.props.handleFocusOff();
+    this.setState({ isEditOn: false });
     this.handlePlaceholderVisibleOnBlur(this.getEditorFromReactRef());
   };
 
@@ -74,10 +73,13 @@ class InlineTextEditWithHighlight extends Component {
 
   render() {
     return (
-      <Bordered
-        isInFocus={this.state.isInFocus}
+      <CustomStyle
         isPlaceholderVisible={this.state.isPlaceholderVisible}
         placeholderTextWidth={this.props.placeholderTextWidth}
+        padding={this.props.padding} //this ensures that the text does not touch the border
+        width={this.props.width}
+        multiLine={this.props.multiLine}
+        isEditOn={this.state.isEditOn}
       >
         <FroalaEditor
           ref={this.editorRef}
@@ -85,7 +87,7 @@ class InlineTextEditWithHighlight extends Component {
           onModelChange={this.props.handleTextChange}
           config={{
             enter: "", //this disables the auto adding of the <p> tag
-            multiLine: false,
+            multiLine: this.props.multiLine,
             toolbarInline: true,
             toolbarButtons: [],
             placeholderText: this.props.placeholderText,
@@ -96,7 +98,7 @@ class InlineTextEditWithHighlight extends Component {
             }
           }}
         />
-      </Bordered>
+      </CustomStyle>
     );
   }
 }

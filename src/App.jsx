@@ -7,6 +7,7 @@ import styled from "styled-components";
 import InlineTextEditWithHighlight from "./InlineTextEditWithHighlight";
 import ContextTextEdit from "./ContextTextEdit";
 import CustomSlider from "./CustomSlider";
+import CustomBorder from "./CustomBorder";
 
 const StyledTitle = styled.div`
   margin-left: 30px;
@@ -14,13 +15,11 @@ const StyledTitle = styled.div`
   font-size: 18px;
   max-width: 78vw;
   overflow: hidden; //ensures that the overflow hides after max-width is hit
-  white-space: nowrap; //ensures that there is no multi line
 `;
 const { Column, HeaderCell, Cell } = Table;
 
 const SliderCell = ({ rowData, dataKey, ...props }) => (
   <Cell {...props}>
-    {/* <img src={rowData[dataKey]} width="50" /> */}
     <CustomSlider value={rowData[dataKey]} />
   </Cell>
 );
@@ -93,12 +92,16 @@ class App extends React.Component {
               }}
             >
               <StyledTitle>
-                <InlineTextEditWithHighlight
-                  text={decision.title}
-                  placeholderText="Untitled decision"
-                  placeholderTextWidth="150px"
-                  handleTextChange={this.handleTitleChange}
-                />
+                <CustomBorder>
+                  <InlineTextEditWithHighlight
+                    text={decision.title}
+                    placeholderText="Untitled decision"
+                    placeholderTextWidth="150px"
+                    padding="5px"
+                    multiLine={false}
+                    handleTextChange={this.handleTitleChange}
+                  />
+                </CustomBorder>
               </StyledTitle>
             </Header>
             <Content
@@ -134,7 +137,21 @@ class App extends React.Component {
                     >
                       <Column align="left" flexGrow={5}>
                         <HeaderCell>Name</HeaderCell>
-                        <Cell dataKey="name" />
+                        <Cell>
+                          <CustomBorder>
+                            <InlineTextEditWithHighlight
+                              text="Your name"
+                              placeholderText="Name"
+                              placeholderTextWidth="50px"
+                              padding="2px"
+                              width="100px"
+                              multiLine={false}
+                              handleTextChange={e =>
+                                console.log("text changed")
+                              }
+                            />
+                          </CustomBorder>
+                        </Cell>
                       </Column>
 
                       <Column align="center" flexGrow={20}>
@@ -145,7 +162,21 @@ class App extends React.Component {
 
                       <Column align="left" flexGrow={30}>
                         <HeaderCell>Description</HeaderCell>
-                        <Cell dataKey="description" />
+                        <Cell>
+                          <CustomBorder>
+                            <InlineTextEditWithHighlight
+                              text="Time and tide waits for none"
+                              placeholderText="Please add something"
+                              placeholderTextWidth="200px"
+                              padding="5px"
+                              width="300px"
+                              multiLine={true}
+                              handleTextChange={e =>
+                                console.log("text changed woohoo")
+                              }
+                            />
+                          </CustomBorder>
+                        </Cell>
                       </Column>
                     </Table>
                   </div>
