@@ -152,7 +152,18 @@ class App extends React.Component {
                           Maria AndersMaria AndersMaria AndersMaria AndersMaria
                           AndersMaria Anders
                         </td>
-                        <td>Germany</td>
+                        <td>
+                          <CustomBorder expandWithContent={false}>
+                            <InlineTextEditWithHighlight
+                              text="Germany"
+                              placeholderText="Name"
+                              placeholderTextWidth="50px"
+                              padding="5px"
+                              // width="80px"
+                              multiLine={true}
+                            />
+                          </CustomBorder>
+                        </td>
                       </tr>
                       <tr>
                         <td>Centro </td>
