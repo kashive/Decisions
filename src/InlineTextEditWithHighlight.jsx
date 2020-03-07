@@ -26,6 +26,12 @@ class InlineTextEditWithHighlight extends Component {
     this.editorRef = React.createRef();
   }
 
+  componentDidMount() {
+    if (!this.props.text) {
+      this.setState({ isPlaceholderVisible: true });
+    }
+  }
+
   handleKeyUp = event => {
     const editor = this.getEditorFromReactRef();
     if (event.key === "Enter" && !this.props.multiLine) {
