@@ -6,9 +6,8 @@ import styled from "styled-components";
 
 import InlineTextEditWithHighlight from "./InlineTextEditWithHighlight";
 import ContextTextEdit from "./ContextTextEdit";
-import CustomSlider from "./CustomSlider";
 import CustomBorder from "./CustomBorder";
-import "./table.less";
+import VariablesTable from "./VariablesTable";
 
 const StyledTitle = styled.div`
   margin-left: 30px;
@@ -17,13 +16,6 @@ const StyledTitle = styled.div`
   max-width: 78vw;
   overflow: hidden; //ensures that the overflow hides after max-width is hit
 `;
-const { Column, HeaderCell, Cell } = Table;
-
-const SliderCell = ({ rowData, dataKey, ...props }) => (
-  <Cell {...props}>
-    <CustomSlider value={rowData[dataKey]} />
-  </Cell>
-);
 
 class App extends React.Component {
   constructor(props) {
@@ -128,51 +120,8 @@ class App extends React.Component {
                   />
                 </Panel>
                 <Panel header="Variables" defaultExpanded>
-                  <div>
-                    <table>
-                      <tr>
-                        <th style={{ width: "20%" }}>Company</th>
-                        <th style={{ width: "40%" }}>Contact</th>
-                        <th>Country</th>
-                      </tr>
-                      <tr>
-                        <td>
-                          <CustomBorder expandWithContent={false}>
-                            <InlineTextEditWithHighlight
-                              text="Name"
-                              placeholderText="Name"
-                              placeholderTextWidth="50px"
-                              padding="5px"
-                              // width="80px"
-                              multiLine={false}
-                            />
-                          </CustomBorder>
-                        </td>
-                        <td>
-                          <CustomSlider value={5} />
-                        </td>
-                        <td>
-                          <CustomBorder expandWithContent={false}>
-                            <InlineTextEditWithHighlight
-                              text="Germany"
-                              placeholderText="Name"
-                              placeholderTextWidth="50px"
-                              padding="5px"
-                              // width="80px"
-                              multiLine={true}
-                            />
-                          </CustomBorder>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Centro </td>
-                        <td>Francisco Chang</td>
-                        <td>Mexico</td>
-                      </tr>
-                    </table>
-                  </div>
+                  <VariablesTable />
                 </Panel>
-
                 <Panel header="Panel 3">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
