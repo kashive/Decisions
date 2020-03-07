@@ -4,7 +4,7 @@ import SideNavInternal from "./SideNavInternal";
 import { Container, Header, Content, PanelGroup, Panel, Table } from "rsuite";
 import styled from "styled-components";
 
-import InlineTextEditWithHighlight from "./InlineTextEditWithHighlight";
+import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import ContextTextEdit from "./ContextTextEdit";
 import CustomBorder from "./CustomBorder";
 import VariablesTable from "./VariablesTable";
@@ -86,7 +86,7 @@ class App extends React.Component {
             >
               <StyledTitle>
                 <CustomBorder expandWithContent={true}>
-                  <InlineTextEditWithHighlight
+                  <BorderedInlineTextEdit
                     text={decision.title}
                     placeholderText="Untitled decision"
                     placeholderTextWidth="150px"

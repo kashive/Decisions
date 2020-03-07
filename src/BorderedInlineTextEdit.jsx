@@ -13,10 +13,10 @@ const CustomStyle = styled.div`
 `;
 
 /**
- * This component wraps the FroalaEditor.
+ * This component wraps the FroalaEditor and CustomBorder to add border to the InLineTextEditor
  * Puts some padding and dymaically adjusts the width in case of having a placeholder
  */
-class InlineTextEditWithHighlight extends Component {
+class BorderedInlineTextEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -109,4 +109,4 @@ class InlineTextEditWithHighlight extends Component {
   }
 }
 
-export default InlineTextEditWithHighlight;
+export default BorderedInlineTextEdit;

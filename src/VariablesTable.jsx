@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CustomSlider from "./CustomSlider";
-import InlineTextEditWithHighlight from "./InlineTextEditWithHighlight";
+import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import CustomBorder from "./CustomBorder";
 import "./table.less";
 
@@ -20,7 +20,7 @@ class VariablesTable extends Component {
         <tr>
           <td>
             <CustomBorder expandWithContent={false}>
-              <InlineTextEditWithHighlight
+              <BorderedInlineTextEdit
                 text="Name"
                 placeholderText="Name"
                 placeholderTextWidth="50px"
@@ -34,7 +34,7 @@ class VariablesTable extends Component {
           </td>
           <td>
             <CustomBorder expandWithContent={false}>
-              <InlineTextEditWithHighlight
+              <BorderedInlineTextEdit
                 text="Germany"
                 placeholderText="Name"
                 placeholderTextWidth="50px"
