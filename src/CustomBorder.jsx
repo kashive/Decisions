@@ -6,7 +6,7 @@ const DEFAULT_BORDER_ON_HOVER = "solid 1px #dbdce0";
 const PADDING_DEFAULT = "5px";
 
 const BorderFocusHover = styled.div`
-  display: inline-block; //this ensures that the border expands according to the width of the children, so, it's always enclosing
+  display: ${props => (props.expandWithContent ? "inline-block" : "block")};
   overflow: hidden;
   border: ${props => (props.isInFocus ? props.borderOnFocus : "none")};
   &:hover {
@@ -42,6 +42,7 @@ class CustomBorder extends Component {
         borderOnFocus={this.props.borderOnFocus || DEFAULT_BORDER_ON_FOCUS}
         borderOnHover={this.props.borderOnHover || DEFAULT_BORDER_ON_HOVER}
         padding={this.props.padding || PADDING_DEFAULT}
+        expandWithContent={this.props.expandWithContent}
       >
         {childrenWithProps}
       </BorderFocusHover>

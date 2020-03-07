@@ -8,6 +8,7 @@ import InlineTextEditWithHighlight from "./InlineTextEditWithHighlight";
 import ContextTextEdit from "./ContextTextEdit";
 import CustomSlider from "./CustomSlider";
 import CustomBorder from "./CustomBorder";
+import "./table.less";
 
 const StyledTitle = styled.div`
   margin-left: 30px;
@@ -92,7 +93,7 @@ class App extends React.Component {
               }}
             >
               <StyledTitle>
-                <CustomBorder>
+                <CustomBorder expandWithContent={true}>
                   <InlineTextEditWithHighlight
                     text={decision.title}
                     placeholderText="Untitled decision"
@@ -128,57 +129,37 @@ class App extends React.Component {
                 </Panel>
                 <Panel header="Variables" defaultExpanded>
                   <div>
-                    <Table
-                      bordered
-                      data={decision.variables}
-                      rowHeight={100}
-                      // autoHeight
-                      wordWrap
-                    >
-                      <Column align="left" flexGrow={5}>
-                        <HeaderCell>Name</HeaderCell>
-                        <Cell>
-                          <CustomBorder>
+                    <table>
+                      <tr>
+                        <th style={{ width: "20%" }}>Company</th>
+                        <th style={{ width: "40%" }}>Contact</th>
+                        <th>Country</th>
+                      </tr>
+                      <tr>
+                        <td>
+                          <CustomBorder expandWithContent={false}>
                             <InlineTextEditWithHighlight
-                              text="Your name"
+                              text="Name"
                               placeholderText="Name"
                               placeholderTextWidth="50px"
-                              padding="2px"
-                              width="100px"
-                              multiLine={false}
-                              handleTextChange={e =>
-                                console.log("text changed")
-                              }
-                            />
-                          </CustomBorder>
-                        </Cell>
-                      </Column>
-
-                      <Column align="center" flexGrow={20}>
-                        <HeaderCell>Weight</HeaderCell>
-                        {/* <Cell dataKey="weight" /> */}
-                        <SliderCell dataKey="weight" />
-                      </Column>
-
-                      <Column align="left" flexGrow={30}>
-                        <HeaderCell>Description</HeaderCell>
-                        <Cell>
-                          <CustomBorder>
-                            <InlineTextEditWithHighlight
-                              text="Time and tide waits for none"
-                              placeholderText="Please add something"
-                              placeholderTextWidth="200px"
                               padding="5px"
-                              width="300px"
-                              multiLine={true}
-                              handleTextChange={e =>
-                                console.log("text changed woohoo")
-                              }
+                              // width="80px"
+                              multiLine={false}
                             />
                           </CustomBorder>
-                        </Cell>
-                      </Column>
-                    </Table>
+                        </td>
+                        <td>
+                          Maria AndersMaria AndersMaria AndersMaria AndersMaria
+                          AndersMaria Anders
+                        </td>
+                        <td>Germany</td>
+                      </tr>
+                      <tr>
+                        <td>Centro </td>
+                        <td>Francisco Chang</td>
+                        <td>Mexico</td>
+                      </tr>
+                    </table>
                   </div>
                 </Panel>
 
