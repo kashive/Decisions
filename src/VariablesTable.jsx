@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import CustomSlider from "./CustomSlider";
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
-import CustomBorder from "./CustomBorder";
 import "./table.less";
 
 class VariablesTable extends Component {
@@ -12,38 +11,40 @@ class VariablesTable extends Component {
   render() {
     return (
       <table>
-        <tr>
-          <th style={{ width: "20%" }}>Name</th>
-          <th style={{ width: "40%" }}>Weight</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>
-            <CustomBorder expandWithContent={false}>
+        <thead>
+          <tr>
+            <th style={{ width: "20%" }}>Name</th>
+            <th style={{ width: "40%" }}>Weight</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
               <BorderedInlineTextEdit
                 text="Name"
                 placeholderText="Name"
                 placeholderTextWidth="50px"
                 padding="5px"
+                expandWithContent={false}
                 multiLine={false}
               />
-            </CustomBorder>
-          </td>
-          <td>
-            <CustomSlider value={5} />
-          </td>
-          <td>
-            <CustomBorder expandWithContent={false}>
+            </td>
+            <td>
+              <CustomSlider value={5} />
+            </td>
+            <td>
               <BorderedInlineTextEdit
                 text="Germany"
                 placeholderText="Name"
                 placeholderTextWidth="50px"
                 padding="5px"
+                expandWithContent={false}
                 multiLine={true}
               />
-            </CustomBorder>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        </tbody>
       </table>
     );
   }

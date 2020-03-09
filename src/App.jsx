@@ -1,12 +1,11 @@
 import React from "react";
 import SideNavInternal from "./SideNavInternal";
 
-import { Container, Header, Content, PanelGroup, Panel, Table } from "rsuite";
+import { Container, Header, Content, PanelGroup, Panel } from "rsuite";
 import styled from "styled-components";
 
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import ContextTextEdit from "./ContextTextEdit";
-import CustomBorder from "./CustomBorder";
 import VariablesTable from "./VariablesTable";
 
 const StyledTitle = styled.div`
@@ -85,16 +84,15 @@ class App extends React.Component {
               }}
             >
               <StyledTitle>
-                <CustomBorder expandWithContent={true}>
-                  <BorderedInlineTextEdit
-                    text={decision.title}
-                    placeholderText="Untitled decision"
-                    placeholderTextWidth="150px"
-                    padding="5px"
-                    multiLine={false}
-                    handleTextChange={this.handleTitleChange}
-                  />
-                </CustomBorder>
+                <BorderedInlineTextEdit
+                  text={decision.title}
+                  placeholderText="Untitled decision"
+                  placeholderTextWidth="150px"
+                  padding="5px"
+                  multiLine={false}
+                  handleTextChange={this.handleTitleChange}
+                  expandWithContent={true}
+                />
               </StyledTitle>
             </Header>
             <Content
