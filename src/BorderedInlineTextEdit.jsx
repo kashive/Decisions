@@ -23,8 +23,18 @@ class BorderedInlineTextEdit extends Component {
       >
         <CustomInlineFroalaEditor
           onEnter={() => this.setState({ isInFocus: false })}
-          onFocus={() => this.setState({ isInFocus: true })}
-          onBlur={() => this.setState({ isInFocus: false })}
+          onFocus={() => {
+            this.setState({ isInFocus: true });
+            if (typeof this.props.onBorderVisible === "function") {
+              this.props.onBorderVisible();
+            }
+          }}
+          onBlur={() => {
+            this.setState({ isInFocus: false });
+            if (typeof this.props.onBorderInvisible === "function") {
+              this.props.onBorderInvisible();
+            }
+          }}
           {...this.props}
         />
       </CustomBorder>

@@ -27,9 +27,17 @@ class App extends React.Component {
           context: "This is why we need to make this decision",
           variables: [
             {
+              id: 1,
               name: "Time",
               weight: 4,
               description: "Time and tide waits for none"
+            },
+            {
+              id: 2,
+              name: "Money",
+              weight: 4,
+              description:
+                "Money and time and tide waits for none and none again and again."
             }
           ]
         }
@@ -118,7 +126,7 @@ class App extends React.Component {
                   />
                 </Panel>
                 <Panel header="Variables" defaultExpanded>
-                  <VariablesTable />
+                  <VariablesTable variables={decision.variables} />
                 </Panel>
                 <Panel header="Panel 3">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed

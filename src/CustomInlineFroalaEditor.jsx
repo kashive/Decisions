@@ -39,20 +39,26 @@ class CustomInlineFroalaEditor extends Component {
     editor.edit.on();
     this.setState({ isEditOn: false });
     this.handlePlaceholderVisibleOnBlur(editor);
-    this.props.onEnter();
+    if (typeof this.props.onEnter === "function") {
+      this.props.onEnter();
+    }
   };
 
   handleBlur = () => {
     this.setState({ isEditOn: false });
     this.handlePlaceholderVisibleOnBlur(this.getEditorFromReactRef());
-    this.props.onBlur();
+    if (typeof this.props.onBlur === "function") {
+      this.props.onBlur();
+    }
   };
 
   //todo: consolidate the setState to one call as it renders everytime
   handleFocus = () => {
     this.setState({ isEditOn: true });
     this.handlePlaceholderVisibleOnFocus(this.getEditorFromReactRef());
-    this.props.onFocus();
+    if (typeof this.props.onFocus === "function") {
+      this.props.onFocus();
+    }
   };
 
   handlePlaceholderVisibleOnFocus(editor) {
