@@ -8,6 +8,7 @@ const PADDING_DEFAULT = "5px";
 const BorderStyling = styled.div`
   display: ${props => (props.expandWithContent ? "inline-block" : "block")};
   overflow: hidden;
+  background-color: white;
   border: ${props => (props.isInFocus ? props.borderOnFocus : "none")};
   &:hover {
     border: ${props =>
