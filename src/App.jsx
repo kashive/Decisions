@@ -1,7 +1,8 @@
 import React from "react";
 import SideNavInternal from "./SideNavInternal";
+import uuid from "uuid";
 
-import { Container, Header, Content, PanelGroup, Panel } from "rsuite";
+import { Container, Header, Content, PanelGroup, Panel, Icon } from "rsuite";
 import styled from "styled-components";
 
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
@@ -27,15 +28,15 @@ class App extends React.Component {
           context: "This is why we need to make this decision",
           variables: [
             {
-              id: 1,
+              id: uuid.v4(),
               name: "Time",
               weight: 4,
               description: "Time and tide waits for none"
             },
             {
-              id: 2,
+              id: uuid.v4(),
               name: "Money",
-              weight: 4,
+              weight: 8,
               description:
                 "Money and time and tide waits for none and none again and again."
             }
@@ -101,6 +102,19 @@ class App extends React.Component {
     this.setState({ decisions });
   };
 
+  handleAddNewVariable = () => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    currentDecision.variables.push({
+      id: uuid.v4(),
+      name: undefined,
+      weight: undefined
+    });
+    this.setState({ decisions });
+  };
+
   render() {
     var decision = this.getCurrentDecision();
     return (
@@ -160,6 +174,7 @@ class App extends React.Component {
                     variables={decision.variables}
                     onHandleMove={this.handleVariableWeightChange}
                     handleNameChange={this.handleVariableNameChange}
+                    handleAddNewVariable={this.handleAddNewVariable}
                     handleDescriptionChange={
                       this.handleVariableDescriptionChange
                     }
