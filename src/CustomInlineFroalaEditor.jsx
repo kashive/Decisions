@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import FroalaEditor from "react-froala-wysiwyg";
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { changeTitle } from "./redux/actions";
 
 const CustomStyle = styled.div`
   background-color: ${props => (props.isEditOn ? "white" : "unset")};
@@ -10,6 +12,15 @@ const CustomStyle = styled.div`
     (props.isPlaceholderVisible ? props.placeholderTextWidth : "unset")};
   white-space: ${props => (props.multiLine ? "wrap" : "nowrap")};
 `;
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onTextChange: text => {
+      console.log("onTextChange with text", text);
+      dispatch(changeTitle(text));
+    }
+  };
+};
 
 class CustomInlineFroalaEditor extends Component {
   constructor(props) {
@@ -79,6 +90,11 @@ class CustomInlineFroalaEditor extends Component {
     return this.editorRef.current.editor;
   }
 
+  onModelChange = model => {
+    console.log("onModelChange handler", model);
+    this.props.handleTextChange();
+  };
+
   render() {
     return (
       <CustomStyle
@@ -92,7 +108,7 @@ class CustomInlineFroalaEditor extends Component {
         <FroalaEditor
           ref={this.editorRef}
           model={this.props.text}
-          onModelChange={this.props.handleTextChange}
+          onModelChange={this.props.onTextChange}
           config={{
             enter: "", //this disables the auto adding of the <p> tag
             multiLine: this.props.multiLine,
@@ -112,4 +128,4 @@ class CustomInlineFroalaEditor extends Component {
   }
 }
 
-export default CustomInlineFroalaEditor;
+export default connect(null, mapDispatchToProps)(CustomInlineFroalaEditor);

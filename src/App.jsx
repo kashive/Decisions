@@ -71,6 +71,8 @@ class App extends React.Component {
     this.setState({ decisions });
   };
 
+  handleVariablesChange;
+
   render() {
     var decision = this.getCurrentDecision();
     return (
