@@ -59,7 +59,6 @@ class VariablesTable extends Component {
                         variable.id
                       )}
                       placeholderText="Name"
-                      placeholderTextWidth="50px"
                       padding="5px"
                       expandWithContent={false}
                       multiLine={false}
