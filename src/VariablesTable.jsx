@@ -29,7 +29,7 @@ class VariablesTable extends Component {
     return (
       <div>
         <Button
-          style={{ display: "block", margin: "0 auto", marginBottom: "10px" }}
+          style={{ marginBottom: "15px" }}
           appearance="primary"
           onClick={this.props.handleAddNewVariable}
         >
