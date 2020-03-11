@@ -71,6 +71,36 @@ class App extends React.Component {
     this.setState({ decisions });
   };
 
+  handleVariableWeightChange = (variableId, weight) => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const variable = currentDecision.variables.find(v => v.id === variableId);
+    variable.weight = weight;
+    this.setState({ decisions });
+  };
+
+  handleVariableNameChange = (variableId, name) => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const variable = currentDecision.variables.find(v => v.id === variableId);
+    variable.name = name;
+    this.setState({ decisions });
+  };
+
+  handleVariableDescriptionChange = (variableId, description) => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const variable = currentDecision.variables.find(v => v.id === variableId);
+    variable.description = description;
+    this.setState({ decisions });
+  };
+
   render() {
     var decision = this.getCurrentDecision();
     return (
@@ -126,7 +156,14 @@ class App extends React.Component {
                   />
                 </Panel>
                 <Panel header="Variables" defaultExpanded>
-                  <VariablesTable variables={decision.variables} />
+                  <VariablesTable
+                    variables={decision.variables}
+                    onHandleMove={this.handleVariableWeightChange}
+                    handleNameChange={this.handleVariableNameChange}
+                    handleDescriptionChange={
+                      this.handleVariableDescriptionChange
+                    }
+                  />
                 </Panel>
                 <Panel header="Panel 3">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed

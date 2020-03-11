@@ -7,6 +7,7 @@ import styled from "styled-components";
 const HighlightableRow = styled.tr`
   background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
 `;
+//todo: have variables table get state from redux later on
 class VariablesTable extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +44,10 @@ class VariablesTable extends Component {
                 <td>
                   <BorderedInlineTextEdit
                     text={variable.name}
+                    handleTextChange={this.props.handleNameChange.bind(
+                      this,
+                      variable.id
+                    )}
                     placeholderText="Name"
                     placeholderTextWidth="50px"
                     padding="5px"
@@ -56,12 +61,22 @@ class VariablesTable extends Component {
                   />
                 </td>
                 <td>
-                  <CustomSlider value={variable.weight} />
+                  <CustomSlider
+                    value={variable.weight}
+                    onHandleMove={this.props.onHandleMove.bind(
+                      this,
+                      variable.id
+                    )}
+                  />
                 </td>
                 <td>
                   <BorderedInlineTextEdit
                     text={variable.description}
                     placeholderText="Description"
+                    handleTextChange={this.props.handleDescriptionChange.bind(
+                      this,
+                      variable.id
+                    )}
                     padding="5px"
                     expandWithContent={false}
                     multiLine={true}
