@@ -115,6 +115,18 @@ class App extends React.Component {
     this.setState({ decisions });
   };
 
+  handleVariableRemove = variableId => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const variables = currentDecision.variables;
+    const variable = currentDecision.variables.find(v => v.id === variableId);
+    const variableIndex = variables.indexOf(variable);
+    variables.splice(variableIndex, 1);
+    this.setState({ decisions });
+  };
+
   render() {
     var decision = this.getCurrentDecision();
     return (
@@ -175,6 +187,7 @@ class App extends React.Component {
                     onHandleMove={this.handleVariableWeightChange}
                     handleNameChange={this.handleVariableNameChange}
                     handleAddNewVariable={this.handleAddNewVariable}
+                    handleVariableRemove={this.handleVariableRemove}
                     handleDescriptionChange={
                       this.handleVariableDescriptionChange
                     }

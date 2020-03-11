@@ -3,7 +3,7 @@ import CustomSlider from "./CustomSlider";
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import "./table.less";
 import styled from "styled-components";
-import { Button } from "rsuite";
+import { Button, Icon, Tooltip, Whisper } from "rsuite";
 
 const HighlightableRow = styled.tr`
   background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
@@ -33,14 +33,15 @@ class VariablesTable extends Component {
           appearance="primary"
           onClick={this.props.handleAddNewVariable}
         >
-          Add Variables
+          Add New Variable
         </Button>
         <table>
           <thead>
             <tr>
               <th style={{ width: "20%" }}>Name</th>
-              <th style={{ width: "40%" }}>Weight</th>
-              <th>Description</th>
+              <th style={{ width: "30%" }}>Weight</th>
+              <th style={{ width: "45%" }}>Description</th>
+              <th style={{ borderLeft: "hidden" }}></th>
             </tr>
           </thead>
           <tbody>
@@ -90,6 +91,21 @@ class VariablesTable extends Component {
                       expandWithContent={false}
                       multiLine={true}
                     />
+                  </td>
+                  <td>
+                    <Whisper
+                      placement="top"
+                      trigger="hover"
+                      speaker={<Tooltip>Remove variable</Tooltip>}
+                    >
+                      <Icon
+                        icon="trash"
+                        onClick={this.props.handleVariableRemove.bind(
+                          this,
+                          variable.id
+                        )}
+                      />
+                    </Whisper>
                   </td>
                 </HighlightableRow>
               );
