@@ -165,7 +165,7 @@ class App extends React.Component {
     const options = currentDecision.options;
     for (var i = 0; i < (options || []).length; i++) {
       const option = options[i];
-      const remainingScores = option.variableScores.filter(vs => {
+      const remainingScores = (option.variableScores || []).filter(vs => {
         return vs.variableId !== variableId;
       });
       option.variableScores = remainingScores;
@@ -304,6 +304,7 @@ class App extends React.Component {
                 <Panel header="Variables">
                   <VariablesTable
                     variables={decision.variables}
+                    options={decision.options}
                     onHandleMove={this.handleVariableWeightChange}
                     handleNameChange={this.handleVariableNameChange}
                     handleAddNewVariable={this.handleAddNewVariable}
