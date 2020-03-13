@@ -131,7 +131,7 @@ class VariablesTable extends Component {
                       multiLine={true}
                     />
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     <Whisper
                       placement="top"
                       trigger="hover"

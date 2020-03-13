@@ -210,6 +210,17 @@ class App extends React.Component {
     this.setState({ decisions });
   };
 
+  handleRemoveOption = optionId => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    currentDecision.options = (currentDecision.options || []).filter(
+      option => option.id !== optionId
+    );
+    this.setState({ decisions });
+  };
+
   handleOptionsDescriptionChange = (optionId, description) => {
     const decisions = [...this.state.decisions];
     const currentDecision = decisions.find(
@@ -317,6 +328,7 @@ class App extends React.Component {
                     onScoreChange={this.handleOptionsScoreChange}
                     onScoreReasoningChange={this.handleVariableResoningChange}
                     onDescriptionChange={this.handleOptionsDescriptionChange}
+                    onRemoveOption={this.handleRemoveOption}
                   />
                 </Panel>
               </PanelGroup>

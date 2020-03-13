@@ -1,36 +1,44 @@
 import React from "react";
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
-import { Panel, Badge, Whisper, Tooltip } from "rsuite";
+import { Panel, Badge, Whisper, Tooltip, Icon } from "rsuite";
 import FroalaEditor from "react-froala-wysiwyg";
 import OptionScores from "./OptionScores";
 
-const OptionHeader = (headerText, badgeNumber, onNameChange) => {
+const OptionHeader = (
+  headerText,
+  badgeNumber,
+  onNameChange,
+  onRemoveOption
+) => {
   return (
-    <Badge
-      style={{ visibility: badgeNumber === 0 ? "hidden" : "inherit" }}
-      maxCount={Number.MAX_VALUE}
-      content={
-        <Whisper
-          placement="top"
-          trigger="hover"
-          speaker={<Tooltip>Weighted average</Tooltip>}
-        >
-          <p>{badgeNumber}</p>
-        </Whisper>
-      }
-    >
-      <div style={{ margin: "10px", visibility: "visible" }}>
-        <BorderedInlineTextEdit
-          text={headerText}
-          handleTextChange={onNameChange}
-          placeholderText="Option Name"
-          placeholderTextWidth="110px"
-          expandWithContent={true}
-          padding="5px"
-          multiLine={false}
-        />
-      </div>
-    </Badge>
+    <div>
+      <Badge
+        style={{ visibility: badgeNumber === 0 ? "hidden" : "inherit" }}
+        maxCount={Number.MAX_VALUE}
+        content={
+          <Whisper
+            placement="top"
+            trigger="hover"
+            speaker={<Tooltip>Weighted average</Tooltip>}
+          >
+            <p>{badgeNumber}</p>
+          </Whisper>
+        }
+      >
+        <div style={{ margin: "10px", visibility: "visible" }}>
+          <BorderedInlineTextEdit
+            text={headerText}
+            handleTextChange={onNameChange}
+            placeholderText="Option Name"
+            placeholderTextWidth="110px"
+            expandWithContent={true}
+            padding="5px"
+            multiLine={false}
+          />
+        </div>
+      </Badge>
+      <Icon className="actionIcon" onClick={onRemoveOption} icon="trash" />
+    </div>
   );
 };
 
@@ -59,7 +67,8 @@ function Options(props) {
             header={OptionHeader(
               option.name,
               calculateScore(option, props.variables),
-              props.onNameChange.bind(this, option.id)
+              props.onNameChange.bind(this, option.id),
+              props.onRemoveOption.bind(this, option.id)
             )}
           >
             <Panel header="Description">
