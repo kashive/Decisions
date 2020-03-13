@@ -13,6 +13,7 @@ const BorderStyling = styled.div`
   &:hover {
     border: ${props =>
       props.isInFocus ? props.borderOnFocus : props.borderOnHover};
+    cursor: text; //may need to make this configurable later on for now we only have the text box usecase
   }
 `;
 

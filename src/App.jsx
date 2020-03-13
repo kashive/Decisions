@@ -2,12 +2,13 @@ import React from "react";
 import SideNavInternal from "./SideNavInternal";
 import uuid from "uuid";
 
-import { Container, Header, Content, PanelGroup, Panel, Icon } from "rsuite";
+import { Container, Header, Content, PanelGroup, Panel, Button } from "rsuite";
 import styled from "styled-components";
 
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
+import Options from "./Options";
 
 const StyledTitle = styled.div`
   margin-left: 30px;
@@ -28,17 +29,53 @@ class App extends React.Component {
           context: "This is why we need to make this decision",
           variables: [
             {
-              id: uuid.v4(),
+              id: "1",
               name: "Time",
               weight: 4,
               description: "Time and tide waits for none"
             },
             {
-              id: uuid.v4(),
+              id: "2",
               name: "Money",
               weight: 8,
               description:
                 "Money and time and tide waits for none and none again and again."
+            }
+          ],
+          options: [
+            {
+              id: "1",
+              name: "Option A",
+              description: "Solid option",
+              variableScores: [
+                {
+                  variableId: "1",
+                  score: 8,
+                  reasoning: "because of this"
+                },
+                {
+                  variableId: "2",
+                  score: 3,
+                  reasoning: "because of that"
+                }
+              ]
+            },
+            {
+              id: "2",
+              name: "Option B",
+              description: "Another Solid option",
+              variableScores: [
+                {
+                  variableId: "1",
+                  score: 3,
+                  reasoning: "because of this"
+                },
+                {
+                  variableId: "2",
+                  score: 5,
+                  reasoning: "because of that"
+                }
+              ]
             }
           ]
         }
@@ -124,6 +161,78 @@ class App extends React.Component {
     const variable = currentDecision.variables.find(v => v.id === variableId);
     const variableIndex = variables.indexOf(variable);
     variables.splice(variableIndex, 1);
+    //also remove all the varible scores with this variable id
+    const options = currentDecision.options;
+    for (var i = 0; i < (options || []).length; i++) {
+      const option = options[i];
+      const remainingScores = option.variableScores.filter(vs => {
+        return vs.variableId !== variableId;
+      });
+      option.variableScores = remainingScores;
+    }
+    this.setState({ decisions });
+  };
+
+  handleOptionsNameChange = (optionId, name) => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const options = currentDecision.options;
+    const option = options.find(opt => opt.id === optionId);
+    option.name = name;
+    this.setState({ decisions });
+  };
+
+  handleOptionsScoreChange = (optionId, variableId, score) => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const options = currentDecision.options;
+    const option = options.find(opt => opt.id === optionId);
+    const variable = option.variableScores.find(
+      vs => vs.variableId === variableId
+    );
+    variable.score = score;
+    this.setState({ decisions });
+  };
+
+  handleAddNewOption = () => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const options = currentDecision.options;
+    options.unshift({
+      id: uuid.v4(),
+      name: "New Option"
+    });
+    this.setState({ decisions });
+  };
+
+  handleOptionsDescriptionChange = (optionId, description) => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const options = currentDecision.options;
+    const option = options.find(opt => opt.id === optionId);
+    option.description = description;
+    this.setState({ decisions });
+  };
+
+  handleVariableResoningChange = (optionId, variableId, reasoning) => {
+    const decisions = [...this.state.decisions];
+    const currentDecision = decisions.find(
+      d => d.id === this.state.currentDecisionId
+    );
+    const options = currentDecision.options;
+    const option = options.find(opt => opt.id === optionId);
+    const variable = option.variableScores.find(
+      vs => vs.variableId === variableId
+    );
+    variable.reasoning = reasoning;
     this.setState({ decisions });
   };
 
@@ -172,7 +281,7 @@ class App extends React.Component {
                   height: "85vh",
                   overflowY: "scroll"
                 }}
-                accordion
+                // accordion
                 bordered
               >
                 <Panel header="Context">
@@ -181,7 +290,7 @@ class App extends React.Component {
                     handleContextChange={this.handleContextChange}
                   />
                 </Panel>
-                <Panel header="Variables" defaultExpanded>
+                <Panel header="Variables">
                   <VariablesTable
                     variables={decision.variables}
                     onHandleMove={this.handleVariableWeightChange}
@@ -193,27 +302,22 @@ class App extends React.Component {
                     }
                   />
                 </Panel>
-                <Panel header="Panel 3">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Nulla pharetra diam sit amet nisl suscipit adipiscing. Sed
-                  elementum tempus egestas sed sed risus. Lectus quam id leo in
-                  vitae turpis massa sed elementum. Diam sit amet nisl suscipit
-                  adipiscing. Consectetur adipiscing elit pellentesque habitant
-                  morbi tristique senectus et netus. Volutpat est velit egestas
-                  dui id ornare. Viverra accumsan in nisl nisi. Sed augue lacus
-                  viverra vitae congue eu consequat ac felis. Nulla pharetra
-                  diam sit amet. Nulla posuere sollicitudin aliquam ultrices.
-                  Odio euismod lacinia at quis risus sed vulputate. Blandit
-                  cursus risus at ultrices. Egestas congue quisque egestas diam
-                  in arcu cursus euismod. Ornare arcu dui vivamus arcu felis
-                  bibendum ut tristique. Egestas sed tempus urna et pharetra.
-                  Consequat nisl vel pretium lectus quam id leo in vitae.
-                  Gravida neque convallis a cras semper auctor neque. Faucibus
-                  in ornare quam viverra orci. Porttitor lacus luctus accumsan
-                  tortor posuere ac ut consequat semper. A diam maecenas sed
-                  enim. In fermentum et sollicitudin ac orci phasellus.
-                  Consequat ac felis donec et odio pellentesque.
+                <Panel header="Options">
+                  <Button
+                    style={{ marginBottom: "15px" }}
+                    appearance="primary"
+                    onClick={this.handleAddNewOption}
+                  >
+                    Add New Option
+                  </Button>
+                  <Options
+                    options={decision.options}
+                    variables={decision.variables}
+                    onNameChange={this.handleOptionsNameChange}
+                    onScoreChange={this.handleOptionsScoreChange}
+                    onScoreReasoningChange={this.handleVariableResoningChange}
+                    onDescriptionChange={this.handleOptionsDescriptionChange}
+                  />
                 </Panel>
               </PanelGroup>
             </Content>

@@ -3,17 +3,42 @@ import CustomSlider from "./CustomSlider";
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import "./table.less";
 import styled from "styled-components";
-import { Button, Icon, Tooltip, Whisper } from "rsuite";
+import { Button, Icon, Tooltip, Whisper, Modal } from "rsuite";
 
 const HighlightableRow = styled.tr`
   background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
 `;
+
+const RemoveVariablePopUp = ({ isVisible, onCancel, onOk }) => {
+  return (
+    <Modal size="xs" show={isVisible} onHide={onCancel}>
+      <Modal.Header>
+        <Modal.Title>Modal Title</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>
+          Please be aware that deleting a variable removes all the scores
+          associated with this variable as well.
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={onOk} appearance="primary">
+          Ok
+        </Button>
+        <Button onClick={onCancel} appearance="subtle">
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
 //todo: have variables table get state from redux later on
 class VariablesTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rowNumWithHighlight: undefined
+      rowNumWithHighlight: undefined,
+      variableDeletePopUpOpen: false
     };
   }
 
@@ -23,6 +48,21 @@ class VariablesTable extends Component {
 
   handleHighlightOff = () => {
     this.setState({ rowNumWithHighlight: undefined });
+  };
+
+  openRemoveVariablePopUp = () => {
+    this.setState({ variableDeletePopUpOpen: true });
+  };
+
+  closeRemoveVariablePopUp = () => {
+    this.setState({ variableDeletePopUpOpen: false });
+  };
+
+  handleDeleteVariable = variableId => {
+    this.closeRemoveVariablePopUp();
+    if (typeof this.props.handleVariableRemove === "function") {
+      this.props.handleVariableRemove(variableId);
+    }
   };
 
   render() {
@@ -98,14 +138,19 @@ class VariablesTable extends Component {
                       speaker={<Tooltip>Remove variable</Tooltip>}
                     >
                       <Icon
+                        className="actionIcon"
                         icon="trash"
-                        onClick={this.props.handleVariableRemove.bind(
-                          this,
-                          variable.id
-                        )}
+                        onClick={() =>
+                          this.setState({ variableDeletePopUpOpen: true })
+                        }
                       />
                     </Whisper>
                   </td>
+                  <RemoveVariablePopUp
+                    isVisible={this.state.variableDeletePopUpOpen}
+                    onCancel={this.closeRemoveVariablePopUp}
+                    onOk={this.handleDeleteVariable.bind(this, variable.id)}
+                  />
                 </HighlightableRow>
               );
             })}
