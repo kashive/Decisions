@@ -23,12 +23,11 @@ const OptionHeader = (headerText, badgeNumber, onNameChange) => {
         <BorderedInlineTextEdit
           text={headerText}
           handleTextChange={onNameChange}
-          placeholderText="Option name"
-          placeholderTextWidth="60px"
+          placeholderText="Option Name"
+          placeholderTextWidth="110px"
           expandWithContent={true}
           padding="5px"
           multiLine={false}
-          autofocus={headerText === "New Option"} //todo: a bit hacky
         />
       </div>
     </Badge>

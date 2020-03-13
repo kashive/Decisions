@@ -205,8 +205,7 @@ class App extends React.Component {
     );
     const options = currentDecision.options;
     options.unshift({
-      id: uuid.v4(),
-      name: "New Option"
+      id: uuid.v4()
     });
     this.setState({ decisions });
   };
@@ -265,6 +264,7 @@ class App extends React.Component {
                   multiLine={false}
                   handleTextChange={this.handleTitleChange}
                   expandWithContent={true}
+                  autoFocusOnInit={true}
                 />
               </StyledTitle>
             </Header>
