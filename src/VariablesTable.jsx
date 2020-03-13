@@ -13,12 +13,14 @@ const RemoveVariablePopUp = ({ isVisible, onCancel, onOk }) => {
   return (
     <Modal size="xs" show={isVisible} onHide={onCancel}>
       <Modal.Header>
-        <Modal.Title>Modal Title</Modal.Title>
+        <Modal.Title>Are you sure you want to remove?</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p>
+          We found some scores relating to this variable. <br />
+          <br />
           Please be aware that deleting a variable removes all the scores
-          associated with this variable as well.
+          associated with the variable as well.
         </p>
       </Modal.Body>
       <Modal.Footer>
@@ -50,8 +52,16 @@ class VariablesTable extends Component {
     this.setState({ rowNumWithHighlight: undefined });
   };
 
-  openRemoveVariablePopUp = () => {
-    this.setState({ variableDeletePopUpOpen: true });
+  openRemoveVariablePopUp = variableId => {
+    const variableScores = (this.props.options || [])
+      .map(opt => opt.variableScores || [])
+      .flat(1)
+      .find(vs => vs.variableId === variableId);
+    if (variableScores) {
+      this.setState({ variableDeletePopUpOpen: true });
+    } else if (typeof this.props.handleVariableRemove === "function") {
+      this.props.handleVariableRemove(variableId);
+    }
   };
 
   closeRemoveVariablePopUp = () => {
@@ -131,7 +141,7 @@ class VariablesTable extends Component {
                       multiLine={true}
                     />
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     <Whisper
                       placement="top"
                       trigger="hover"
@@ -140,9 +150,10 @@ class VariablesTable extends Component {
                       <Icon
                         className="actionIcon"
                         icon="trash"
-                        onClick={() =>
-                          this.setState({ variableDeletePopUpOpen: true })
-                        }
+                        onClick={this.openRemoveVariablePopUp.bind(
+                          this,
+                          variable.id
+                        )}
                       />
                     </Whisper>
                   </td>
