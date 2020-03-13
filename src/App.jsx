@@ -144,11 +144,14 @@ class App extends React.Component {
     const currentDecision = decisions.find(
       d => d.id === this.state.currentDecisionId
     );
+    const id = uuid.v4();
     currentDecision.variables.push({
-      id: uuid.v4(),
-      name: undefined,
-      weight: undefined
+      id: id
     });
+    //also add it variable to all the options
+    currentDecision.options.forEach(opt =>
+      opt.variableScores.push({ variableId: id })
+    );
     this.setState({ decisions });
   };
 
@@ -205,7 +208,8 @@ class App extends React.Component {
     );
     const options = currentDecision.options;
     options.unshift({
-      id: uuid.v4()
+      id: uuid.v4(),
+      variableScores: []
     });
     this.setState({ decisions });
   };

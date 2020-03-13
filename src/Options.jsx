@@ -13,7 +13,7 @@ const OptionHeader = (
   return (
     <div>
       <Badge
-        style={{ visibility: badgeNumber === 0 ? "hidden" : "inherit" }}
+        style={{ visibility: badgeNumber ? "inherit" : "hidden" }}
         maxCount={Number.MAX_VALUE}
         content={
           <Whisper
