@@ -87,9 +87,23 @@ class SideNavInternal extends React.Component {
                 icon={<Icon icon="list" />}
                 placement="rightStart"
               >
-                <Dropdown.Item eventKey="4-1">Decsion A</Dropdown.Item>
-                <Dropdown.Item eventKey="4-2">Decsion B</Dropdown.Item>
-                <Dropdown.Item eventKey="4-3">Decsion C</Dropdown.Item>
+                {(this.props.decisions || [])
+                  .filter(d => d.title)
+                  .map(decision => {
+                    return (
+                      <Dropdown.Item
+                        style={{ color: "white" }}
+                        key={decision.id}
+                        active={decision.id == this.props.currentDecisionId}
+                        onSelect={this.props.onDecisionSelect.bind(
+                          this,
+                          decision.id
+                        )}
+                      >
+                        {decision.title}
+                      </Dropdown.Item>
+                    );
+                  })}
               </Dropdown>
             </Nav>
           </Sidenav.Body>

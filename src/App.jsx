@@ -250,12 +250,20 @@ class App extends React.Component {
     this.setState({ decisions });
   };
 
+  handleCurrentDecisionChange = newDecisionId => {
+    this.setState({ currentDecisionId: newDecisionId });
+  };
+
   render() {
     var decision = this.getCurrentDecision();
     return (
       <div>
         <Container>
-          <SideNavInternal />
+          <SideNavInternal
+            decisions={this.state.decisions}
+            currentDecisionId={this.state.currentDecisionId}
+            onDecisionSelect={this.handleCurrentDecisionChange}
+          />
           <Container
             style={{
               backgroundColor: "#f8f9fa",
