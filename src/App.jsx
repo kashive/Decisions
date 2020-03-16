@@ -286,8 +286,8 @@ class App extends React.Component {
             <Content
               style={{
                 marginTop: 20,
-                marginLeft: 80,
-                marginRight: 80
+                marginLeft: 150,
+                marginRight: 150
               }}
             >
               <PanelGroup
