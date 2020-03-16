@@ -67,6 +67,7 @@ class OptionScores extends Component {
                       padding="5px"
                       expandWithContent={false}
                       multiLine={true}
+                      autoSelectOnFocus={false}
                       onBorderVisible={this.handleHighlightOn.bind(
                         this,
                         variableScore.variableId
