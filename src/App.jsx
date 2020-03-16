@@ -177,15 +177,21 @@ class App extends React.Component {
   };
 
   handleAddNewVariable = () => {
+    //if there is a variable that is has no name then don't create a new one
     const decisions = [...this.state.decisions];
     const currentDecision = decisions.find(
       d => d.id === this.state.currentDecisionId
     );
+    const variableWithNoName = currentDecision.variables.find(
+      variable => !variable.name
+    );
+    if (variableWithNoName) return;
     const id = uuid.v4();
     currentDecision.variables.push({
       id: id
     });
     //also add it variable to all the options
+    //todo: do this only when variable has a name
     currentDecision.options.forEach(opt =>
       opt.variableScores.push({ variableId: id })
     );
@@ -244,6 +250,8 @@ class App extends React.Component {
       d => d.id === this.state.currentDecisionId
     );
     const options = currentDecision.options;
+    //not creating a new one if there exists one already without a name
+    if (options.find(option => !option.name)) return;
     options.unshift({
       id: uuid.v4(),
       variableScores: []
