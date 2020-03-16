@@ -56,6 +56,7 @@ class VariablesTable extends Component {
     const variableScores = (this.props.options || [])
       .map(opt => opt.variableScores || [])
       .flat(1)
+      .filter(vs => vs.score)
       .find(vs => vs.variableId === variableId);
     if (variableScores) {
       this.setState({ variableDeletePopUpOpen: true });
