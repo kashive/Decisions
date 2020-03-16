@@ -2,7 +2,19 @@ import React from "react";
 import SideNavInternal from "./SideNavInternal";
 import uuid from "uuid";
 
-import { Container, Header, Content, PanelGroup, Panel, Button } from "rsuite";
+import {
+  Container,
+  Header,
+  Content,
+  PanelGroup,
+  Panel,
+  Button,
+  ButtonToolbar,
+  Icon,
+  IconButton,
+  Whisper,
+  Tooltip
+} from "rsuite";
 import styled from "styled-components";
 
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
@@ -13,6 +25,7 @@ import Options from "./Options";
 const StyledTitle = styled.div`
   margin-left: 30px;
   margin-top: 10px;
+  margin-bottom: 5px;
   font-size: 18px;
   max-width: 78vw;
   overflow: hidden; //ensures that the overflow hides after max-width is hit
@@ -273,7 +286,6 @@ class App extends React.Component {
             <Header
               style={{
                 backgroundColor: "white",
-                height: "60px",
                 borderBottom: "1px solid",
                 borderColor: "#dbdce0"
               }}
@@ -290,6 +302,24 @@ class App extends React.Component {
                   autoFocusOnInit={true}
                 />
               </StyledTitle>
+              <div style={{ borderTop: "1px solid", borderColor: "#dbdce0" }}>
+                <ButtonToolbar>
+                  <Whisper
+                    placement="bottomStart"
+                    trigger="hover"
+                    speaker={<Tooltip>Add new decision</Tooltip>}
+                  >
+                    <IconButton
+                      className="actionIcon"
+                      icon={
+                        <Icon style={{ color: "black" }} icon="plus-circle" />
+                      }
+                      size="sm"
+                      appearance="link"
+                    />
+                  </Whisper>
+                </ButtonToolbar>
+              </div>
             </Header>
             <Content
               style={{
