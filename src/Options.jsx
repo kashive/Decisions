@@ -4,16 +4,11 @@ import { Panel, Badge, Whisper, Tooltip, Icon } from "rsuite";
 import FroalaEditor from "react-froala-wysiwyg";
 import OptionScores from "./OptionScores";
 
-const OptionHeader = (
-  headerText,
-  badgeNumber,
-  onNameChange,
-  onRemoveOption
-) => {
+const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
   return (
     <div>
       <Badge
-        style={{ visibility: badgeNumber ? "inherit" : "hidden" }}
+        style={{ visibility: score ? "inherit" : "hidden" }}
         maxCount={Number.MAX_VALUE}
         content={
           <Whisper
@@ -21,7 +16,7 @@ const OptionHeader = (
             trigger="hover"
             speaker={<Tooltip>Weighted average</Tooltip>}
           >
-            <p>{badgeNumber}</p>
+            <p>{score}</p>
           </Whisper>
         }
       >
@@ -47,17 +42,12 @@ const calculateScore = (option, variables) => {
     .map(vs => {
       const variableId = vs.variableId;
       const variable = variables.find(v => v.id === variableId);
-      return vs.score * (variable.weight || 0);
+      return (vs.score || 0) * (variable.weight || 0);
     })
     .reduce((a, b) => a + b, 0);
 };
 
 function Options(props) {
-  //   const [count, setCount] = useState(0);
-
-  // Similar to componentDidMount and componentDidUpdate:
-  //   useEffect(() => {});
-  //todo: solve the arrow not pointing later on as you are refacoring the main body to use cards instead of PanelGroup.
   return (
     <div>
       {(props.options || []).map(option => {
