@@ -62,7 +62,7 @@ class CustomInlineFroalaEditor extends Component {
   };
 
   handlePlaceholderVisibleOnFocus(editor) {
-    if (editor.placeholder.isVisible()) {
+    if (editor.placeholder.isVisible() && this.props.autoSelectOnFocus) {
       editor.html.set(this.props.placeholderText);
       editor.commands.selectAll();
       this.setState({ isPlaceholderVisible: false });
@@ -111,5 +111,9 @@ class CustomInlineFroalaEditor extends Component {
     );
   }
 }
+
+CustomInlineFroalaEditor.defaultProps = {
+  autoSelectOnFocus: true
+};
 
 export default CustomInlineFroalaEditor;

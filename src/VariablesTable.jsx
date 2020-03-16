@@ -110,6 +110,7 @@ class VariablesTable extends Component {
                         variable.id
                       )}
                       placeholderText="Name"
+                      autoSelectOnFocus={false}
                       padding="5px"
                       expandWithContent={false}
                       multiLine={false}
