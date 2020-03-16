@@ -252,9 +252,14 @@ class App extends React.Component {
     const options = currentDecision.options;
     //not creating a new one if there exists one already without a name
     if (options.find(option => !option.name)) return;
+    const variableScores = currentDecision.variables.map(variable => {
+      return {
+        variableId: variable.id
+      };
+    });
     options.unshift({
       id: uuid.v4(),
-      variableScores: []
+      variableScores: variableScores
     });
     this.setState({ decisions });
   };
