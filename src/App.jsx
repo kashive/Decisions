@@ -21,6 +21,7 @@ import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
 import Options from "./Options";
+import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
 
 const StyledTitle = styled.div`
   margin-left: 30px;
@@ -93,7 +94,8 @@ class App extends React.Component {
           ]
         }
       ],
-      currentDecisionId: "1"
+      currentDecisionId: "1",
+      addNewDecisionPopupActive: false
     };
   }
 
@@ -102,6 +104,28 @@ class App extends React.Component {
       d => d.id === this.state.currentDecisionId
     );
   }
+
+  showAddNewDecision = () => {
+    this.setState({ addNewDecisionPopupActive: true });
+  };
+
+  hideAddNewDecision = () => {
+    this.setState({ addNewDecisionPopupActive: false });
+  };
+
+  handleAddNewDecision = decisionTitle => {
+    const state = { ...this.state };
+    const decisionId = uuid.v4();
+    state.decisions.push({
+      id: decisionId,
+      title: decisionTitle,
+      variables: [],
+      options: []
+    });
+    state.currentDecisionId = decisionId;
+    state.addNewDecisionPopupActive = false;
+    this.setState(state);
+  };
 
   //todo: refactor handleTitleChange and handleContextChange
   handleTitleChange = title => {
@@ -307,9 +331,10 @@ class App extends React.Component {
                   <Whisper
                     placement="bottomStart"
                     trigger="hover"
-                    speaker={<Tooltip>Add new decision</Tooltip>}
+                    speaker={<Tooltip>Add New Decision</Tooltip>}
                   >
                     <IconButton
+                      onClick={this.showAddNewDecision}
                       className="actionIcon"
                       icon={
                         <Icon style={{ color: "black" }} icon="plus-circle" />
@@ -319,6 +344,11 @@ class App extends React.Component {
                     />
                   </Whisper>
                 </ButtonToolbar>
+                <CreateNewDecisionPopUp
+                  isVisible={this.state.addNewDecisionPopupActive}
+                  onCreate={this.handleAddNewDecision}
+                  onCancel={this.hideAddNewDecision}
+                />
               </div>
             </Header>
             <Content

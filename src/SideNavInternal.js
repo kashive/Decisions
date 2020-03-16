@@ -94,7 +94,7 @@ class SideNavInternal extends React.Component {
                       <Dropdown.Item
                         style={{ color: "white" }}
                         key={decision.id}
-                        active={decision.id == this.props.currentDecisionId}
+                        active={decision.id === this.props.currentDecisionId}
                         onSelect={this.props.onDecisionSelect.bind(
                           this,
                           decision.id
