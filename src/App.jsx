@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import SideNavInternal from "./SideNavInternal";
 import uuid from "uuid";
+import produce from "immer";
 
 import {
   Container,
@@ -116,190 +117,204 @@ class App extends React.Component {
   };
 
   handleAddNewDecision = decisionTitle => {
-    const state = { ...this.state };
-    const decisionId = uuid.v4();
-    state.decisions.push({
-      id: decisionId,
-      title: decisionTitle,
-      variables: [],
-      options: []
-    });
-    state.currentDecisionId = decisionId;
-    state.addNewDecisionPopupActive = false;
-    this.setState(state);
+    this.setState(
+      produce(draft => {
+        const decisionId = uuid.v4();
+        draft.decisions.push({
+          id: decisionId,
+          title: decisionTitle,
+          variables: [],
+          options: []
+        });
+        draft.currentDecisionId = decisionId;
+        draft.addNewDecisionPopupActive = false;
+      })
+    );
   };
 
   //todo: refactor handleTitleChange and handleContextChange
   handleTitleChange = title => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = this.getCurrentDecision();
-    const currentDecisionIndex = decisions.indexOf(currentDecision);
-    decisions[currentDecisionIndex] = { ...currentDecision };
-    decisions[currentDecisionIndex].title = title;
-    this.setState({ decisions });
+    this.setState(
+      produce(draft => {
+        const currentDecision = this.findCurrentDecisionInState(draft);
+        currentDecision.title = title;
+      })
+    );
   };
+
+  findCurrentDecisionInState(state) {
+    return state.decisions.find(
+      decision => decision.id === state.currentDecisionId
+    );
+  }
+
+  findVariableInDecision(variableId, decision) {
+    return decision.variables.find(v => v.id === variableId);
+  }
 
   handleContextChange = context => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = this.getCurrentDecision();
-    const currentDecisionIndex = decisions.indexOf(currentDecision);
-    decisions[currentDecisionIndex] = { ...currentDecision };
-    decisions[currentDecisionIndex].context = context;
-    this.setState({ decisions });
+    this.setState(
+      produce(draft => {
+        const currentDecision = this.findCurrentDecisionInState(draft);
+        currentDecision.context = context;
+      })
+    );
   };
 
+  getVariableInCurrentDecision(state, variableId) {
+    const currentDecision = this.findCurrentDecisionInState(state);
+    return this.findVariableInDecision(variableId, currentDecision);
+  }
+
   handleVariableWeightChange = (variableId, weight) => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const variable = this.getVariableInCurrentDecision(draft, variableId);
+        variable.weight = weight;
+      })
     );
-    const variable = currentDecision.variables.find(v => v.id === variableId);
-    variable.weight = weight;
-    this.setState({ decisions });
   };
 
   handleVariableNameChange = (variableId, name) => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const variable = this.getVariableInCurrentDecision(draft, variableId);
+        variable.name = name;
+      })
     );
-    const variable = currentDecision.variables.find(v => v.id === variableId);
-    variable.name = name;
-    this.setState({ decisions });
   };
 
   handleVariableDescriptionChange = (variableId, description) => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const variable = this.getVariableInCurrentDecision(draft, variableId);
+        variable.description = description;
+      })
     );
-    const variable = currentDecision.variables.find(v => v.id === variableId);
-    variable.description = description;
-    this.setState({ decisions });
   };
 
   handleAddNewVariable = () => {
     //if there is a variable that is has no name then don't create a new one
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
-    );
+    const currentDecision = this.findCurrentDecisionInState(this.state);
     const variableWithNoName = currentDecision.variables.find(
       variable => !variable.name
     );
     if (variableWithNoName) return;
-    const id = uuid.v4();
-    currentDecision.variables.push({
-      id: id
-    });
-    //also add it variable to all the options
-    //todo: do this only when variable has a name
-    currentDecision.options.forEach(opt =>
-      opt.variableScores.push({ variableId: id })
+    this.setState(
+      produce(draft => {
+        const id = uuid.v4();
+        const newDecision = this.findCurrentDecisionInState(draft);
+        newDecision.variables.push({
+          id: id
+        });
+        //also add it variable to all the options
+        //todo: do this only when variable has a name
+        newDecision.options.forEach(opt =>
+          opt.variableScores.push({ variableId: id })
+        );
+      })
     );
-    this.setState({ decisions });
   };
 
   handleVariableRemove = variableId => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const decision = this.findCurrentDecisionInState(draft);
+        decision.variables = decision.variables.filter(
+          v => v.id !== variableId
+        );
+        //also remove all the varible scores with this variable id
+        const options = decision.options;
+        for (var i = 0; i < options.length; i++) {
+          const option = options[i];
+          const remainingScores = option.variableScores.filter(vs => {
+            return vs.variableId !== variableId;
+          });
+          option.variableScores = remainingScores;
+        }
+      })
     );
-    const variables = currentDecision.variables;
-    const variable = currentDecision.variables.find(v => v.id === variableId);
-    const variableIndex = variables.indexOf(variable);
-    variables.splice(variableIndex, 1);
-    //also remove all the varible scores with this variable id
-    const options = currentDecision.options;
-    for (var i = 0; i < (options || []).length; i++) {
-      const option = options[i];
-      const remainingScores = (option.variableScores || []).filter(vs => {
-        return vs.variableId !== variableId;
-      });
-      option.variableScores = remainingScores;
-    }
-    this.setState({ decisions });
   };
+
+  findOptionInCurrentDecision(optionId, state) {
+    const decision = this.findCurrentDecisionInState(state);
+    return decision.options.find(opt => opt.id === optionId);
+  }
 
   handleOptionsNameChange = (optionId, name) => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const option = this.findOptionInCurrentDecision(optionId, draft);
+        option.name = name;
+      })
     );
-    const options = currentDecision.options;
-    const option = options.find(opt => opt.id === optionId);
-    option.name = name;
-    this.setState({ decisions });
   };
 
-  handleOptionsScoreChange = (optionId, variableId, score) => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+  handleVariableScoreChange = (optionId, variableId, score) => {
+    this.setState(
+      produce(draft => {
+        const option = this.findOptionInCurrentDecision(optionId, draft);
+        const variable = option.variableScores.find(
+          vs => vs.variableId === variableId
+        );
+        variable.score = score;
+      })
     );
-    const options = currentDecision.options;
-    const option = options.find(opt => opt.id === optionId);
-    const variable = option.variableScores.find(
-      vs => vs.variableId === variableId
-    );
-    variable.score = score;
-    this.setState({ decisions });
   };
 
   handleAddNewOption = () => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
-    );
+    //there are multiple calls to findCurrentDecisionInState in this method
+    //react always renders when you call the .setState so preventing that in
+    //the guard usecase
+    const currentDecision = this.findCurrentDecisionInState(this.state);
     const options = currentDecision.options;
     //not creating a new one if there exists one already without a name
     if (options.find(option => !option.name)) return;
-    const variableScores = currentDecision.variables.map(variable => {
-      return {
-        variableId: variable.id
-      };
-    });
-    options.unshift({
-      id: uuid.v4(),
-      variableScores: variableScores
-    });
-    this.setState({ decisions });
+    this.setState(
+      produce(draft => {
+        const variableScores = currentDecision.variables.map(variable => {
+          return {
+            variableId: variable.id
+          };
+        });
+        this.findCurrentDecisionInState(draft).options.unshift({
+          id: uuid.v4(),
+          variableScores: variableScores
+        });
+      })
+    );
   };
 
   handleRemoveOption = optionId => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const decision = this.findCurrentDecisionInState(draft);
+        decision.options = decision.options.filter(
+          option => option.id !== optionId
+        );
+      })
     );
-    currentDecision.options = (currentDecision.options || []).filter(
-      option => option.id !== optionId
-    );
-    this.setState({ decisions });
   };
 
   handleOptionsDescriptionChange = (optionId, description) => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const option = this.findOptionInCurrentDecision(optionId, draft);
+        option.description = description;
+      })
     );
-    const options = currentDecision.options;
-    const option = options.find(opt => opt.id === optionId);
-    option.description = description;
-    this.setState({ decisions });
   };
 
   handleVariableResoningChange = (optionId, variableId, reasoning) => {
-    const decisions = [...this.state.decisions];
-    const currentDecision = decisions.find(
-      d => d.id === this.state.currentDecisionId
+    this.setState(
+      produce(draft => {
+        const option = this.findOptionInCurrentDecision(optionId, draft);
+        const variable = option.variableScores.find(
+          vs => vs.variableId === variableId
+        );
+        variable.reasoning = reasoning;
+      })
     );
-    const options = currentDecision.options;
-    const option = options.find(opt => opt.id === optionId);
-    const variable = option.variableScores.find(
-      vs => vs.variableId === variableId
-    );
-    variable.reasoning = reasoning;
-    this.setState({ decisions });
   };
 
   handleCurrentDecisionChange = newDecisionId => {
@@ -419,7 +434,7 @@ class App extends React.Component {
                     options={decision.options}
                     variables={decision.variables}
                     onNameChange={this.handleOptionsNameChange}
-                    onScoreChange={this.handleOptionsScoreChange}
+                    onScoreChange={this.handleVariableScoreChange}
                     onScoreReasoningChange={this.handleVariableResoningChange}
                     onDescriptionChange={this.handleOptionsDescriptionChange}
                     onRemoveOption={this.handleRemoveOption}
