@@ -79,6 +79,15 @@ class CustomInlineFroalaEditor extends Component {
     return this.editorRef.current.editor;
   }
 
+  handleTextChange = text => {
+    if (typeof this.props.handleTextChange === "function") {
+      //needed this as the editor was adding <undefined>{text}</undefiend> also non-breaking spaces were adding &nbsp
+      this.props.handleTextChange(
+        text.replace(/(<([^>]+)>)/gi, "").replace(/&nbsp;/g, " ")
+      );
+    }
+  };
+
   render() {
     return (
       <CustomStyle
@@ -92,7 +101,7 @@ class CustomInlineFroalaEditor extends Component {
         <FroalaEditor
           ref={this.editorRef}
           model={this.props.text}
-          onModelChange={this.props.handleTextChange}
+          onModelChange={this.handleTextChange}
           config={{
             enter: "", //this disables the auto adding of the <p> tag
             multiLine: this.props.multiLine,
