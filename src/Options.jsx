@@ -72,6 +72,7 @@ function Options(props) {
             </Panel>
             <Panel header="Variable Scores">
               <OptionScores
+                scrollToVariableTable={props.scrollToVariableTable}
                 onScoreReasoningChange={props.onScoreReasoningChange}
                 onScoreChange={props.onScoreChange}
                 optionId={option.id}

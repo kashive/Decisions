@@ -44,7 +44,14 @@ class OptionScores extends Component {
                     variableScore.variableId === this.state.rowNumWithHighlight
                   }
                 >
-                  <td>{variableScore.variableName}</td>
+                  <td>
+                    <span
+                      className="pointerOnHover"
+                      onClick={this.props.scrollToVariableTable}
+                    >
+                      {variableScore.variableName}
+                    </span>
+                  </td>
                   <td>
                     <CustomSlider
                       value={variableScore.score}

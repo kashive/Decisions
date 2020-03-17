@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import SideNavInternal from "./SideNavInternal";
 import uuid from "uuid";
 
@@ -97,6 +98,7 @@ class App extends React.Component {
       currentDecisionId: "1",
       addNewDecisionPopupActive: false
     };
+    this.variablesPanelRef = React.createRef();
   }
 
   getCurrentDecision() {
@@ -304,6 +306,12 @@ class App extends React.Component {
     this.setState({ currentDecisionId: newDecisionId });
   };
 
+  scrollToVariableTable = () => {
+    if (this.variablesPanelRef.current) {
+      ReactDOM.findDOMNode(this.variablesPanelRef.current).scrollIntoView();
+    }
+  };
+
   render() {
     var decision = this.getCurrentDecision();
     return (
@@ -386,7 +394,7 @@ class App extends React.Component {
                     handleContextChange={this.handleContextChange}
                   />
                 </Panel>
-                <Panel header="Variables">
+                <Panel ref={this.variablesPanelRef} header="Variables">
                   <VariablesTable
                     variables={decision.variables}
                     options={decision.options}
@@ -415,6 +423,7 @@ class App extends React.Component {
                     onScoreReasoningChange={this.handleVariableResoningChange}
                     onDescriptionChange={this.handleOptionsDescriptionChange}
                     onRemoveOption={this.handleRemoveOption}
+                    scrollToVariableTable={this.scrollToVariableTable}
                   />
                 </Panel>
               </PanelGroup>
