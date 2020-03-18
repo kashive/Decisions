@@ -17,31 +17,21 @@ import {
   Whisper,
   Tooltip
 } from "rsuite";
-import styled from "styled-components";
 
-import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
 import Options from "./Options";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
-import { fetchDecisions } from "./redux/actions/decisionActions";
+import {
+  fetchDecisions,
+  onDecisionTitleChange
+} from "./redux/actions/decisionActions";
 import { connect } from "react-redux";
+import DecisionTitle from "./components/DecisionTitle";
 
-const StyledTitle = styled.div`
-  margin-left: 30px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-size: 18px;
-  max-width: 78vw;
-  overflow: hidden; //ensures that the overflow hides after max-width is hit
-`;
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchDecisions: (userId = "dummyId") => {
-      dispatch(fetchDecisions(userId));
-    }
-  };
+const actionCreators = {
+  fetchDecisions,
+  onDecisionTitleChange
 };
 
 const mapStateToProps = state => {
@@ -86,16 +76,6 @@ class App extends React.Component {
         });
         draft.currentDecisionId = decisionId;
         draft.addNewDecisionPopupActive = false;
-      })
-    );
-  };
-
-  //todo: refactor handleTitleChange and handleContextChange
-  handleTitleChange = title => {
-    this.setState(
-      produce(draft => {
-        const currentDecision = this.findCurrentDecisionInState(draft);
-        currentDecision.title = title;
       })
     );
   };
@@ -288,7 +268,7 @@ class App extends React.Component {
   handleVariablesChange;
 
   render() {
-    var decision = this.findCurrentDecisionInState(this.props);
+    const decision = this.findCurrentDecisionInState(this.props);
     if (!decision) {
       //todo: show a spinner when integrated with the backend
       return <div>Loading...</div>;
@@ -314,18 +294,12 @@ class App extends React.Component {
                 borderColor: "#dbdce0"
               }}
             >
-              <StyledTitle>
-                <BorderedInlineTextEdit
-                  text={decision.title}
-                  placeholderText="Untitled decision"
-                  placeholderTextWidth="150px"
-                  padding="5px"
-                  multiLine={false}
-                  handleTextChange={this.handleTitleChange}
-                  expandWithContent={true}
-                  autoFocusOnInit={true}
-                />
-              </StyledTitle>
+              <DecisionTitle
+                decisionTitle={decision.title}
+                onDecisionTitleChange={title =>
+                  this.props.onDecisionTitleChange(decision.id, title)
+                }
+              />
               <div style={{ borderTop: "1px solid", borderColor: "#dbdce0" }}>
                 <ButtonToolbar>
                   <Whisper
@@ -414,4 +388,4 @@ class App extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, actionCreators)(App);
