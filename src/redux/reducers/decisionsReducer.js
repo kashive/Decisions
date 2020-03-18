@@ -1,13 +1,17 @@
 import {
   FETCH_DECISIONS_SUCCESS,
   DECISION_TITLE_CHANGE,
-  CREATE_DECISION
+  CREATE_DECISION,
+  DECISION_CONTEXT_CHANGE
 } from "../actionTypes";
 import uuid from "uuid";
 import produce from "immer";
 
 const initialState = {
   decisions: []
+};
+const findDecisionById = (decisions, decisionId) => {
+  return decisions.find(decision => decision.id === decisionId);
 };
 
 export function decisionsReducer(state = initialState, action) {
@@ -20,9 +24,7 @@ export function decisionsReducer(state = initialState, action) {
     case DECISION_TITLE_CHANGE: {
       const { decisionId, title } = action.payload;
       return produce(state, draft => {
-        const decision = draft.decisions.find(
-          decision => decision.id === decisionId
-        );
+        const decision = findDecisionById(draft.decisions, decisionId);
         decision.title = title;
       });
     }
@@ -35,6 +37,13 @@ export function decisionsReducer(state = initialState, action) {
           variables: [],
           options: []
         });
+      });
+    }
+    case DECISION_CONTEXT_CHANGE: {
+      const { decisionId, context } = action.payload;
+      return produce(state, draft => {
+        const currentDecision = findDecisionById(draft.decisions, decisionId);
+        currentDecision.context = context;
       });
     }
     default:

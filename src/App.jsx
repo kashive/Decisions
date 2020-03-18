@@ -25,7 +25,8 @@ import CreateNewDecisionPopUp from "./components/CreateNewDecisionPopUp";
 import {
   fetchDecisions,
   onDecisionTitleChange,
-  onDecisionCreate
+  onDecisionCreate,
+  onDecisionContextChange
 } from "./redux/actions/decisionActions";
 import { connect } from "react-redux";
 import DecisionTitle from "./components/DecisionTitle";
@@ -33,7 +34,8 @@ import DecisionTitle from "./components/DecisionTitle";
 const actionCreators = {
   fetchDecisions,
   onDecisionTitleChange,
-  onDecisionCreate
+  onDecisionCreate,
+  onDecisionContextChange
 };
 
 const mapStateToProps = state => {
@@ -76,15 +78,6 @@ class App extends React.Component {
   findVariableInDecision(variableId, decision) {
     return decision.variables.find(v => v.id === variableId);
   }
-
-  handleContextChange = context => {
-    this.setState(
-      produce(draft => {
-        const currentDecision = this.findCurrentDecisionInState(draft);
-        currentDecision.context = context;
-      })
-    );
-  };
 
   getVariableInCurrentDecision(state, variableId) {
     const currentDecision = this.findCurrentDecisionInState(state);
@@ -335,7 +328,9 @@ class App extends React.Component {
                 <Panel header="Context">
                   <ContextTextEdit
                     model={decision.context}
-                    handleContextChange={this.handleContextChange}
+                    handleContextChange={context =>
+                      this.props.onDecisionContextChange(decision.id, context)
+                    }
                   />
                 </Panel>
                 <Panel ref={this.variablesPanelRef} header="Variables">

@@ -3,7 +3,8 @@ import {
   FETCH_DECISIONS_BEGIN,
   FETCH_DECISIONS_SUCCESS,
   DECISION_TITLE_CHANGE,
-  CREATE_DECISION
+  CREATE_DECISION,
+  DECISION_CONTEXT_CHANGE
 } from "../actionTypes";
 
 export function fetchDecisions(userId) {
@@ -25,6 +26,14 @@ export const fetchDecisionsSuccess = decisions => ({
 export function onDecisionTitleChange(decisionId, title) {
   return dispatch =>
     dispatch({ type: DECISION_TITLE_CHANGE, payload: { decisionId, title } });
+}
+
+export function onDecisionContextChange(decisionId, context) {
+  return dispatch =>
+    dispatch({
+      type: DECISION_CONTEXT_CHANGE,
+      payload: { decisionId, context }
+    });
 }
 
 export function onDecisionCreate(title) {
