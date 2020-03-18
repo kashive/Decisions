@@ -21,23 +21,26 @@ import {
 import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
 import Options from "./Options";
-import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
+import CreateNewDecisionPopUp from "./components/CreateNewDecisionPopUp";
 import {
   fetchDecisions,
-  onDecisionTitleChange
+  onDecisionTitleChange,
+  onDecisionCreate
 } from "./redux/actions/decisionActions";
 import { connect } from "react-redux";
 import DecisionTitle from "./components/DecisionTitle";
 
 const actionCreators = {
   fetchDecisions,
-  onDecisionTitleChange
+  onDecisionTitleChange,
+  onDecisionCreate
 };
 
 const mapStateToProps = state => {
   const decisions = state.decisionsReducer.decisions;
-  //setting first decision in the list as current. may need to modify later. most recently edited?
-  const currentDecisionId = decisions[0] ? decisions[0].id : undefined;
+  const lastDecision = decisions[decisions.length - 1];
+  //setting last decision in the list as current. may need to modify later. most recently edited?
+  const currentDecisionId = lastDecision ? lastDecision.id : undefined;
   return {
     decisions,
     currentDecisionId
@@ -62,22 +65,6 @@ class App extends React.Component {
 
   hideAddNewDecision = () => {
     this.setState({ addNewDecisionPopupActive: false });
-  };
-
-  handleAddNewDecision = decisionTitle => {
-    this.setState(
-      produce(draft => {
-        const decisionId = uuid.v4();
-        draft.decisions.push({
-          id: decisionId,
-          title: decisionTitle,
-          variables: [],
-          options: []
-        });
-        draft.currentDecisionId = decisionId;
-        draft.addNewDecisionPopupActive = false;
-      })
-    );
   };
 
   findCurrentDecisionInState(state) {
@@ -265,9 +252,13 @@ class App extends React.Component {
     }
   };
 
-  handleVariablesChange;
+  onDecisionCreate = title => {
+    this.props.onDecisionCreate(title);
+    this.hideAddNewDecision();
+  };
 
   render() {
+    console.log("rendering");
     const decision = this.findCurrentDecisionInState(this.props);
     if (!decision) {
       //todo: show a spinner when integrated with the backend
@@ -320,7 +311,7 @@ class App extends React.Component {
                 </ButtonToolbar>
                 <CreateNewDecisionPopUp
                   isVisible={this.state.addNewDecisionPopupActive}
-                  onCreate={this.handleAddNewDecision}
+                  onCreate={this.onDecisionCreate}
                   onCancel={this.hideAddNewDecision}
                 />
               </div>
