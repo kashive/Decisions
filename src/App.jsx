@@ -24,6 +24,8 @@ import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
 import Options from "./Options";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
+import { fetchDecisions } from "./redux/actions/decisionActions";
+import { connect } from "react-redux";
 
 const StyledTitle = styled.div`
   margin-left: 30px;
@@ -34,78 +36,34 @@ const StyledTitle = styled.div`
   overflow: hidden; //ensures that the overflow hides after max-width is hit
 `;
 
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchDecisions: (userId = "dummyId") => {
+      dispatch(fetchDecisions(userId));
+    }
+  };
+};
+
+const mapStateToProps = state => {
+  const decisions = state.decisionsReducer.decisions;
+  //setting first decision in the list as current. may need to modify later. most recently edited?
+  const currentDecisionId = decisions[0] ? decisions[0].id : undefined;
+  return {
+    decisions,
+    currentDecisionId
+  };
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      decisions: [
-        {
-          id: "1",
-          title: "Decision 1",
-          context: "This is why we need to make this decision",
-          variables: [
-            {
-              id: "1",
-              name: "Time",
-              weight: 4,
-              description: "Time and tide waits for none"
-            },
-            {
-              id: "2",
-              name: "Money",
-              weight: 8,
-              description:
-                "Money and time and tide waits for none and none again and again."
-            }
-          ],
-          options: [
-            {
-              id: "1",
-              name: "Option A",
-              description: "Solid option",
-              variableScores: [
-                {
-                  variableId: "1",
-                  score: 8,
-                  reasoning: "because of this"
-                },
-                {
-                  variableId: "2",
-                  score: 3,
-                  reasoning: "because of that"
-                }
-              ]
-            },
-            {
-              id: "2",
-              name: "Option B",
-              description: "Another Solid option",
-              variableScores: [
-                {
-                  variableId: "1",
-                  score: 3,
-                  reasoning: "because of this"
-                },
-                {
-                  variableId: "2",
-                  score: 5,
-                  reasoning: "because of that"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      currentDecisionId: "1",
       addNewDecisionPopupActive: false
     };
     this.variablesPanelRef = React.createRef();
   }
-
-  getCurrentDecision() {
-    return this.state.decisions.find(
-      d => d.id === this.state.currentDecisionId
-    );
+  componentDidMount() {
+    this.props.fetchDecisions();
   }
 
   showAddNewDecision = () => {
@@ -195,7 +153,7 @@ class App extends React.Component {
 
   handleAddNewVariable = () => {
     //if there is a variable that is has no name then don't create a new one
-    const currentDecision = this.findCurrentDecisionInState(this.state);
+    const currentDecision = this.findCurrentDecisionInState(this.props);
     const variableWithNoName = currentDecision.variables.find(
       variable => !variable.name
     );
@@ -266,7 +224,7 @@ class App extends React.Component {
     //there are multiple calls to findCurrentDecisionInState in this method
     //react always renders when you call the .setState so preventing that in
     //the guard usecase
-    const currentDecision = this.findCurrentDecisionInState(this.state);
+    const currentDecision = this.findCurrentDecisionInState(this.props);
     const options = currentDecision.options;
     //not creating a new one if there exists one already without a name
     if (options.find(option => !option.name)) return;
@@ -327,14 +285,20 @@ class App extends React.Component {
     }
   };
 
+  handleVariablesChange;
+
   render() {
-    var decision = this.getCurrentDecision();
+    var decision = this.findCurrentDecisionInState(this.props);
+    if (!decision) {
+      //todo: show a spinner when integrated with the backend
+      return <div>Loading...</div>;
+    }
     return (
       <div>
         <Container>
           <SideNavInternal
-            decisions={this.state.decisions}
-            currentDecisionId={this.state.currentDecisionId}
+            decisions={this.props.decisions}
+            currentDecisionId={this.props.currentDecisionId}
             onDecisionSelect={this.handleCurrentDecisionChange}
           />
           <Container
@@ -450,4 +414,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
