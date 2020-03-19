@@ -4,4 +4,21 @@ import rootReducer from "./reducers";
 
 const middlewares = [thunk];
 
-export default createStore(rootReducer, {}, applyMiddleware(...middlewares));
+export default createStore(
+  rootReducer,
+  {
+    entities: {
+      decisions: {
+        byId: {},
+        allIds: []
+      },
+      variables: {},
+      options: {},
+      variableScores: {}
+    },
+    controlState: {
+      decisionId: undefined
+    }
+  },
+  applyMiddleware(...middlewares)
+);

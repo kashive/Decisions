@@ -23,11 +23,11 @@ import VariablesTable from "./VariablesTable";
 import Options from "./Options";
 import CreateNewDecisionPopUp from "./components/CreateNewDecisionPopUp";
 import {
-  fetchDecisions,
   onDecisionTitleChange,
   onDecisionCreate,
   onDecisionContextChange
 } from "./redux/actions/decisionActions";
+import { appMountSuccess } from "./redux/actions/entitiesActions";
 import { connect } from "react-redux";
 import DecisionTitle from "./components/DecisionTitle";
 
@@ -40,7 +40,7 @@ class App extends React.Component {
     this.variablesPanelRef = React.createRef();
   }
   componentDidMount() {
-    this.props.fetchDecisions();
+    this.props.appMountSuccess("dummyUserId");
   }
 
   showAddNewDecision = () => {
@@ -231,7 +231,6 @@ class App extends React.Component {
   };
 
   render() {
-    console.log("rendering");
     const currentDecisionId = this.props.currentDecisionId;
     if (!currentDecisionId) {
       //todo: show a spinner when integrated with the backend
@@ -313,7 +312,6 @@ class App extends React.Component {
                 </Panel>
                 <Panel ref={this.variablesPanelRef} header="Variables">
                   <VariablesTable
-                    variables={decision.variables}
                     options={decision.options}
                     onHandleMove={this.handleVariableWeightChange}
                     handleNameChange={this.handleVariableNameChange}
@@ -353,9 +351,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log("passed state", state);
   const decisions = state.entities.decisions;
-  const currentDecisionId = state.controlState.activeDecision.decisionId;
+  const currentDecisionId = state.controlState.decisionId;
   return {
     decisions,
     currentDecisionId
@@ -363,7 +360,7 @@ const mapStateToProps = state => {
 };
 
 const actionCreators = {
-  fetchDecisions,
+  appMountSuccess,
   onDecisionTitleChange,
   onDecisionCreate,
   onDecisionContextChange

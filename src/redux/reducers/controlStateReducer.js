@@ -1,18 +1,14 @@
 import {
-  FETCH_DECISIONS_SUCCESS,
+  APP_MOUNT_SUCCESS,
   DECISION_SELECT,
   CREATE_DECISION
 } from "../actionTypes";
 import { produce } from "immer";
 
-const initialState = {
-  decisionId: undefined
-};
-
-export function controlStateReducer(state = initialState, action) {
+export function controlStateReducer(state, action) {
   switch (action.type) {
-    case FETCH_DECISIONS_SUCCESS: {
-      const decisionIds = action.payload.decisions.allIds;
+    case APP_MOUNT_SUCCESS: {
+      const decisionIds = action.payload.entities.decisions.allIds;
       return produce(state, draft => {
         draft.decisionId = decisionIds[decisionIds.length - 1];
       });

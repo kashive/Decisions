@@ -1,36 +1,48 @@
-import { CREATE_VARIABLE } from "../actionTypes";
-import uuid from "uuid";
+import {
+  CREATE_VARIABLE,
+  VARIABLE_NAME_CHANGE,
+  VARIABLE_DESCRIPTION_CHANGE,
+  VARIABLE_WEIGHT_CHANGE,
+  VARIABLE_REMOVE
+} from "../actionTypes";
 import produce from "immer";
 
-const initialState = {
-  variables: []
-};
-
-const findDecisionById = (decisions, decisionId) => {
-  return decisions.find(decision => decision.id === decisionId);
-};
-
-export function variablesReducer(state = initialState, action) {
+export function variablesReducer(state, action) {
   switch (action.type) {
     case CREATE_VARIABLE: {
-      const { decisionId } = action.payload;
-      //if there is a variable that is has no name then don't create a new one
-      const currentDecision = findDecisionById(state, decisions, decisionId);
-      const variableWithNoName = currentDecision.variables.find(
-        variable => !variable.name
-      );
-      if (variableWithNoName) return state;
       return produce(state, draft => {
-        const id = uuid.v4();
-        const newDecision = findDecisionById(draft.decisions, decisionId);
-        newDecision.variables.push({
-          id: id
-        });
-        //also add it variable to all the options
-        //todo: do this only when variable has a name
-        newDecision.options.forEach(opt =>
-          opt.variableScores.push({ variableId: id })
-        );
+        const { decisionId, variableId } = action.payload;
+        draft.byId[variableId] = {
+          id: variableId,
+          decisionId: decisionId,
+          options: []
+        };
+        draft.allIds.push(variableId);
+      });
+    }
+    case VARIABLE_NAME_CHANGE: {
+      return produce(state, draft => {
+        const { id, name } = action.payload;
+        draft.byId[id].name = name;
+      });
+    }
+    case VARIABLE_DESCRIPTION_CHANGE: {
+      return produce(state, draft => {
+        const { id, description } = action.payload;
+        draft.byId[id].description = description;
+      });
+    }
+    case VARIABLE_WEIGHT_CHANGE: {
+      return produce(state, draft => {
+        const { id, weight } = action.payload;
+        draft.byId[id].weight = weight;
+      });
+    }
+    case VARIABLE_REMOVE: {
+      return produce(state, draft => {
+        const { variableId } = action.payload;
+        delete draft.byId[variableId];
+        draft.allIds = draft.allIds.filter(id => id !== variableId);
       });
     }
     default:

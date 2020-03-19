@@ -121,7 +121,7 @@ const mapStateToProps = state => {
   const decisionIdsAndTitles = allIds
     .map(id => byId[id])
     .map(decision => ({ id: decision.id, title: decision.title }));
-  const currentDecisionId = state.controlState.activeDecision.decisionId;
+  const currentDecisionId = state.controlState.decisionId;
   return {
     decisionIdsAndTitles,
     currentDecisionId

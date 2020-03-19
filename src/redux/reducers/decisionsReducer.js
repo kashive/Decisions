@@ -2,7 +2,9 @@ import {
   FETCH_DECISIONS_SUCCESS,
   DECISION_TITLE_CHANGE,
   CREATE_DECISION,
-  DECISION_CONTEXT_CHANGE
+  DECISION_CONTEXT_CHANGE,
+  CREATE_VARIABLE,
+  VARIABLE_REMOVE
 } from "../actionTypes";
 import produce from "immer";
 
@@ -46,6 +48,21 @@ export function decisionsReducer(state = initialState, action) {
           options: []
         };
         draft.allIds.push(id);
+      });
+    }
+    case CREATE_VARIABLE: {
+      return produce(state, draft => {
+        const { decisionId, variableId } = action.payload;
+        draft.byId[decisionId].variables.push(variableId);
+      });
+    }
+    case VARIABLE_REMOVE: {
+      return produce(state, draft => {
+        const { decisionId, variableId } = action.payload;
+        const variables = draft.byId[decisionId].variables;
+        draft.byId[decisionId].variables = variables.filter(
+          id => id !== variableId
+        );
       });
     }
     default:

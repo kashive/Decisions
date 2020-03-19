@@ -4,6 +4,14 @@ import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import "./table.less";
 import styled from "styled-components";
 import { Button, Icon, Tooltip, Whisper, Modal } from "rsuite";
+import {
+  onVariableCreate,
+  onVariableRemove,
+  onVariableNameChange,
+  onVariableDescriptionChange,
+  onVariableWeightChange
+} from "./redux/actions/variableActions";
+import { connect } from "react-redux";
 
 const HighlightableRow = styled.tr`
   background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
@@ -53,15 +61,16 @@ class VariablesTable extends Component {
   };
 
   openRemoveVariablePopUp = variableId => {
-    const variableScores = (this.props.options || [])
-      .map(opt => opt.variableScores || [])
-      .flat(1)
+    //if there are any variable scores with score not undefined with my variableId then show the popup
+    const { allIds, byId } = this.props.variableScores;
+    const variableScores = allIds
+      .map(id => byId[id])
       .filter(vs => vs.score)
       .find(vs => vs.variableId === variableId);
     if (variableScores) {
       this.setState({ variableDeletePopUpOpen: true });
-    } else if (typeof this.props.handleVariableRemove === "function") {
-      this.props.handleVariableRemove(variableId);
+    } else if (typeof this.props.onVariableRemove === "function") {
+      this.props.onVariableRemove(this.props.currentDecisionId, variableId);
     }
   };
 
@@ -69,20 +78,20 @@ class VariablesTable extends Component {
     this.setState({ variableDeletePopUpOpen: false });
   };
 
-  handleDeleteVariable = variableId => {
+  onVariableRemovePromptOkClick = (decisionId, variableId) => {
+    this.props.onVariableRemove(decisionId, variableId);
     this.closeRemoveVariablePopUp();
-    if (typeof this.props.handleVariableRemove === "function") {
-      this.props.handleVariableRemove(variableId);
-    }
   };
 
   render() {
+    const currentDecisionId = this.props.currentDecisionId;
+    const { byId, allIds } = this.props.variables;
     return (
       <div>
         <Button
           style={{ marginBottom: "15px" }}
           appearance="primary"
-          onClick={this.props.handleAddNewVariable}
+          onClick={this.props.onVariableCreate.bind(this, currentDecisionId)}
         >
           Add New Variable
         </Button>
@@ -96,77 +105,85 @@ class VariablesTable extends Component {
             </tr>
           </thead>
           <tbody>
-            {(this.props.variables || []).map(variable => {
-              return (
-                <HighlightableRow
-                  key={variable.id}
-                  isHighlightOn={variable.id === this.state.rowNumWithHighlight}
-                >
-                  <td>
-                    <BorderedInlineTextEdit
-                      text={variable.name}
-                      handleTextChange={this.props.handleNameChange.bind(
-                        this,
-                        variable.id
-                      )}
-                      placeholderText="Name"
-                      autoSelectOnFocus={false}
-                      padding="5px"
-                      expandWithContent={false}
-                      multiLine={false}
-                      onBorderVisible={this.handleHighlightOn.bind(
-                        this,
-                        variable.id
-                      )}
-                      onBorderInvisible={this.handleHighlightOff}
-                    />
-                  </td>
-                  <td>
-                    <CustomSlider
-                      value={variable.weight}
-                      onHandleMove={this.props.onHandleMove.bind(
-                        this,
-                        variable.id
-                      )}
-                    />
-                  </td>
-                  <td>
-                    <BorderedInlineTextEdit
-                      text={variable.description}
-                      placeholderText="Description"
-                      handleTextChange={this.props.handleDescriptionChange.bind(
-                        this,
-                        variable.id
-                      )}
-                      padding="5px"
-                      expandWithContent={false}
-                      multiLine={true}
-                    />
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    <Whisper
-                      placement="top"
-                      trigger="hover"
-                      speaker={<Tooltip>Remove variable</Tooltip>}
-                    >
-                      <Icon
-                        className="actionIcon"
-                        icon="trash"
-                        onClick={this.openRemoveVariablePopUp.bind(
+            {allIds
+              .map(id => byId[id])
+              .map(variable => {
+                return (
+                  <HighlightableRow
+                    key={variable.id}
+                    isHighlightOn={
+                      variable.id === this.state.rowNumWithHighlight
+                    }
+                  >
+                    <td>
+                      <BorderedInlineTextEdit
+                        text={variable.name}
+                        handleTextChange={this.props.onVariableNameChange.bind(
+                          this,
+                          variable.id
+                        )}
+                        placeholderText="Name"
+                        autoSelectOnFocus={false}
+                        padding="5px"
+                        expandWithContent={false}
+                        multiLine={false}
+                        onBorderVisible={this.handleHighlightOn.bind(
+                          this,
+                          variable.id
+                        )}
+                        onBorderInvisible={this.handleHighlightOff}
+                      />
+                    </td>
+                    <td>
+                      <CustomSlider
+                        value={variable.weight}
+                        onHandleMove={this.props.onVariableWeightChange.bind(
                           this,
                           variable.id
                         )}
                       />
-                    </Whisper>
-                  </td>
-                  <RemoveVariablePopUp
-                    isVisible={this.state.variableDeletePopUpOpen}
-                    onCancel={this.closeRemoveVariablePopUp}
-                    onOk={this.handleDeleteVariable.bind(this, variable.id)}
-                  />
-                </HighlightableRow>
-              );
-            })}
+                    </td>
+                    <td>
+                      <BorderedInlineTextEdit
+                        text={variable.description}
+                        placeholderText="Description"
+                        handleTextChange={this.props.onVariableDescriptionChange.bind(
+                          this,
+                          variable.id
+                        )}
+                        padding="5px"
+                        expandWithContent={false}
+                        multiLine={true}
+                      />
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                      <Whisper
+                        placement="top"
+                        trigger="hover"
+                        speaker={<Tooltip>Remove variable</Tooltip>}
+                      >
+                        <Icon
+                          className="actionIcon"
+                          icon="trash"
+                          onClick={this.openRemoveVariablePopUp.bind(
+                            this,
+                            variable.id
+                          )}
+                        />
+                      </Whisper>
+                    </td>
+                    <RemoveVariablePopUp
+                      isVisible={this.state.variableDeletePopUpOpen}
+                      onCancel={this.closeRemoveVariablePopUp}
+                      onOk={this.onVariableRemovePromptOkClick.bind(
+                        this,
+                        currentDecisionId,
+                        variable.id
+                      )}
+                    />
+                  </HighlightableRow>
+                );
+              })}
           </tbody>
         </table>
       </div>
@@ -174,4 +191,23 @@ class VariablesTable extends Component {
   }
 }
 
-export default VariablesTable;
+const mapStateToProps = state => {
+  const variables = state.entities.variables;
+  const currentDecisionId = state.controlState.decisionId;
+  const variableScores = state.entities.variableScores;
+  return {
+    variables,
+    currentDecisionId,
+    variableScores
+  };
+};
+
+const actionCreators = {
+  onVariableCreate,
+  onVariableRemove,
+  onVariableNameChange,
+  onVariableDescriptionChange,
+  onVariableWeightChange
+};
+
+export default connect(mapStateToProps, actionCreators)(VariablesTable);

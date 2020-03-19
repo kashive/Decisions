@@ -13,21 +13,26 @@ export const NORMALIZED_DUMMY_STATE = {
       allIds: ["1"]
     },
     variables: {
-      "2": {
-        id: "1",
-        decisionId: "1",
-        name: "Time",
-        weight: 4,
-        description: "Time and tide waits for none"
+      byId: {
+        "2": {
+          id: "2",
+          decisionId: "1",
+          name: "Time",
+          weight: 4,
+          description: "Time and tide waits for none",
+          options: ["4"]
+        },
+        "3": {
+          id: "3",
+          decisionId: "1",
+          name: "Money",
+          weight: 8,
+          options: [],
+          description:
+            "Money and time and tide waits for none and none again and again."
+        }
       },
-      "3": {
-        id: "3",
-        decisionId: "1",
-        name: "Money",
-        weight: 8,
-        description:
-          "Money and time and tide waits for none and none again and again."
-      }
+      allIds: ["2", "3"]
     },
     options: {
       "4": {
@@ -46,31 +51,31 @@ export const NORMALIZED_DUMMY_STATE = {
       }
     },
     variableScores: {
-      "6": {
-        id: "6",
-        optionId: "4",
-        variableId: "2",
-        score: 8,
-        reasoning: "because of this"
+      byId: {
+        "6": {
+          id: "6",
+          optionId: "4",
+          variableId: "2",
+          score: 8,
+          reasoning: "because of this"
+        },
+        "7": {
+          id: "7",
+          optionId: "5",
+          variableId: "2",
+          score: 8,
+          reasoning: "because of this"
+        },
+        "8": {
+          id: "8",
+          optionId: "5",
+          variableId: "3",
+          score: 2,
+          reasoning: "because of this"
+        }
       },
-      "7": {
-        id: "7",
-        optionId: "5",
-        variableId: "2",
-        score: 8,
-        reasoning: "because of this"
-      },
-      "8": {
-        id: "8",
-        optionId: "5",
-        variableId: "3",
-        score: 2,
-        reasoning: "because of this"
-      }
+      allIds: ["6", "7", "8"]
     }
-  },
-  controlState: {
-    activeDecision: { decisionId: "1" }
   }
 };
 

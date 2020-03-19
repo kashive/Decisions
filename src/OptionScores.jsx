@@ -46,6 +46,7 @@ class OptionScores extends Component {
                 >
                   <td>
                     <span
+                      style={{ whiteSpace: "nowrap" }}
                       className="pointerOnHover"
                       onClick={this.props.scrollToVariableTable}
                     >
