@@ -68,6 +68,9 @@ export const NORMALIZED_DUMMY_STATE = {
         reasoning: "because of this"
       }
     }
+  },
+  controlState: {
+    activeDecision: { decisionId: "1" }
   }
 };
 

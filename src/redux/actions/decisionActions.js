@@ -1,16 +1,17 @@
-import { DUMMY_DECISIONS } from "../../DummyState";
+import { NORMALIZED_DUMMY_STATE } from "../../DummyState";
 import {
   FETCH_DECISIONS_BEGIN,
   FETCH_DECISIONS_SUCCESS,
   DECISION_TITLE_CHANGE,
   CREATE_DECISION,
-  DECISION_CONTEXT_CHANGE
+  DECISION_CONTEXT_CHANGE,
+  DECISION_SELECT
 } from "../actionTypes";
 
 export function fetchDecisions(userId) {
   return dispatch => {
     dispatch(fetchDecisionsBegin());
-    dispatch(fetchDecisionsSuccess(DUMMY_DECISIONS));
+    dispatch(fetchDecisionsSuccess(NORMALIZED_DUMMY_STATE.entities.decisions));
   };
 }
 
@@ -38,4 +39,9 @@ export function onDecisionContextChange(decisionId, context) {
 
 export function onDecisionCreate(title) {
   return dispatch => dispatch({ type: CREATE_DECISION, payload: { title } });
+}
+
+export function onCurrentDecisionChange(decisionId) {
+  return dispatch =>
+    dispatch({ type: DECISION_SELECT, payload: { decisionId } });
 }

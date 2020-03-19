@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import { onDecisionSelect } from "./redux/actions/controlStateActions";
 
 import { Sidenav, Nav, Dropdown, Icon, Navbar, Sidebar } from "rsuite";
 
@@ -59,6 +61,7 @@ class SideNavInternal extends React.Component {
       expand: !this.state.expand
     });
   }
+
   render() {
     const { expand } = this.state;
     return (
@@ -87,8 +90,8 @@ class SideNavInternal extends React.Component {
                 icon={<Icon icon="list" />}
                 placement="rightStart"
               >
-                {(this.props.decisions || [])
-                  .filter(d => d.title)
+                {this.props.decisionIdsAndTitles
+                  .filter(decision => decision.title)
                   .map(decision => {
                     return (
                       <Dropdown.Item
@@ -113,5 +116,20 @@ class SideNavInternal extends React.Component {
     );
   }
 }
+const mapStateToProps = state => {
+  const { byId, allIds } = state.entities.decisions;
+  const decisionIdsAndTitles = allIds
+    .map(id => byId[id])
+    .map(decision => ({ id: decision.id, title: decision.title }));
+  const currentDecisionId = state.controlState.activeDecision.decisionId;
+  return {
+    decisionIdsAndTitles,
+    currentDecisionId
+  };
+};
 
-export default SideNavInternal;
+const actionCreators = {
+  onDecisionSelect
+};
+
+export default connect(mapStateToProps, actionCreators)(SideNavInternal);

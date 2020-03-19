@@ -31,24 +31,6 @@ import {
 import { connect } from "react-redux";
 import DecisionTitle from "./components/DecisionTitle";
 
-const actionCreators = {
-  fetchDecisions,
-  onDecisionTitleChange,
-  onDecisionCreate,
-  onDecisionContextChange
-};
-
-const mapStateToProps = state => {
-  const decisions = state.decisionsReducer.decisions;
-  const lastDecision = decisions[decisions.length - 1];
-  //setting last decision in the list as current. may need to modify later. most recently edited?
-  const currentDecisionId = lastDecision ? lastDecision.id : undefined;
-  return {
-    decisions,
-    currentDecisionId
-  };
-};
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -70,9 +52,7 @@ class App extends React.Component {
   };
 
   findCurrentDecisionInState(state) {
-    return state.decisions.find(
-      decision => decision.id === state.currentDecisionId
-    );
+    return state.decisions.byId[state.currentDecisionId];
   }
 
   findVariableInDecision(variableId, decision) {
@@ -252,6 +232,7 @@ class App extends React.Component {
 
   render() {
     console.log("rendering");
+    const { byId, allIds } = this.props.decisions;
     const decision = this.findCurrentDecisionInState(this.props);
     if (!decision) {
       //todo: show a spinner when integrated with the backend
@@ -261,7 +242,7 @@ class App extends React.Component {
       <div>
         <Container>
           <SideNavInternal
-            decisions={this.props.decisions}
+            decisions={[]}
             currentDecisionId={this.props.currentDecisionId}
             onDecisionSelect={this.handleCurrentDecisionChange}
           />
@@ -373,5 +354,22 @@ class App extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  console.log("passed state", state);
+  const decisions = state.entities.decisions;
+  const currentDecisionId = state.controlState.activeDecision.decisionId;
+  return {
+    decisions,
+    currentDecisionId
+  };
+};
+
+const actionCreators = {
+  fetchDecisions,
+  onDecisionTitleChange,
+  onDecisionCreate,
+  onDecisionContextChange
+};
 
 export default connect(mapStateToProps, actionCreators)(App);
