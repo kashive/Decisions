@@ -4,51 +4,50 @@ import {
   CREATE_DECISION,
   DECISION_CONTEXT_CHANGE
 } from "../actionTypes";
-import uuid from "uuid";
 import produce from "immer";
 
 const initialState = {
   byId: {},
   allIds: []
 };
-const findDecisionById = (decisions, decisionId) => {
-  return decisions.find(decision => decision.id === decisionId);
-};
 
 export function decisionsReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_DECISIONS_SUCCESS: {
-      console.log("fetch success with action", action);
-      return action.payload.decisions;
-      // return produce(state, draft => {
-      //   draft.decisions = action.payload.decisions;
-      // });
+      return produce(state, draft => {
+        //for now data is same but once api is implmented then may need to renormalize
+        //see: https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape
+        const { byId, allIds } = action.payload.decisions;
+        draft.byId = byId;
+        draft.allIds = allIds;
+      });
     }
-    // case DECISION_TITLE_CHANGE: {
-    //   const { decisionId, title } = action.payload;
-    //   return produce(state, draft => {
-    //     const decision = findDecisionById(draft.decisions, decisionId);
-    //     decision.title = title;
-    //   });
-    // }
-    // case CREATE_DECISION: {
-    //   return produce(state, draft => {
-    //     const decisionId = uuid.v4();
-    //     draft.decisions.push({
-    //       id: decisionId,
-    //       title: action.payload.title,
-    //       variables: [],
-    //       options: []
-    //     });
-    //   });
-    // }
-    // case DECISION_CONTEXT_CHANGE: {
-    //   const { decisionId, context } = action.payload;
-    //   return produce(state, draft => {
-    //     const currentDecision = findDecisionById(draft.decisions, decisionId);
-    //     currentDecision.context = context;
-    //   });
-    // }
+    case DECISION_TITLE_CHANGE: {
+      const { id, title } = action.payload;
+      return produce(state, draft => {
+        const decision = draft.byId[id];
+        decision.title = title;
+      });
+    }
+    case DECISION_CONTEXT_CHANGE: {
+      const { id, context } = action.payload;
+      return produce(state, draft => {
+        const currentDecision = draft.byId[id];
+        currentDecision.context = context;
+      });
+    }
+    case CREATE_DECISION: {
+      return produce(state, draft => {
+        const { id, title } = action.payload;
+        draft.byId[id] = {
+          id: id,
+          title: title,
+          variables: [],
+          options: []
+        };
+        draft.allIds.push(id);
+      });
+    }
     default:
       return state;
   }

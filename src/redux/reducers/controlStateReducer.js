@@ -1,4 +1,8 @@
-import { FETCH_DECISIONS_SUCCESS, DECISION_SELECT } from "../actionTypes";
+import {
+  FETCH_DECISIONS_SUCCESS,
+  DECISION_SELECT,
+  CREATE_DECISION
+} from "../actionTypes";
 import { produce } from "immer";
 
 const initialState = {
@@ -13,9 +17,10 @@ export function controlStateReducer(state = initialState, action) {
         draft.decisionId = decisionIds[decisionIds.length - 1];
       });
     }
-    case DECISION_SELECT: {
+    case DECISION_SELECT:
+    case CREATE_DECISION: {
       return produce(state, draft => {
-        draft.decisionId = action.payload.decisionId;
+        draft.decisionId = action.payload.id;
       });
     }
     default:

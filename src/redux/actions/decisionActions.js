@@ -7,6 +7,7 @@ import {
   DECISION_CONTEXT_CHANGE,
   DECISION_SELECT
 } from "../actionTypes";
+import uuid from "uuid";
 
 export function fetchDecisions(userId) {
   return dispatch => {
@@ -24,21 +25,23 @@ export const fetchDecisionsSuccess = decisions => ({
   payload: { decisions }
 });
 
-export function onDecisionTitleChange(decisionId, title) {
+export function onDecisionTitleChange(id, title) {
   return dispatch =>
-    dispatch({ type: DECISION_TITLE_CHANGE, payload: { decisionId, title } });
+    dispatch({ type: DECISION_TITLE_CHANGE, payload: { id, title } });
 }
 
-export function onDecisionContextChange(decisionId, context) {
+export function onDecisionContextChange(id, context) {
   return dispatch =>
     dispatch({
       type: DECISION_CONTEXT_CHANGE,
-      payload: { decisionId, context }
+      payload: { id, context }
     });
 }
 
 export function onDecisionCreate(title) {
-  return dispatch => dispatch({ type: CREATE_DECISION, payload: { title } });
+  return dispatch => {
+    dispatch({ type: CREATE_DECISION, payload: { title, id: uuid.v4() } });
+  };
 }
 
 export function onCurrentDecisionChange(decisionId) {

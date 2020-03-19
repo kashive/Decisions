@@ -232,20 +232,17 @@ class App extends React.Component {
 
   render() {
     console.log("rendering");
-    const { byId, allIds } = this.props.decisions;
-    const decision = this.findCurrentDecisionInState(this.props);
-    if (!decision) {
+    const currentDecisionId = this.props.currentDecisionId;
+    if (!currentDecisionId) {
       //todo: show a spinner when integrated with the backend
       return <div>Loading...</div>;
     }
+    const { byId } = this.props.decisions;
+    const decision = byId[currentDecisionId];
     return (
       <div>
         <Container>
-          <SideNavInternal
-            decisions={[]}
-            currentDecisionId={this.props.currentDecisionId}
-            onDecisionSelect={this.handleCurrentDecisionChange}
-          />
+          <SideNavInternal />
           <Container
             style={{
               backgroundColor: "#f8f9fa",
