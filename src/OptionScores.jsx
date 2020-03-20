@@ -1,8 +1,13 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import CustomSlider from "./CustomSlider";
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import "./table.less";
 import styled from "styled-components";
+import {
+  onOptionScoreChange,
+  onOptionScoreReasoningChange
+} from "./redux/actions/optionScoreActions";
 
 const HighlightableRow = styled.tr`
   background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
@@ -36,12 +41,12 @@ class OptionScores extends Component {
             </tr>
           </thead>
           <tbody>
-            {(this.props.variableScores || []).map(variableScore => {
+            {this.props.variableScoresTableData.map(vs => {
               return (
                 <HighlightableRow
-                  key={variableScore.variableId}
+                  key={vs.variableScoreId}
                   isHighlightOn={
-                    variableScore.variableId === this.state.rowNumWithHighlight
+                    vs.variableScoreId === this.state.rowNumWithHighlight
                   }
                 >
                   <td>
@@ -50,27 +55,25 @@ class OptionScores extends Component {
                       className="pointerOnHover"
                       onClick={this.props.scrollToVariableTable}
                     >
-                      {variableScore.variableName}
+                      {vs.variableName}
                     </span>
                   </td>
                   <td>
                     <CustomSlider
-                      value={variableScore.score}
-                      onHandleMove={this.props.onScoreChange.bind(
+                      value={vs.score}
+                      onHandleMove={this.props.onOptionScoreChange.bind(
                         this,
-                        this.props.optionId,
-                        variableScore.variableId
+                        vs.variableScoreId
                       )}
                     />
                   </td>
                   <td>
                     <BorderedInlineTextEdit
-                      text={variableScore.reasoning}
+                      text={vs.reasoning}
                       placeholderText="Please explain the reasoning behind the score"
-                      handleTextChange={this.props.onScoreReasoningChange.bind(
+                      handleTextChange={this.props.onOptionScoreReasoningChange.bind(
                         this,
-                        this.props.optionId,
-                        variableScore.variableId
+                        vs.variableScoreId
                       )}
                       padding="5px"
                       expandWithContent={false}
@@ -78,7 +81,7 @@ class OptionScores extends Component {
                       autoSelectOnFocus={false}
                       onBorderVisible={this.handleHighlightOn.bind(
                         this,
-                        variableScore.variableId
+                        vs.variableScoreId
                       )}
                       onBorderInvisible={this.handleHighlightOff}
                     />
@@ -93,4 +96,32 @@ class OptionScores extends Component {
   }
 }
 
-export default OptionScores;
+const mapStateToProps = (state, myProps) => {
+  const { options, variables, variableScores } = state.entities;
+
+  const variableScoresTableData = options.allIds
+    .filter(optId => optId === myProps.optionId)
+    .map(id => options.byId[id].variableScores)
+    .flat(1)
+    .map(vsId => variableScores.byId[vsId])
+    .map(vs => {
+      const toReturn = {
+        variableScoreId: vs.id,
+        score: vs.score,
+        reasoning: vs.reasoning,
+        variableName: variables.byId[vs.variableId].name
+      };
+      return toReturn;
+    });
+
+  return {
+    variableScoresTableData
+  };
+};
+
+const actionCreators = {
+  onOptionScoreChange,
+  onOptionScoreReasoningChange
+};
+
+export default connect(mapStateToProps, actionCreators)(OptionScores);

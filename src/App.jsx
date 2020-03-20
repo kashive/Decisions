@@ -55,111 +55,6 @@ class App extends React.Component {
     return state.decisions.byId[state.currentDecisionId];
   }
 
-  findVariableInDecision(variableId, decision) {
-    return decision.variables.find(v => v.id === variableId);
-  }
-
-  getVariableInCurrentDecision(state, variableId) {
-    const currentDecision = this.findCurrentDecisionInState(state);
-    return this.findVariableInDecision(variableId, currentDecision);
-  }
-
-  handleVariableWeightChange = (variableId, weight) => {
-    this.setState(
-      produce(draft => {
-        const variable = this.getVariableInCurrentDecision(draft, variableId);
-        variable.weight = weight;
-      })
-    );
-  };
-
-  handleVariableNameChange = (variableId, name) => {
-    this.setState(
-      produce(draft => {
-        const variable = this.getVariableInCurrentDecision(draft, variableId);
-        variable.name = name;
-      })
-    );
-  };
-
-  handleVariableDescriptionChange = (variableId, description) => {
-    this.setState(
-      produce(draft => {
-        const variable = this.getVariableInCurrentDecision(draft, variableId);
-        variable.description = description;
-      })
-    );
-  };
-
-  handleAddNewVariable = () => {
-    //if there is a variable that is has no name then don't create a new one
-    const currentDecision = this.findCurrentDecisionInState(this.props);
-    const variableWithNoName = currentDecision.variables.find(
-      variable => !variable.name
-    );
-    if (variableWithNoName) return;
-    this.setState(
-      produce(draft => {
-        const id = uuid.v4();
-        const newDecision = this.findCurrentDecisionInState(draft);
-        newDecision.variables.push({
-          id: id
-        });
-        //also add it variable to all the options
-        //todo: do this only when variable has a name
-        newDecision.options.forEach(opt =>
-          opt.variableScores.push({ variableId: id })
-        );
-      })
-    );
-  };
-
-  handleVariableRemove = variableId => {
-    this.setState(
-      produce(draft => {
-        const decision = this.findCurrentDecisionInState(draft);
-        decision.variables = decision.variables.filter(
-          v => v.id !== variableId
-        );
-        //also remove all the varible scores with this variable id
-        const options = decision.options;
-        for (var i = 0; i < options.length; i++) {
-          const option = options[i];
-          const remainingScores = option.variableScores.filter(vs => {
-            return vs.variableId !== variableId;
-          });
-          option.variableScores = remainingScores;
-        }
-      })
-    );
-  };
-
-  findOptionInCurrentDecision(optionId, state) {
-    const decision = this.findCurrentDecisionInState(state);
-    return decision.options.find(opt => opt.id === optionId);
-  }
-
-  handleOptionsNameChange = (optionId, name) => {
-    this.setState(
-      produce(draft => {
-        const option = this.findOptionInCurrentDecision(optionId, draft);
-        option.name = name;
-      })
-    );
-  };
-
-  handleVariableScoreChange = (optionId, variableId, score) => {
-    this.setState(
-      produce(draft => {
-        const option = this.findOptionInCurrentDecision(optionId, draft);
-        const variable = option.variableScores.find(
-          vs => vs.variableId === variableId
-        );
-        variable.score = score;
-      })
-    );
-  };
-
   handleAddNewOption = () => {
     //there are multiple calls to findCurrentDecisionInState in this method
     //react always renders when you call the .setState so preventing that in
@@ -179,38 +74,6 @@ class App extends React.Component {
           id: uuid.v4(),
           variableScores: variableScores
         });
-      })
-    );
-  };
-
-  handleRemoveOption = optionId => {
-    this.setState(
-      produce(draft => {
-        const decision = this.findCurrentDecisionInState(draft);
-        decision.options = decision.options.filter(
-          option => option.id !== optionId
-        );
-      })
-    );
-  };
-
-  handleOptionsDescriptionChange = (optionId, description) => {
-    this.setState(
-      produce(draft => {
-        const option = this.findOptionInCurrentDecision(optionId, draft);
-        option.description = description;
-      })
-    );
-  };
-
-  handleVariableResoningChange = (optionId, variableId, reasoning) => {
-    this.setState(
-      produce(draft => {
-        const option = this.findOptionInCurrentDecision(optionId, draft);
-        const variable = option.variableScores.find(
-          vs => vs.variableId === variableId
-        );
-        variable.reasoning = reasoning;
       })
     );
   };
@@ -311,16 +174,7 @@ class App extends React.Component {
                   />
                 </Panel>
                 <Panel ref={this.variablesPanelRef} header="Variables">
-                  <VariablesTable
-                    options={decision.options}
-                    onHandleMove={this.handleVariableWeightChange}
-                    handleNameChange={this.handleVariableNameChange}
-                    handleAddNewVariable={this.handleAddNewVariable}
-                    handleVariableRemove={this.handleVariableRemove}
-                    handleDescriptionChange={
-                      this.handleVariableDescriptionChange
-                    }
-                  />
+                  <VariablesTable />
                 </Panel>
                 <Panel header="Options">
                   <Button
@@ -331,13 +185,7 @@ class App extends React.Component {
                     Add New Option
                   </Button>
                   <Options
-                    options={decision.options}
-                    variables={decision.variables}
-                    onNameChange={this.handleOptionsNameChange}
-                    onScoreChange={this.handleVariableScoreChange}
-                    onScoreReasoningChange={this.handleVariableResoningChange}
-                    onDescriptionChange={this.handleOptionsDescriptionChange}
-                    onRemoveOption={this.handleRemoveOption}
+                    decisionId={decision.id}
                     scrollToVariableTable={this.scrollToVariableTable}
                   />
                 </Panel>

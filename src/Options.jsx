@@ -1,8 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
 import { Panel, Badge, Whisper, Tooltip, Icon } from "rsuite";
 import FroalaEditor from "react-froala-wysiwyg";
 import OptionScores from "./OptionScores";
+import {
+  onOptionNameChange,
+  onOptionDescriptionChange,
+  onOptionRemove
+} from "./redux/actions/optionActions";
 
 const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
   return (
@@ -38,61 +44,91 @@ const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
 };
 
 const calculateScore = (option, variables) => {
-  return (option.variableScores || [])
-    .map(vs => {
-      const variableId = vs.variableId;
-      const variable = variables.find(v => v.id === variableId);
-      return (vs.score || 0) * (variable.weight || 0);
-    })
-    .reduce((a, b) => a + b, 0);
+  return 0;
+  //   return (option.variableScores || [])
+  //     .map(vs => {
+  //       const variableId = vs.variableId;
+  //       const variable = variables.find(v => v.id === variableId);
+  //       return (vs.score || 0) * (variable.weight || 0);
+  //     })
+  //     .reduce((a, b) => a + b, 0);
 };
 
 function Options(props) {
+  const { allIds, byId } = props.options;
   return (
     <div>
-      {(props.options || []).map(option => {
-        return (
-          <Panel
-            key={option.id}
-            header={OptionHeader(
-              option.name,
-              calculateScore(option, props.variables),
-              props.onNameChange.bind(this, option.id),
-              props.onRemoveOption.bind(this, option.id)
-            )}
-          >
-            <Panel header="Description">
-              <FroalaEditor
-                model={option.description}
-                onModelChange={props.onDescriptionChange.bind(this, option.id)}
-                config={{
-                  placeholderText: "Tell us more about the option"
-                }}
-              />
+      {allIds
+        .map(id => byId[id])
+        .map(option => {
+          return (
+            <Panel
+              key={option.id}
+              header={OptionHeader(
+                option.name,
+                calculateScore(option, props.variables),
+                props.onOptionNameChange.bind(this, option.id),
+                props.onOptionRemove.bind(
+                  this,
+                  option.id,
+                  option.decisionId,
+                  option.variableScores
+                )
+              )}
+            >
+              <Panel header="Description">
+                <FroalaEditor
+                  model={option.description}
+                  onModelChange={props.onOptionDescriptionChange.bind(
+                    this,
+                    option.id
+                  )}
+                  config={{
+                    placeholderText: "Tell us more about the option"
+                  }}
+                />
+              </Panel>
+              <Panel header="Variable Scores">
+                <OptionScores
+                  scrollToVariableTable={props.scrollToVariableTable}
+                  optionId={option.id}
+                />
+              </Panel>
             </Panel>
-            <Panel header="Variable Scores">
-              <OptionScores
-                scrollToVariableTable={props.scrollToVariableTable}
-                onScoreReasoningChange={props.onScoreReasoningChange}
-                onScoreChange={props.onScoreChange}
-                optionId={option.id}
-                variableScores={(option.variableScores || []).map(vs => {
-                  const variable = props.variables.find(
-                    v => v.id === vs.variableId
-                  );
-                  return {
-                    variableId: vs.variableId,
-                    variableName: variable.name,
-                    score: vs.score,
-                    reasoning: vs.reasoning
-                  };
-                })}
-              />
-            </Panel>
-          </Panel>
-        );
-      })}
+          );
+        })}
     </div>
   );
 }
-export default Options;
+
+const mapStateToProps = (state, myProps) => {
+  const { options, variables, variableScores } = state.entities;
+
+  const variableScoresTableData = options.allIds
+    .map(id => options.byId[id])
+    .filter(opt => opt.decisionId === myProps.decisionId)
+    .map(opt => opt.variableScores)
+    .flat(1)
+    .map(vsId => variableScores.byId[vsId])
+    .map(vs => {
+      return {
+        variableScoreId: vs.id,
+        score: vs.score,
+        reasoning: vs.reasoning,
+        variableName: variables.byId[vs.variableId].name
+      };
+    });
+
+  return {
+    options,
+    variableScoresTableData
+  };
+};
+
+const actionCreators = {
+  onOptionNameChange,
+  onOptionDescriptionChange,
+  onOptionRemove
+};
+
+export default connect(mapStateToProps, actionCreators)(Options);

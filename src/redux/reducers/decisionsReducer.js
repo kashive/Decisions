@@ -4,7 +4,8 @@ import {
   CREATE_DECISION,
   DECISION_CONTEXT_CHANGE,
   CREATE_VARIABLE,
-  VARIABLE_REMOVE
+  VARIABLE_REMOVE,
+  OPTION_REMOVE
 } from "../actionTypes";
 import produce from "immer";
 
@@ -63,6 +64,13 @@ export function decisionsReducer(state = initialState, action) {
         draft.byId[decisionId].variables = variables.filter(
           id => id !== variableId
         );
+      });
+    }
+    case OPTION_REMOVE: {
+      return produce(state, draft => {
+        const { decisionId, optionId } = action.payload;
+        const options = draft.byId[decisionId].options;
+        draft.byId[decisionId].options = options.filter(id => id !== optionId);
       });
     }
     default:

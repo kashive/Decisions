@@ -3,6 +3,9 @@ import { controlStateReducer } from "./controlStateReducer";
 import { globalEntitiesReducer } from "./entitiesReducer";
 import { APP_MOUNT_SUCCESS } from "../actionTypes";
 import { variablesReducer } from "./variablesReducer";
+import { optionsReducer } from "./optionsReducer";
+import { NORMALIZED_DUMMY_STATE } from "../../DummyState";
+import { optionScoresReducer } from "./optionScoresReducer";
 
 export default function rootReducer(state, action) {
   var resp;
@@ -17,7 +20,12 @@ export default function rootReducer(state, action) {
       resp = {
         entities: {
           decisions: decisionsReducer(state.entities.decisions, action),
-          variables: variablesReducer(state.entities.variables, action)
+          variables: variablesReducer(state.entities.variables, action),
+          options: optionsReducer(state.entities.options, action),
+          variableScores: optionScoresReducer(
+            state.entities.variableScores,
+            action
+          )
         },
         controlState: controlStateReducer(state.controlState, action)
       };
