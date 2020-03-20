@@ -107,6 +107,7 @@ class VariablesTable extends Component {
           <tbody>
             {allIds
               .map(id => byId[id])
+              .filter(variable => variable.decisionId === currentDecisionId)
               .map(variable => {
                 return (
                   <HighlightableRow

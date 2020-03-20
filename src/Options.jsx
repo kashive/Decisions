@@ -51,12 +51,13 @@ function Options(props) {
       <Button
         style={{ marginBottom: "15px" }}
         appearance="primary"
-        onClick={props.onOptionCreate.bind(this, props.decisionId)}
+        onClick={props.onOptionCreate.bind(this, props.currentDecisionId)}
       >
         Add New Option
       </Button>
       {allIds
         .map(id => byId[id])
+        .filter(option => option.decisionId === props.currentDecisionId)
         .map(option => {
           return (
             <Panel
@@ -114,9 +115,11 @@ const mapStateToProps = state => {
       return { [option.id]: score };
     })
     .reduce((obj, item) => Object.assign(obj, item), {});
+  const currentDecisionId = state.controlState.decisionId;
   return {
     options,
-    optionScores
+    optionScores,
+    currentDecisionId
   };
 };
 

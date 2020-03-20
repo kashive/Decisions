@@ -176,10 +176,7 @@ class App extends React.Component {
                   <VariablesTable />
                 </Panel>
                 <Panel header="Options">
-                  <Options
-                    decisionId={decision.id}
-                    scrollToVariableTable={this.scrollToVariableTable}
-                  />
+                  <Options scrollToVariableTable={this.scrollToVariableTable} />
                 </Panel>
               </PanelGroup>
             </Content>

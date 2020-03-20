@@ -46,6 +46,7 @@ export function decisionsReducer(state = initialState, action) {
         draft.byId[id] = {
           id: id,
           title: title,
+          context: "",
           variables: [],
           options: []
         };
