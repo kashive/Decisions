@@ -44,17 +44,6 @@ const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
   );
 };
 
-const calculateScore = (option, variables) => {
-  return 0;
-  //   return (option.variableScores || [])
-  //     .map(vs => {
-  //       const variableId = vs.variableId;
-  //       const variable = variables.find(v => v.id === variableId);
-  //       return (vs.score || 0) * (variable.weight || 0);
-  //     })
-  //     .reduce((a, b) => a + b, 0);
-};
-
 function Options(props) {
   const { allIds, byId } = props.options;
   return (
@@ -74,7 +63,7 @@ function Options(props) {
               key={option.id}
               header={OptionHeader(
                 option.name,
-                calculateScore(option, props.variables),
+                props.optionScores[option.id],
                 props.onOptionNameChange.bind(this, option.id),
                 props.onOptionRemove.bind(
                   this,
@@ -109,27 +98,25 @@ function Options(props) {
   );
 }
 
-const mapStateToProps = (state, myProps) => {
+const mapStateToProps = state => {
   const { options, variables, variableScores } = state.entities;
-
-  const variableScoresTableData = options.allIds
-    .map(id => options.byId[id])
-    .filter(opt => opt.decisionId === myProps.decisionId)
-    .map(opt => opt.variableScores)
-    .flat(1)
-    .map(vsId => variableScores.byId[vsId])
-    .map(vs => {
-      return {
-        variableScoreId: vs.id,
-        score: vs.score,
-        reasoning: vs.reasoning,
-        variableName: variables.byId[vs.variableId].name
-      };
-    });
-
+  const optionScores = options.allIds
+    .map(optionId => options.byId[optionId])
+    .map(option => {
+      const score = option.variableScores
+        .map(vsId => variableScores.byId[vsId])
+        .map(vs => {
+          const weight = variables.byId[vs.variableId].weight || 0;
+          const score = vs.score || 0;
+          return weight * score;
+        })
+        .reduce((a, b) => a + b, 0);
+      return { [option.id]: score };
+    })
+    .reduce((obj, item) => Object.assign(obj, item), {});
   return {
     options,
-    variableScoresTableData
+    optionScores
   };
 };
 
