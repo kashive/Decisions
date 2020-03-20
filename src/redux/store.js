@@ -12,9 +12,18 @@ export default createStore(
         byId: {},
         allIds: []
       },
-      variables: {},
-      options: {},
-      variableScores: {}
+      variables: {
+        byId: {},
+        allIds: []
+      },
+      options: {
+        byId: {},
+        allIds: []
+      },
+      variableScores: {
+        byId: {},
+        allIds: []
+      }
     },
     controlState: {
       decisionId: undefined

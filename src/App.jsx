@@ -10,7 +10,6 @@ import {
   Content,
   PanelGroup,
   Panel,
-  Button,
   ButtonToolbar,
   Icon,
   IconButton,
@@ -177,13 +176,6 @@ class App extends React.Component {
                   <VariablesTable />
                 </Panel>
                 <Panel header="Options">
-                  <Button
-                    style={{ marginBottom: "15px" }}
-                    appearance="primary"
-                    onClick={this.handleAddNewOption}
-                  >
-                    Add New Option
-                  </Button>
                   <Options
                     decisionId={decision.id}
                     scrollToVariableTable={this.scrollToVariableTable}

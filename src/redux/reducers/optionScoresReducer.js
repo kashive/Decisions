@@ -1,7 +1,8 @@
 import {
   OPTION_SCORE_CHANGE,
   OPTION_SCORE_REASONING_CHANGE,
-  OPTION_REMOVE
+  OPTION_REMOVE,
+  CREATE_OPTION
 } from "../actionTypes";
 import { produce } from "immer";
 
@@ -28,6 +29,15 @@ export function optionScoresReducer(state, action) {
         draft.allIds = draft.allIds.filter(
           id => !variableScoreIds.includes(id)
         );
+      });
+    }
+    case CREATE_OPTION: {
+      const { variableScores } = action.payload;
+      return produce(state, draft => {
+        variableScores.forEach(vs => {
+          draft.byId[vs.id] = vs;
+          draft.allIds.push(vs.id);
+        });
       });
     }
     default:

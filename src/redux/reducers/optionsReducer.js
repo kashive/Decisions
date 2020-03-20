@@ -1,7 +1,8 @@
 import {
   OPTION_NAME_CHANGE,
   OPTION_DESCRIPTION_CHANGE,
-  OPTION_REMOVE
+  OPTION_REMOVE,
+  CREATE_OPTION
 } from "../actionTypes";
 import { produce } from "immer";
 
@@ -24,6 +25,17 @@ export function optionsReducer(state, action) {
       return produce(state, draft => {
         delete draft.byId[optionId];
         draft.allIds = draft.allIds.filter(id => id !== optionId);
+      });
+    }
+    case CREATE_OPTION: {
+      const { optionId, decisionId, variableScores } = action.payload;
+      return produce(state, draft => {
+        draft.byId[optionId] = {
+          id: optionId,
+          decisionId,
+          variableScores: variableScores.map(vs => vs.id)
+        };
+        draft.allIds.unshift(optionId);
       });
     }
     default:

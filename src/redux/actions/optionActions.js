@@ -1,8 +1,10 @@
 import {
   OPTION_NAME_CHANGE,
   OPTION_DESCRIPTION_CHANGE,
-  OPTION_REMOVE
+  OPTION_REMOVE,
+  CREATE_OPTION
 } from "../actionTypes";
+import uuid from "uuid";
 
 export function onOptionNameChange(id, name) {
   return dispatch => {
@@ -24,6 +26,27 @@ export function onOptionRemove(optionId, decisionId, variableScoreIds) {
     dispatch({
       type: OPTION_REMOVE,
       payload: { optionId, decisionId, variableScoreIds }
+    });
+  };
+}
+
+export function onOptionCreate(decisionId) {
+  return (dispatch, getState) => {
+    const optionId = uuid.v4();
+    const { allIds, byId } = getState().entities.variables;
+    const variableScores = allIds
+      .map(variableId => byId[variableId])
+      .filter(variable => variable.decisionId === decisionId)
+      .map(variable => {
+        return {
+          id: uuid.v4(),
+          optionId,
+          variableId: variable.id
+        };
+      });
+    dispatch({
+      type: CREATE_OPTION,
+      payload: { decisionId, optionId, variableScores }
     });
   };
 }

@@ -4,7 +4,6 @@ import { globalEntitiesReducer } from "./entitiesReducer";
 import { APP_MOUNT_SUCCESS } from "../actionTypes";
 import { variablesReducer } from "./variablesReducer";
 import { optionsReducer } from "./optionsReducer";
-import { NORMALIZED_DUMMY_STATE } from "../../DummyState";
 import { optionScoresReducer } from "./optionScoresReducer";
 
 export default function rootReducer(state, action) {

@@ -1,13 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
-import { Panel, Badge, Whisper, Tooltip, Icon } from "rsuite";
+import { Panel, Badge, Whisper, Tooltip, Icon, Button } from "rsuite";
 import FroalaEditor from "react-froala-wysiwyg";
 import OptionScores from "./OptionScores";
 import {
   onOptionNameChange,
   onOptionDescriptionChange,
-  onOptionRemove
+  onOptionRemove,
+  onOptionCreate
 } from "./redux/actions/optionActions";
 
 const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
@@ -58,6 +59,13 @@ function Options(props) {
   const { allIds, byId } = props.options;
   return (
     <div>
+      <Button
+        style={{ marginBottom: "15px" }}
+        appearance="primary"
+        onClick={props.onOptionCreate.bind(this, props.decisionId)}
+      >
+        Add New Option
+      </Button>
       {allIds
         .map(id => byId[id])
         .map(option => {
@@ -128,7 +136,8 @@ const mapStateToProps = (state, myProps) => {
 const actionCreators = {
   onOptionNameChange,
   onOptionDescriptionChange,
-  onOptionRemove
+  onOptionRemove,
+  onOptionCreate
 };
 
 export default connect(mapStateToProps, actionCreators)(Options);

@@ -4,7 +4,8 @@ import {
   VARIABLE_DESCRIPTION_CHANGE,
   VARIABLE_WEIGHT_CHANGE,
   VARIABLE_REMOVE,
-  OPTION_REMOVE
+  OPTION_REMOVE,
+  CREATE_OPTION
 } from "../actionTypes";
 import produce from "immer";
 
@@ -57,6 +58,15 @@ export function variablesReducer(state, action) {
               optId => optId !== optionId
             );
           });
+      });
+    }
+    case CREATE_OPTION: {
+      const { optionId, decisionId } = action.payload;
+      return produce(state, draft => {
+        draft.allIds
+          .map(variableId => draft.byId[variableId])
+          .filter(variable => variable.decisionId === decisionId)
+          .forEach(variable => variable.options.push(optionId));
       });
     }
     default:
