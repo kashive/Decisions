@@ -2,7 +2,9 @@ import {
   OPTION_NAME_CHANGE,
   OPTION_DESCRIPTION_CHANGE,
   OPTION_REMOVE,
-  CREATE_OPTION
+  CREATE_OPTION,
+  CREATE_VARIABLE,
+  VARIABLE_REMOVE
 } from "../actionTypes";
 import { produce } from "immer";
 
@@ -36,6 +38,27 @@ export function optionsReducer(state, action) {
           variableScores: variableScores.map(vs => vs.id)
         };
         draft.allIds.unshift(optionId);
+      });
+    }
+    case CREATE_VARIABLE: {
+      const { variableScores } = action.payload;
+      return produce(state, draft => {
+        variableScores.forEach(vs =>
+          draft.byId[vs.optionId].variableScores.push(vs.id)
+        );
+      });
+    }
+    case VARIABLE_REMOVE: {
+      const { variableScores } = action.payload;
+      return produce(state, draft => {
+        const { byId, allIds } = draft;
+        allIds
+          .map(optId => byId[optId])
+          .forEach(opt => {
+            opt.variableScores = opt.variableScores.filter(
+              vsId => !variableScores.includes(vsId)
+            );
+          });
       });
     }
     default:

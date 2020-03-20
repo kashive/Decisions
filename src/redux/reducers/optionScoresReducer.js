@@ -2,7 +2,8 @@ import {
   OPTION_SCORE_CHANGE,
   OPTION_SCORE_REASONING_CHANGE,
   OPTION_REMOVE,
-  CREATE_OPTION
+  CREATE_OPTION,
+  CREATE_VARIABLE
 } from "../actionTypes";
 import { produce } from "immer";
 
@@ -31,6 +32,7 @@ export function optionScoresReducer(state, action) {
         );
       });
     }
+    case CREATE_VARIABLE:
     case CREATE_OPTION: {
       const { variableScores } = action.payload;
       return produce(state, draft => {
