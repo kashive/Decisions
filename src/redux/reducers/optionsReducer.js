@@ -4,7 +4,9 @@ import {
   OPTION_REMOVE,
   CREATE_OPTION,
   CREATE_VARIABLE,
-  VARIABLE_REMOVE
+  VARIABLE_REMOVE,
+  OPTION_SCORE_CHANGE,
+  OPTION_SCORE_REASONING_CHANGE
 } from "../actionTypes";
 import { produce } from "immer";
 
@@ -22,6 +24,20 @@ export function optionsReducer(state, action) {
         draft.byId[id].description = description;
       });
     }
+    case OPTION_SCORE_REASONING_CHANGE: {
+      const { variableId, optionId, reasoning } = action.payload;
+      return produce(state, draft => {
+        draft.byId[optionId].variableScores.byId[
+          variableId
+        ].reasoning = reasoning;
+      });
+    }
+    case OPTION_SCORE_CHANGE: {
+      const { optionId, variableId, score } = action.payload;
+      return produce(state, draft => {
+        draft.byId[optionId].variableScores.byId[variableId].score = score;
+      });
+    }
     case OPTION_REMOVE: {
       const { optionId } = action.payload;
       return produce(state, draft => {
@@ -30,33 +46,51 @@ export function optionsReducer(state, action) {
       });
     }
     case CREATE_OPTION: {
-      const { optionId, decisionId, variableScores } = action.payload;
+      const { optionId, decisionId, variableIds } = action.payload;
       return produce(state, draft => {
         draft.byId[optionId] = {
           id: optionId,
           decisionId,
-          variableScores: variableScores.map(vs => vs.id)
+          variableScores: {
+            byId: variableIds
+              .map(id => {
+                return { [id]: { variableId: id } };
+              })
+              .reduce((obj, item) => Object.assign(obj, item), {}),
+            allIds: variableIds
+          }
         };
         draft.allIds.unshift(optionId);
       });
     }
     case CREATE_VARIABLE: {
-      const { variableScores } = action.payload;
+      const { variableId } = action.payload;
+
       return produce(state, draft => {
-        variableScores.forEach(vs =>
-          draft.byId[vs.optionId].variableScores.push(vs.id)
-        );
+        const { allIds, byId } = draft;
+        allIds
+          .map(optId => byId[optId])
+          .forEach(opt => {
+            opt.variableScores.byId[variableId] = {
+              variableId
+            };
+            opt.variableScores.allIds.unshift(variableId);
+          });
       });
     }
     case VARIABLE_REMOVE: {
-      const { variableScores } = action.payload;
+      const { decisionId, variableId } = action.payload;
       return produce(state, draft => {
         const { byId, allIds } = draft;
         allIds
           .map(optId => byId[optId])
-          .forEach(opt => {
-            opt.variableScores = opt.variableScores.filter(
-              vsId => !variableScores.includes(vsId)
+          .filter(option => option.decisionId === decisionId)
+          .filter(option => option.variableScores.allIds.includes(variableId))
+          .forEach(option => {
+            delete option.variableScores.byId[variableId];
+            const variableScoresAllIds = option.variableScores.allIds;
+            option.variableScores.allIds = variableScoresAllIds.filter(
+              id => id !== variableId
             );
           });
       });

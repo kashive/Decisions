@@ -2,7 +2,9 @@ import {
   OPTION_NAME_CHANGE,
   OPTION_DESCRIPTION_CHANGE,
   OPTION_REMOVE,
-  CREATE_OPTION
+  CREATE_OPTION,
+  OPTION_SCORE_CHANGE,
+  OPTION_SCORE_REASONING_CHANGE
 } from "../actionTypes";
 import uuid from "uuid";
 
@@ -21,11 +23,11 @@ export function onOptionDescriptionChange(id, description) {
   };
 }
 
-export function onOptionRemove(optionId, decisionId, variableScoreIds) {
+export function onOptionRemove(optionId, decisionId) {
   return dispatch => {
     dispatch({
       type: OPTION_REMOVE,
-      payload: { optionId, decisionId, variableScoreIds }
+      payload: { optionId, decisionId }
     });
   };
 }
@@ -33,20 +35,27 @@ export function onOptionRemove(optionId, decisionId, variableScoreIds) {
 export function onOptionCreate(decisionId) {
   return (dispatch, getState) => {
     const optionId = uuid.v4();
-    const { allIds, byId } = getState().entities.variables;
-    const variableScores = allIds
-      .map(variableId => byId[variableId])
-      .filter(variable => variable.decisionId === decisionId)
-      .map(variable => {
-        return {
-          id: uuid.v4(),
-          optionId,
-          variableId: variable.id
-        };
-      });
+    const variableIds = getState().entities.variables.allIds;
     dispatch({
       type: CREATE_OPTION,
-      payload: { decisionId, optionId, variableScores }
+      payload: { decisionId, optionId, variableIds }
+    });
+  };
+}
+
+export function onOptionScoreChange(variableId, optionId, score) {
+  return dispatch => {
+    dispatch({
+      type: OPTION_SCORE_CHANGE,
+      payload: { variableId, optionId, score }
+    });
+  };
+}
+export function onOptionScoreReasoningChange(variableId, optionId, reasoning) {
+  return dispatch => {
+    dispatch({
+      type: OPTION_SCORE_REASONING_CHANGE,
+      payload: { variableId, optionId, reasoning }
     });
   };
 }

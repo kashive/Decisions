@@ -61,16 +61,10 @@ class VariablesTable extends Component {
   };
 
   openRemoveVariablePopUp = variableId => {
-    //if there are any variable scores with score not undefined with my variableId then show the popup
-    const { allIds, byId } = this.props.variableScores;
-    const variableScores = allIds
-      .map(id => byId[id])
-      .filter(vs => vs.score)
-      .find(vs => vs.variableId === variableId);
-    if (variableScores) {
-      this.setState({ variableDeletePopUpOpen: true });
-    } else if (typeof this.props.onVariableRemove === "function") {
+    if (!this.props.variableIdRemovalConsent[variableId]) {
       this.props.onVariableRemove(this.props.currentDecisionId, variableId);
+    } else {
+      this.setState({ variableDeletePopUpOpen: true });
     }
   };
 
@@ -195,11 +189,26 @@ class VariablesTable extends Component {
 const mapStateToProps = state => {
   const variables = state.entities.variables;
   const currentDecisionId = state.controlState.decisionId;
-  const variableScores = state.entities.variableScores;
+  const allOptions = state.entities.options.allIds;
+  const byOption = state.entities.options.byId;
+
+  const variableIdRemovalConsent = state.entities.variables.allIds
+    .map(variableId => {
+      const optionHasScoreForVariableId =
+        allOptions
+          .map(optId => byOption[optId])
+          .filter(option => variableId in option.variableScores.byId)
+          .filter(option => option.variableScores.byId[variableId].score)
+          .length > 0;
+      return {
+        [variableId]: optionHasScoreForVariableId
+      };
+    })
+    .reduce((obj, item) => Object.assign(obj, item), {});
   return {
     variables,
     currentDecisionId,
-    variableScores
+    variableIdRemovalConsent
   };
 };
 

@@ -66,12 +66,7 @@ function Options(props) {
                 option.name,
                 props.optionScores[option.id],
                 props.onOptionNameChange.bind(this, option.id),
-                props.onOptionRemove.bind(
-                  this,
-                  option.id,
-                  option.decisionId,
-                  option.variableScores
-                )
+                props.onOptionRemove.bind(this, option.id, option.decisionId)
               )}
             >
               <Panel header="Description">
@@ -100,19 +95,20 @@ function Options(props) {
 }
 
 const mapStateToProps = state => {
-  const { options, variables, variableScores } = state.entities;
+  const { options, variables } = state.entities;
   const optionScores = options.allIds
     .map(optionId => options.byId[optionId])
     .map(option => {
-      const score = option.variableScores
-        .map(vsId => variableScores.byId[vsId])
-        .map(vs => {
-          const weight = variables.byId[vs.variableId].weight || 0;
-          const score = vs.score || 0;
+      const { allIds, byId } = option.variableScores;
+      const weightedScore = allIds
+        .map(variableId => byId[variableId])
+        .map(variableScore => {
+          const score = variableScore.score || 0;
+          const weight = variables.byId[variableScore.variableId].weight || 0;
           return weight * score;
         })
         .reduce((a, b) => a + b, 0);
-      return { [option.id]: score };
+      return { [option.id]: weightedScore };
     })
     .reduce((obj, item) => Object.assign(obj, item), {});
   const currentDecisionId = state.controlState.decisionId;

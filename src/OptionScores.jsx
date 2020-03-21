@@ -7,7 +7,7 @@ import styled from "styled-components";
 import {
   onOptionScoreChange,
   onOptionScoreReasoningChange
-} from "./redux/actions/optionScoreActions";
+} from "./redux/actions/optionActions";
 
 const HighlightableRow = styled.tr`
   background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
@@ -44,9 +44,9 @@ class OptionScores extends Component {
             {this.props.variableScoresTableData.map(vs => {
               return (
                 <HighlightableRow
-                  key={vs.variableScoreId}
+                  key={vs.variableId}
                   isHighlightOn={
-                    vs.variableScoreId === this.state.rowNumWithHighlight
+                    vs.variableId === this.state.rowNumWithHighlight
                   }
                 >
                   <td>
@@ -63,7 +63,8 @@ class OptionScores extends Component {
                       value={vs.score}
                       onHandleMove={this.props.onOptionScoreChange.bind(
                         this,
-                        vs.variableScoreId
+                        vs.variableId,
+                        this.props.optionId
                       )}
                     />
                   </td>
@@ -73,7 +74,8 @@ class OptionScores extends Component {
                       placeholderText="Please explain the reasoning behind the score"
                       handleTextChange={this.props.onOptionScoreReasoningChange.bind(
                         this,
-                        vs.variableScoreId
+                        vs.variableId,
+                        this.props.optionId
                       )}
                       padding="5px"
                       expandWithContent={false}
@@ -81,7 +83,7 @@ class OptionScores extends Component {
                       autoSelectOnFocus={false}
                       onBorderVisible={this.handleHighlightOn.bind(
                         this,
-                        vs.variableScoreId
+                        vs.variableId
                       )}
                       onBorderInvisible={this.handleHighlightOff}
                     />
@@ -97,22 +99,17 @@ class OptionScores extends Component {
 }
 
 const mapStateToProps = (state, myProps) => {
-  const { options, variables, variableScores } = state.entities;
-
-  const variableScoresTableData = options.allIds
-    .filter(optId => optId === myProps.optionId)
-    .map(id => options.byId[id].variableScores)
-    .flat(1)
-    .map(vsId => variableScores.byId[vsId])
-    .map(vs => {
-      const toReturn = {
-        variableScoreId: vs.id,
-        score: vs.score,
-        reasoning: vs.reasoning,
-        variableName: variables.byId[vs.variableId].name
-      };
-      return toReturn;
-    });
+  const { options, variables } = state.entities;
+  const variableScores = options.byId[myProps.optionId].variableScores;
+  const variableScoresTableData = variableScores.allIds.map(variableId => {
+    const variableScore = variableScores.byId[variableId];
+    return {
+      variableId,
+      variableName: variables.byId[variableId].name,
+      score: variableScore.score,
+      reasoning: variableScore.reasoning
+    };
+  });
 
   return {
     variableScoresTableData

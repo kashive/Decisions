@@ -10,7 +10,7 @@ import uuid from "uuid";
 export function onVariableCreate(decisionId) {
   return (dispatch, getState) => {
     const { decisions, variables, options } = getState().entities;
-    const variableWithNoName = decisions.byId[decisionId].variables
+    const variableWithNoName = decisions.byId[decisionId].variableIds
       .map(variableId => variables.byId[variableId])
       .find(variable => !variable.name);
     if (!variableWithNoName) {
@@ -51,15 +51,10 @@ export function onVariableWeightChange(id, weight) {
 }
 
 export function onVariableRemove(decisionId, variableId) {
-  return (dispatch, getState) => {
-    const { allIds, byId } = getState().entities.variableScores;
-    const variableScores = allIds
-      .map(vsId => byId[vsId])
-      .filter(vs => vs.variableId == variableId)
-      .map(vs => vs.id);
+  return dispatch => {
     dispatch({
       type: VARIABLE_REMOVE,
-      payload: { decisionId, variableId, variableScores }
+      payload: { decisionId, variableId }
     });
   };
 }

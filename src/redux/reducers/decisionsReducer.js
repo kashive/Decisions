@@ -56,14 +56,14 @@ export function decisionsReducer(state = initialState, action) {
     case CREATE_VARIABLE: {
       return produce(state, draft => {
         const { decisionId, variableId } = action.payload;
-        draft.byId[decisionId].variables.push(variableId);
+        draft.byId[decisionId].variableIds.unshift(variableId);
       });
     }
     case VARIABLE_REMOVE: {
       return produce(state, draft => {
         const { decisionId, variableId } = action.payload;
-        const variables = draft.byId[decisionId].variables;
-        draft.byId[decisionId].variables = variables.filter(
+        const variableIds = draft.byId[decisionId].variableIds;
+        draft.byId[decisionId].variableIds = variableIds.filter(
           id => id !== variableId
         );
       });
@@ -71,8 +71,10 @@ export function decisionsReducer(state = initialState, action) {
     case OPTION_REMOVE: {
       return produce(state, draft => {
         const { decisionId, optionId } = action.payload;
-        const options = draft.byId[decisionId].options;
-        draft.byId[decisionId].options = options.filter(id => id !== optionId);
+        const optionIds = draft.byId[decisionId].optionIds;
+        draft.byId[decisionId].optionIds = optionIds.filter(
+          id => id !== optionId
+        );
       });
     }
     case CREATE_OPTION: {

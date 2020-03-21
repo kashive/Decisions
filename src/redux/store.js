@@ -19,10 +19,6 @@ export default createStore(
       options: {
         byId: {},
         allIds: []
-      },
-      variableScores: {
-        byId: {},
-        allIds: []
       }
     },
     controlState: {
