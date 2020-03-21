@@ -47,10 +47,10 @@ export function decisionsReducer(state = initialState, action) {
           id: id,
           title: title,
           context: "",
-          variables: [],
-          options: []
+          variableIds: [],
+          optionIds: []
         };
-        draft.allIds.push(id);
+        draft.allIds.unshift(id);
       });
     }
     case CREATE_VARIABLE: {
@@ -80,7 +80,7 @@ export function decisionsReducer(state = initialState, action) {
     case CREATE_OPTION: {
       const { optionId, decisionId } = action.payload;
       return produce(state, draft => {
-        draft.byId[decisionId].options.push(optionId);
+        draft.byId[decisionId].optionIds.push(optionId);
       });
     }
     default:

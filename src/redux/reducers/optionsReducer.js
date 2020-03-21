@@ -64,12 +64,13 @@ export function optionsReducer(state, action) {
       });
     }
     case CREATE_VARIABLE: {
-      const { variableId } = action.payload;
+      const { decisionId, variableId } = action.payload;
 
       return produce(state, draft => {
         const { allIds, byId } = draft;
         allIds
           .map(optId => byId[optId])
+          .filter(opt => opt.decisionId === decisionId)
           .forEach(opt => {
             opt.variableScores.byId[variableId] = {
               variableId

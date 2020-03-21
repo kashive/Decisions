@@ -35,7 +35,12 @@ export function onOptionRemove(optionId, decisionId) {
 export function onOptionCreate(decisionId) {
   return (dispatch, getState) => {
     const optionId = uuid.v4();
-    const variableIds = getState().entities.variables.allIds;
+    const { allIds, byId } = getState().entities.variables;
+
+    const variableIds = allIds
+      .map(variableId => byId[variableId])
+      .filter(variable => variable.decisionId === decisionId)
+      .map(variable => variable.id);
     dispatch({
       type: CREATE_OPTION,
       payload: { decisionId, optionId, variableIds }

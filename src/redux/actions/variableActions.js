@@ -15,18 +15,9 @@ export function onVariableCreate(decisionId) {
       .find(variable => !variable.name);
     if (!variableWithNoName) {
       const variableId = uuid.v4();
-      const variableScores = options.allIds
-        .map(optId => options.byId[optId])
-        .map(option => {
-          return {
-            id: uuid.v4(),
-            optionId: option.id,
-            variableId
-          };
-        });
       return dispatch({
         type: CREATE_VARIABLE,
-        payload: { decisionId, variableId, variableScores }
+        payload: { decisionId, variableId }
       });
     }
   };

@@ -96,8 +96,10 @@ function Options(props) {
 
 const mapStateToProps = state => {
   const { options, variables } = state.entities;
+  const currentDecisionId = state.controlState.decisionId;
   const optionScores = options.allIds
     .map(optionId => options.byId[optionId])
+    .filter(option => option.decisionId === currentDecisionId)
     .map(option => {
       const { allIds, byId } = option.variableScores;
       const weightedScore = allIds
@@ -111,7 +113,6 @@ const mapStateToProps = state => {
       return { [option.id]: weightedScore };
     })
     .reduce((obj, item) => Object.assign(obj, item), {});
-  const currentDecisionId = state.controlState.decisionId;
   return {
     options,
     optionScores,
