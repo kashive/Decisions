@@ -35,10 +35,18 @@ export function onOptionRemove(optionId, decisionId) {
 export function onOptionCreate(decisionId) {
   return (dispatch, getState) => {
     const optionId = uuid.v4();
-    const { allIds, byId } = getState().entities.variables;
-
-    const variableIds = allIds
-      .map(variableId => byId[variableId])
+    const { decisions, variables, options } = getState().entities;
+    const optionsById = options.byId;
+    const existingOptionWithNoName =
+      decisions.byId[decisionId].optionIds
+        .map(optId => optionsById[optId])
+        .filter(opt => !opt.name).length > 0;
+    if (existingOptionWithNoName) {
+      return;
+    }
+    const { allIds: variableAllIds, byId: variableById } = variables;
+    const variableIds = variableAllIds
+      .map(variableId => variableById[variableId])
       .filter(variable => variable.decisionId === decisionId)
       .map(variable => variable.id);
     dispatch({
