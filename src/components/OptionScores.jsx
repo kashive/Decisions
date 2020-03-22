@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import CustomSlider from "./CustomSlider";
-import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
-import "./table.less";
+import CustomSlider from "./shared/CustomSlider";
+import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
+import "../styles/table.less";
 import styled from "styled-components";
 import {
   onOptionScoreChange,
   onOptionScoreReasoningChange
-} from "./redux/actions/optionActions";
+} from "../redux/actions/optionActions";
 
 const HighlightableRow = styled.tr`
   background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};

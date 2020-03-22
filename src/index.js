@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./styles/index.css";
 // import "rsuite/dist/styles/rsuite-default.css";
-import "./rsuite.less";
+import "./styles/rsuite.less";
 // Require Editor JS files.
 import "froala-editor/js/froala_editor.pkgd.min.js";
 
@@ -12,7 +12,7 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 
 // Require Font Awesome.
 import "font-awesome/css/font-awesome.css";
-import App from "./App.jsx";
+import App from "./components/App";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 

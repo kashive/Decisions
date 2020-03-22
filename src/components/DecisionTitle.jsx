@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import BorderedInlineTextEdit from "../BorderedInlineTextEdit";
+import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
 
 const StyledTitle = styled.div`
   margin-left: 30px;

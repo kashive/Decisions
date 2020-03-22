@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
+import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
 import { Panel, Badge, Whisper, Tooltip, Icon, Button } from "rsuite";
 import FroalaEditor from "react-froala-wysiwyg";
 import OptionScores from "./OptionScores";
@@ -9,7 +9,7 @@ import {
   onOptionDescriptionChange,
   onOptionRemove,
   onOptionCreate
-} from "./redux/actions/optionActions";
+} from "../redux/actions/optionActions";
 
 const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
   return (

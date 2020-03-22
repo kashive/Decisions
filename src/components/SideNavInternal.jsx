@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { onDecisionSelect } from "./redux/actions/controlStateActions";
+import { onDecisionSelect } from "../redux/actions/controlStateActions";
 
 import { Sidenav, Nav, Dropdown, Icon, Navbar, Sidebar } from "rsuite";
 

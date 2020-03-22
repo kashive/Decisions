@@ -1,4 +1,4 @@
-import { NORMALIZED_DUMMY_STATE } from "../../DummyState";
+import { NORMALIZED_DUMMY_STATE } from "../../data/DummyState";
 import {
   FETCH_DECISIONS_BEGIN,
   FETCH_DECISIONS_SUCCESS,

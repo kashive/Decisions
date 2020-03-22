@@ -20,15 +20,15 @@ import {
 import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
 import Options from "./Options";
-import CreateNewDecisionPopUp from "./components/CreateNewDecisionPopUp";
+import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
 import {
   onDecisionTitleChange,
   onDecisionCreate,
   onDecisionContextChange
-} from "./redux/actions/decisionActions";
-import { appMountSuccess } from "./redux/actions/entitiesActions";
+} from "../redux/actions/decisionActions";
+import { appMountSuccess } from "../redux/actions/entitiesActions";
 import { connect } from "react-redux";
-import DecisionTitle from "./components/DecisionTitle";
+import DecisionTitle from "./DecisionTitle";
 
 class App extends React.Component {
   constructor(props) {

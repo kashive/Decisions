@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import CustomSlider from "./CustomSlider";
-import BorderedInlineTextEdit from "./BorderedInlineTextEdit";
-import "./table.less";
+import CustomSlider from "./shared/CustomSlider";
+import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
+import "../styles/table.less";
 import styled from "styled-components";
 import { Button, Icon, Tooltip, Whisper, Modal } from "rsuite";
 import {
@@ -10,7 +10,7 @@ import {
   onVariableNameChange,
   onVariableDescriptionChange,
   onVariableWeightChange
-} from "./redux/actions/variableActions";
+} from "../redux/actions/variableActions";
 import { connect } from "react-redux";
 
 const HighlightableRow = styled.tr`
