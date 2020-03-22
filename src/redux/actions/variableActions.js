@@ -9,7 +9,7 @@ import uuid from "uuid";
 
 export function onVariableCreate(decisionId) {
   return (dispatch, getState) => {
-    const { decisions, variables, options } = getState().entities;
+    const { decisions, variables } = getState().entities;
     const variableWithNoName = decisions.byId[decisionId].variableIds
       .map(variableId => variables.byId[variableId])
       .find(variable => !variable.name);
