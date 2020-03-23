@@ -20,6 +20,7 @@ import {
 import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
 import Options from "./Options";
+import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
 import {
   onDecisionTitleChange,
@@ -29,6 +30,7 @@ import {
 import { appMountSuccess } from "../redux/actions/entitiesActions";
 import { connect } from "react-redux";
 import DecisionTitle from "./DecisionTitle";
+import Card from "./shared/Card";
 
 class App extends React.Component {
   constructor(props) {
@@ -155,7 +157,21 @@ class App extends React.Component {
                 marginRight: 150
               }}
             >
-              <PanelGroup
+              <Card
+                title={
+                  <BorderedInlineTextEdit
+                    text="This is a description"
+                    placeholderText="Description"
+                    padding="5px"
+                    expandWithContent={false}
+                    multiLine={true}
+                  />
+                }
+                enableDropdown={true}
+                enableFullscreen={true}
+                enableCollapse={true}
+              />
+              {/* <PanelGroup
                 style={{
                   background: "white",
                   height: "85vh",
@@ -178,7 +194,7 @@ class App extends React.Component {
                 <Panel header="Options">
                   <Options scrollToVariableTable={this.scrollToVariableTable} />
                 </Panel>
-              </PanelGroup>
+              </PanelGroup> */}
             </Content>
           </Container>
         </Container>
