@@ -12,9 +12,9 @@ const StyledCard = styled.div`
 
 const CardBody = styled.div`
   padding: 10px;
-  opacity: ${props => (props.isVisible ? 1 : 0)};
-  max-height: ${props => (props.isVisible ? "1000px" : "0")};
-  transition: all 0.5s ease 0.15s;
+  opacity: ${props => (props.isCollapsed ? 1 : 0)};
+  max-height: ${props => (props.isCollapsed ? "1000px" : "0")};
+  transition: all 0.4s ease 0.15s;
   overflow: hidden;
 `;
 
@@ -25,15 +25,16 @@ const StyledTitle = styled.div`
 `;
 
 const CardFooter = styled.div`
-  position: relative;
-  border-top: 1px solid #efefef;
-  height: 20px;
+  position: absolute;
+  top: ${props => (props.isCollapsed ? "70%" : "100%")};
+  left: 50%;
+  transition: all 0.3s ease 0.15s;
 `;
 
 const ExpandIcon = styled(Icon)`
   position: absolute;
   left: 50%;
-  transition: all 0.3s ease 0.15s;
+  transition: all 0.2s ease 0.15s;
   &:hover {
     cursor: pointer;
   }
@@ -46,6 +47,8 @@ const CardHeader = styled.div`
   padding-left: 5px;
   padding-right: 5px;
   color: #333;
+  border-bottom: ${props => (props.isCollapsed ? "1px solid #efefef" : "none")};
+  transition: border-bottom 0.5s ease 0.5s;
 `;
 
 const CardFocus = ({ isVisible, onCancel, content }) => {
@@ -143,7 +146,7 @@ class Card extends Component {
   render() {
     return (
       <StyledCard>
-        <CardHeader>
+        <CardHeader isCollapsed={this.state.isCollapsed}>
           <StyledTitle>{this.props.title}</StyledTitle>
           <CardDropdown dropdownConfig={this.getDropdownConfig()} />
         </CardHeader>
@@ -154,10 +157,10 @@ class Card extends Component {
           }
           content={<Card {...this.getCardFocusParams()} />}
         />
-        <CardBody isVisible={!this.state.isCollapsed}>
+        <CardBody isCollapsed={!this.state.isCollapsed}>
           {this.props.body}
         </CardBody>
-        <CardFooter>
+        <CardFooter isCollapsed={this.state.isCollapsed}>
           <ExpandIcon
             onClick={this.toggleCollapse}
             size="lg"
