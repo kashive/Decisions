@@ -53,7 +53,8 @@ class CustomInlineFroalaEditor extends Component {
   };
 
   //todo: consolidate the setState to one call as it renders everytime
-  handleFocus = () => {
+  handleFocus = event => {
+    event.stopPropagation();
     this.setState({ isEditOn: true });
     this.handlePlaceholderVisibleOnFocus(this.getEditorFromReactRef());
     if (typeof this.props.onFocus === "function") {
