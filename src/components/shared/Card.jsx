@@ -1,23 +1,21 @@
 import React, { Component } from "react";
 import { Icon, Dropdown, Modal } from "rsuite";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import produce from "immer";
 import "../../styles/card.less";
-
-const BOLD_COLOR = "#333";
 
 const StyledCard = styled.div`
   background-color: white;
   border: 1px solid #efefef;
+  position: relative;
 `;
 
 const CardBody = styled.div`
   margin-top: 5px;
   margin-left: 10px;
   padding-left: 5px;
-  padding-right: 5px;
   opacity: ${props => (props.isVisible ? 1 : 0)};
-  height: ${props => (props.isVisible ? "300px" : "0")};
+  max-height: ${props => (props.isVisible ? "1000px" : "0")};
   transition: all 0.5s ease 0.15s;
   overflow: hidden;
 `;
@@ -25,20 +23,31 @@ const CardBody = styled.div`
 const StyledTitle = styled.div`
   font-weight: bold;
   line-height: 1.3;
-  color: ${BOLD_COLOR};
   font-size: 18px;
 `;
 
-const SameLineLeftRightFloat = styled.div`
-  display: flex;
-  justify-content: space-between;
+const CardFooter = styled.div`
+  position: relative;
+  border-top: 1px solid #efefef;
+  height: 20px;
+  background-color: #f7f8f9;
 `;
 
-const CardHeaderContainer = styled.div`
+const ExpandIcon = styled(Icon)`
+  position: absolute;
+  left: 50%;
   &:hover {
     cursor: pointer;
-    //background-color: #f7f8f9;
   }
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333;
 `;
 
 const CardFocus = ({ isVisible, onCancel, content }) => {
@@ -61,7 +70,7 @@ const CardDropdown = ({ dropdownConfig }) => {
   return (
     <Dropdown
       renderTitle={() => {
-        return <Icon style={{ color: BOLD_COLOR }} icon="ellipsis-h" />;
+        return <Icon icon="ellipsis-h" />;
       }}
       trigger="hover"
       placement="rightStart"
@@ -77,21 +86,6 @@ const CardDropdown = ({ dropdownConfig }) => {
     </Dropdown>
   );
 };
-
-const CardHeaderContent = ({ className, title, dropdownConfig }) => {
-  return (
-    <SameLineLeftRightFloat className={className}>
-      <StyledTitle>{title}</StyledTitle>
-      <CardDropdown dropdownConfig={dropdownConfig} />
-    </SameLineLeftRightFloat>
-  );
-};
-
-const StyledCardHeaderContent = styled(CardHeaderContent)`
-  padding-top: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-`;
 
 class Card extends Component {
   constructor(props) {
@@ -151,12 +145,10 @@ class Card extends Component {
   render() {
     return (
       <StyledCard>
-        <CardHeaderContainer onClick={this.toggleCollapse}>
-          <StyledCardHeaderContent
-            title={this.props.title}
-            dropdownConfig={this.getDropdownConfig()}
-          />
-        </CardHeaderContainer>
+        <CardHeader>
+          <StyledTitle>{this.props.title}</StyledTitle>
+          <CardDropdown dropdownConfig={this.getDropdownConfig()} />
+        </CardHeader>
         <CardFocus
           onCancel={this.disableFullscreen}
           isVisible={
@@ -194,6 +186,15 @@ class Card extends Component {
           deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet,
           consectetur adipiscing elit,
         </CardBody>
+        <CardFooter>
+          <ExpandIcon
+            onClick={this.toggleCollapse}
+            size="lg"
+            icon={
+              this.state.isCollapsed ? "angle-double-up" : "angle-double-down"
+            }
+          />
+        </CardFooter>
       </StyledCard>
     );
   }
