@@ -11,9 +11,7 @@ const StyledCard = styled.div`
 `;
 
 const CardBody = styled.div`
-  margin-top: 5px;
-  margin-left: 10px;
-  padding-left: 5px;
+  padding: 10px;
   opacity: ${props => (props.isVisible ? 1 : 0)};
   max-height: ${props => (props.isVisible ? "1000px" : "0")};
   transition: all 0.5s ease 0.15s;
@@ -30,12 +28,12 @@ const CardFooter = styled.div`
   position: relative;
   border-top: 1px solid #efefef;
   height: 20px;
-  background-color: #f7f8f9;
 `;
 
 const ExpandIcon = styled(Icon)`
   position: absolute;
   left: 50%;
+  transition: all 0.3s ease 0.15s;
   &:hover {
     cursor: pointer;
   }
@@ -157,42 +155,14 @@ class Card extends Component {
           content={<Card {...this.getCardFocusParams()} />}
         />
         <CardBody isVisible={!this.state.isCollapsed}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-          mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-          irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-          sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem
-          ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit,
+          {this.props.body}
         </CardBody>
         <CardFooter>
           <ExpandIcon
             onClick={this.toggleCollapse}
             size="lg"
-            icon={
-              this.state.isCollapsed ? "angle-double-up" : "angle-double-down"
-            }
+            rotate={this.state.isCollapsed ? 0 : 180}
+            icon={"angle-double-down"}
           />
         </CardFooter>
       </StyledCard>

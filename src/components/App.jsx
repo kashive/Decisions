@@ -167,6 +167,14 @@ class App extends React.Component {
                     multiLine={true}
                   />
                 }
+                body={
+                  <ContextTextEdit
+                    model={decision.context}
+                    handleContextChange={context =>
+                      this.props.onDecisionContextChange(decision.id, context)
+                    }
+                  />
+                }
                 enableDropdown={true}
                 enableFullscreen={true}
                 enableCollapse={true}
