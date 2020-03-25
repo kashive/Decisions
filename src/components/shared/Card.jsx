@@ -8,10 +8,12 @@ const StyledCard = styled.div`
   background-color: white;
   border: 1px solid #efefef;
   position: relative;
+  margin-bottom: 15px;
 `;
 
 const CardBody = styled.div`
   padding: 10px;
+  padding-bottom: 15px;
   opacity: ${props => (props.isCollapsed ? 1 : 0)};
   max-height: ${props => (props.isCollapsed ? "1000px" : "0")};
   transition: all 0.4s ease 0.15s;
@@ -73,7 +75,7 @@ const CardDropdown = ({ dropdownConfig }) => {
       renderTitle={() => {
         return <Icon icon="ellipsis-h" />;
       }}
-      trigger="hover"
+      trigger="click"
       placement="rightStart"
       style={{ marginLeft: "10px" }}
     >

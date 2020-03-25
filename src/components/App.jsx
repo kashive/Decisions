@@ -168,12 +168,58 @@ class App extends React.Component {
                   />
                 }
                 body={
-                  <ContextTextEdit
-                    model={decision.context}
-                    handleContextChange={context =>
-                      this.props.onDecisionContextChange(decision.id, context)
-                    }
-                  />
+                  <div>
+                    <Card
+                      title={
+                        <BorderedInlineTextEdit
+                          text="This is a child 1"
+                          placeholderText="Description"
+                          padding="5px"
+                          expandWithContent={false}
+                          multiLine={true}
+                        />
+                      }
+                      body={
+                        <ContextTextEdit
+                          model={decision.context}
+                          handleContextChange={context =>
+                            this.props.onDecisionContextChange(
+                              decision.id,
+                              context
+                            )
+                          }
+                        />
+                      }
+                      enableDropdown={true}
+                      enableFullscreen={true}
+                      enableCollapse={true}
+                    />
+                    <Card
+                      title={
+                        <BorderedInlineTextEdit
+                          text="This is a child 2"
+                          placeholderText="Description"
+                          padding="5px"
+                          expandWithContent={false}
+                          multiLine={true}
+                        />
+                      }
+                      body={
+                        <ContextTextEdit
+                          model={decision.context}
+                          handleContextChange={context =>
+                            this.props.onDecisionContextChange(
+                              decision.id,
+                              context
+                            )
+                          }
+                        />
+                      }
+                      enableDropdown={true}
+                      enableFullscreen={true}
+                      enableCollapse={true}
+                    />
+                  </div>
                 }
                 enableDropdown={true}
                 enableFullscreen={true}
