@@ -20,6 +20,7 @@ import {
 import ContextTextEdit from "./ContextTextEdit";
 import VariablesTable from "./VariablesTable";
 import Options from "./Options";
+import Option from "./Option";
 import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
 import {
@@ -27,10 +28,12 @@ import {
   onDecisionCreate,
   onDecisionContextChange
 } from "../redux/actions/decisionActions";
+import { onOptionCreate } from "../redux/actions/optionActions";
 import { appMountSuccess } from "../redux/actions/entitiesActions";
 import { connect } from "react-redux";
 import DecisionTitle from "./DecisionTitle";
-import Card from "./shared/Card";
+import Card, { StyledTitle } from "./shared/Card";
+import { ListGrouping } from "./shared/ListGrouping";
 
 class App extends React.Component {
   constructor(props) {
@@ -94,6 +97,80 @@ class App extends React.Component {
     this.hideAddNewDecision();
   };
 
+  getListGroupingData = decision => {
+    return [
+      {
+        id: "1",
+        items: [
+          {
+            itemId: 1,
+            content: (
+              <Card
+                title="Context"
+                body={
+                  <ContextTextEdit
+                    model={decision.context}
+                    handleContextChange={context =>
+                      this.props.onDecisionContextChange(decision.id, context)
+                    }
+                  />
+                }
+                enableDropdown={true}
+                enableFullscreen={true}
+                enableCollapse={true}
+              />
+            )
+          }
+        ]
+      },
+      {
+        id: "2",
+        items: [
+          {
+            itemId: 2,
+            content: (
+              <Card
+                title="Variables"
+                body={<VariablesTable />}
+                enableDropdown={true}
+                enableFullscreen={true}
+                enableCollapse={true}
+                additionalDropdowns={{
+                  "Add new variable": () =>
+                    console.log("add new variable clicked")
+                }}
+              />
+            )
+          }
+        ]
+      },
+      {
+        id: "3",
+        title: <StyledTitle>Options</StyledTitle>,
+        dropdownConfig: {
+          enableFullscreen: true,
+          enableCollapse: true,
+          additionalDropdowns: [
+            {
+              text: "Add new option",
+              onClick: () => console.log("Add new option clicked")
+            }
+          ]
+        },
+        items: [
+          {
+            itemId: 4,
+            content: <Option optionId="4" />
+          },
+          {
+            itemId: 5,
+            content: <Option optionId="5" />
+          }
+        ]
+      }
+    ];
+  };
+
   render() {
     const currentDecisionId = this.props.currentDecisionId;
     if (!currentDecisionId) {
@@ -152,12 +229,13 @@ class App extends React.Component {
             </Header>
             <Content
               style={{
-                marginTop: 20,
-                marginLeft: 150,
-                marginRight: 150
+                marginTop: "2%",
+                marginLeft: "15%",
+                marginRight: "15%"
               }}
             >
-              <Card
+              <ListGrouping data={this.getListGroupingData(decision)} />
+              {/* <Card
                 title={
                   <BorderedInlineTextEdit
                     text="This is a description"
@@ -224,7 +302,7 @@ class App extends React.Component {
                 enableDropdown={true}
                 enableFullscreen={true}
                 enableCollapse={true}
-              />
+              /> */}
               {/* <PanelGroup
                 style={{
                   background: "white",
@@ -270,7 +348,8 @@ const actionCreators = {
   appMountSuccess,
   onDecisionTitleChange,
   onDecisionCreate,
-  onDecisionContextChange
+  onDecisionContextChange,
+  onOptionCreate
 };
 
 export default connect(mapStateToProps, actionCreators)(App);

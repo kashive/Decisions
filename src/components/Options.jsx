@@ -91,6 +91,50 @@ function Options(props) {
           );
         })}
     </div>
+    // <div>
+    //   <Button
+    //     style={{ marginBottom: "15px" }}
+    //     appearance="primary"
+    //     onClick={props.onOptionCreate.bind(this, props.currentDecisionId)}
+    //   >
+    //     Add New Option
+    //   </Button>
+    //   {allIds
+    //     .map(id => byId[id])
+    //     .filter(option => option.decisionId === props.currentDecisionId)
+    //     .map(option => {
+    //       return (
+    //         <Panel
+    //           key={option.id}
+    //           header={OptionHeader(
+    //             option.name,
+    //             props.optionScores[option.id],
+    //             props.onOptionNameChange.bind(this, option.id),
+    //             props.onOptionRemove.bind(this, option.id, option.decisionId)
+    //           )}
+    //         >
+    //           <Panel header="Description">
+    //             <FroalaEditor
+    //               model={option.description}
+    //               onModelChange={props.onOptionDescriptionChange.bind(
+    //                 this,
+    //                 option.id
+    //               )}
+    //               config={{
+    //                 placeholderText: "Tell us more about the option"
+    //               }}
+    //             />
+    //           </Panel>
+    //           <Panel header="Variable Scores">
+    //             <OptionScores
+    //               scrollToVariableTable={props.scrollToVariableTable}
+    //               optionId={option.id}
+    //             />
+    //           </Panel>
+    //         </Panel>
+    //       );
+    //     })}
+    // </div>
   );
 }
 

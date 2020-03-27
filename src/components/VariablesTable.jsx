@@ -82,13 +82,6 @@ class VariablesTable extends Component {
     const { byId, allIds } = this.props.variables;
     return (
       <div>
-        <Button
-          style={{ marginBottom: "15px" }}
-          appearance="primary"
-          onClick={this.props.onVariableCreate.bind(this, currentDecisionId)}
-        >
-          Add New Variable
-        </Button>
         <table>
           <thead>
             <tr>

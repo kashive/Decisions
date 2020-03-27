@@ -8,7 +8,13 @@ const StyledCard = styled.div`
   background-color: white;
   border: 1px solid #efefef;
   position: relative;
-  margin-bottom: 15px;
+  &:nth-child(1) {
+    margin-top: 0%;
+  }
+  & + & {
+    margin-top: 4%; //<StyledCard> next to <StyledCard>
+  }
+  //margin-bottom: 15px;
 `;
 
 const CardBody = styled.div`
@@ -20,15 +26,16 @@ const CardBody = styled.div`
   overflow: hidden;
 `;
 
-const StyledTitle = styled.div`
+export const StyledTitle = styled.div`
   font-weight: bold;
   line-height: 1.3;
   font-size: 18px;
+  color: #333;
 `;
 
 const CardFooter = styled.div`
   position: absolute;
-  top: ${props => (props.isCollapsed ? "70%" : "100%")};
+  top: ${props => (props.isCollapsed ? "75%" : "100%")};
   left: 50%;
   transition: all 0.3s ease 0.15s;
 `;
@@ -37,6 +44,7 @@ const ExpandIcon = styled(Icon)`
   position: absolute;
   left: 50%;
   transition: all 0.2s ease 0.15s;
+  color: #333;
   &:hover {
     cursor: pointer;
   }
@@ -48,12 +56,11 @@ const CardHeader = styled.div`
   padding-top: 5px;
   padding-left: 5px;
   padding-right: 5px;
-  color: #333;
   border-bottom: ${props => (props.isCollapsed ? "1px solid #efefef" : "none")};
   transition: border-bottom 0.5s ease 0.5s;
 `;
 
-const CardFocus = ({ isVisible, onCancel, content }) => {
+export const CardFocus = ({ isVisible, onCancel, content }) => {
   return (
     <Modal
       backdropClassName="fullOpacity"
@@ -68,14 +75,14 @@ const CardFocus = ({ isVisible, onCancel, content }) => {
   );
 };
 
-const CardDropdown = ({ dropdownConfig }) => {
+export const CardDropdown = ({ dropdownConfig }) => {
   if (Object.keys(dropdownConfig).length === 0) return <div>{false}</div>;
   return (
     <Dropdown
       renderTitle={() => {
         return <Icon icon="ellipsis-h" />;
       }}
-      trigger="click"
+      trigger="hover"
       placement="rightStart"
       style={{ marginLeft: "10px" }}
     >
@@ -162,14 +169,14 @@ class Card extends Component {
         <CardBody isCollapsed={!this.state.isCollapsed}>
           {this.props.body}
         </CardBody>
-        <CardFooter isCollapsed={this.state.isCollapsed}>
+        {/* <CardFooter isCollapsed={this.state.isCollapsed}>
           <ExpandIcon
             onClick={this.toggleCollapse}
             size="lg"
             rotate={this.state.isCollapsed ? 0 : 180}
             icon={"angle-double-down"}
           />
-        </CardFooter>
+        </CardFooter> */}
       </StyledCard>
     );
   }
