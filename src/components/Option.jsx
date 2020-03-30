@@ -45,8 +45,7 @@ const OptionHeader = ({ headerText, score, onNameChange }) => {
 };
 
 function Option(props) {
-  const { byId } = props.options;
-  const option = byId[props.optionId];
+  const option = props.option;
   if (!option) return false; //todo: fix this later: https://app.asana.com/0/1166509149726089/1168928353343516/f
   return (
     <Card
@@ -59,7 +58,7 @@ function Option(props) {
       title={
         <OptionHeader
           headerText={option.name}
-          score={props.optionScores[option.id]}
+          score={props.score}
           onNameChange={props.onOptionNameChange.bind(this, option.id)}
         />
       }
@@ -101,29 +100,22 @@ function Option(props) {
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, myProps) => {
   const { options, variables } = state.entities;
-  const currentDecisionId = state.controlState.decisionId;
-  const optionScores = options.allIds
-    .map(optionId => options.byId[optionId])
-    .filter(option => option.decisionId === currentDecisionId)
-    .map(option => {
-      const { allIds, byId } = option.variableScores;
-      const weightedScore = allIds
-        .map(variableId => byId[variableId])
-        .map(variableScore => {
-          const score = variableScore.score || 0;
-          const weight = variables.byId[variableScore.variableId].weight || 0;
-          return weight * score;
-        })
-        .reduce((a, b) => a + b, 0);
-      return { [option.id]: weightedScore };
+  const option = options.byId[myProps.optionId];
+  if (!option) return;
+  const { allIds, byId } = option.variableScores;
+  const score = allIds
+    .map(variableId => byId[variableId])
+    .map(variableScore => {
+      const score = variableScore.score || 0;
+      const weight = variables.byId[variableScore.variableId].weight || 0;
+      return weight * score;
     })
-    .reduce((obj, item) => Object.assign(obj, item), {});
+    .reduce((a, b) => a + b, 0);
   return {
-    options,
-    optionScores,
-    currentDecisionId
+    option,
+    score
   };
 };
 

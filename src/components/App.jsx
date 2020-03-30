@@ -151,6 +151,7 @@ class App extends React.Component {
     }
     const { byId } = this.props.decisions;
     const decision = byId[currentDecisionId];
+    const listGroupingData = this.getListGroupingData(decision);
     return (
       <div>
         <Container>
@@ -206,7 +207,7 @@ class App extends React.Component {
                 marginRight: "15%"
               }}
             >
-              <ListGrouping data={this.getListGroupingData(decision)} />
+              <ListGrouping data={listGroupingData} />
             </Content>
           </Container>
         </Container>
