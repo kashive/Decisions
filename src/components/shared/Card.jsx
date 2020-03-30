@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Icon, Dropdown, Modal } from "rsuite";
+import { Modal } from "rsuite";
+import { CustomDropdown } from "./CustomDropdown";
 import styled from "styled-components";
 import produce from "immer";
 import "../../styles/card.less";
@@ -57,27 +58,47 @@ export const CardFocus = ({ isVisible, onCancel, content }) => {
   );
 };
 
-export const CardDropdown = ({ dropdownConfig }) => {
-  if (Object.keys(dropdownConfig).length === 0) return <div>{false}</div>;
-  return (
-    <Dropdown
-      renderTitle={() => {
-        return <Icon icon="ellipsis-h" />;
-      }}
-      trigger="hover"
-      placement="rightStart"
-      style={{ marginLeft: "10px" }}
-    >
-      {Object.entries(dropdownConfig).map(entry => {
-        return (
-          <Dropdown.Item key={entry[0]} onClick={entry[1]}>
-            {entry[0].charAt(0).toUpperCase() + entry[0].slice(1)}
-          </Dropdown.Item>
-        );
-      })}
-    </Dropdown>
-  );
+const buildPropsForCustomDropdown = (
+  config,
+  isCollapsed,
+  setIsCollapsed,
+  isFullscreen,
+  setIsFullscreen
+) => {
+  if (!config) return;
+  const output = [];
+  if (config.enableCollapse) {
+    output.push({
+      text: isCollapsed ? "Expand" : "Collapse",
+      onClick: () => {
+        isCollapsed ? setIsCollapsed(false) : setIsCollapsed(true);
+      }
+    });
+  }
+  if (config.enableFullscreen) {
+    output.push({
+      text: isFullscreen ? "Close" : "Focus",
+      onClick: () => {
+        isFullscreen ? setIsFullscreen(false) : setIsFullscreen(true);
+      }
+    });
+  }
+  return (config.additionalDropdowns || []).concat(output);
 };
+
+const fullscreenConfig = (config, setIsFullscreen) =>
+  config
+    ? produce(config, draft => {
+        draft.enableFullscreen = false;
+        //need to add close as it won't be covered in buildPropsForCustomDropdown
+        draft.additionalDropdowns = (draft.additionalDropdowns || []).concat([
+          {
+            text: "Close",
+            onClick: () => setIsFullscreen(false)
+          }
+        ]);
+      })
+    : config;
 
 class Card extends Component {
   constructor(props) {
@@ -88,24 +109,16 @@ class Card extends Component {
     };
   }
 
-  enableFullscreen = () => {
-    this.setState({ isFullscreen: true });
+  setIsCollapsed = isCollapsed => {
+    this.setState({ isCollapsed });
+  };
+
+  setIsFullscreen = isFullscreen => {
+    this.setState({ isFullscreen });
   };
 
   disableFullscreen = () => {
     this.setState({ isFullscreen: false });
-  };
-
-  enableCollapse = () => {
-    this.setState({ isCollapsed: true });
-  };
-
-  disableCollapse = () => {
-    this.setState({ isCollapsed: false });
-  };
-
-  toggleCollapse = () => {
-    this.setState({ isCollapsed: !this.state.isCollapsed });
   };
 
   getCardFocusParams = () => {
@@ -119,34 +132,33 @@ class Card extends Component {
     });
   };
 
-  getDropdownConfig = () => {
-    return produce(this.props.additionalDropdowns || {}, draft => {
-      if (!this.props.enableDropdown) return;
-      if (this.props.enableFullscreen) {
-        draft.focus = this.enableFullscreen;
-      }
-      if (this.props.enableCollapse && !this.state.isCollapsed) {
-        draft.collapse = this.enableCollapse;
-      }
-      if (this.props.enableCollapse && this.state.isCollapsed) {
-        draft.expand = this.disableCollapse;
-      }
-    });
-  };
-
   render() {
     return (
       <StyledCard>
         <CardHeader isCollapsed={this.state.isCollapsed}>
           <StyledTitle>{this.props.title}</StyledTitle>
-          <CardDropdown dropdownConfig={this.getDropdownConfig()} />
+          <CustomDropdown
+            config={buildPropsForCustomDropdown(
+              this.props.dropdownConfig,
+              this.state.isCollapsed,
+              this.setIsCollapsed,
+              this.state.isFullscreen,
+              this.setIsFullscreen
+            )}
+          />
         </CardHeader>
         <CardFocus
           onCancel={this.disableFullscreen}
-          isVisible={
-            this.props.enableFullscreen ? this.state.isFullscreen : false
+          isVisible={this.state.isFullscreen}
+          content={
+            <Card
+              {...this.props}
+              dropdownConfig={fullscreenConfig(
+                this.props.dropdownConfig,
+                this.setIsFullscreen
+              )}
+            />
           }
-          content={<Card {...this.getCardFocusParams()} />}
         />
         <CardBody isCollapsed={!this.state.isCollapsed}>
           {this.props.body}

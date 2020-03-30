@@ -17,7 +17,6 @@ export const CustomDropdown = ({ config }) => {
       }}
       trigger="hover"
       placement="rightStart"
-      //style={{ marginLeft: "10px" }}
     >
       {config.map(dropdown => {
         return (

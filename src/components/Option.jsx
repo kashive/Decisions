@@ -49,11 +49,19 @@ function Option(props) {
   if (!option) return false; //todo: fix this later: https://app.asana.com/0/1166509149726089/1168928353343516/f
   return (
     <Card
-      enableDropdown={true}
-      enableFullscreen={true}
-      enableCollapse={true}
-      additionalDropdowns={{
-        Remove: props.onOptionRemove.bind(this, option.id, option.decisionId)
+      dropdownConfig={{
+        enableFullscreen: true,
+        enableCollapse: true,
+        additionalDropdowns: [
+          {
+            text: "Remove",
+            onClick: props.onOptionRemove.bind(
+              this,
+              option.id,
+              option.decisionId
+            )
+          }
+        ]
       }}
       title={
         <OptionHeader
@@ -65,6 +73,10 @@ function Option(props) {
       body={
         <>
           <Card
+            dropdownConfig={{
+              enableFullscreen: true,
+              enableCollapse: true
+            }}
             enableDropdown={true}
             enableFullscreen={true}
             enableCollapse={true}
@@ -83,9 +95,10 @@ function Option(props) {
             }
           />
           <Card
-            enableDropdown={true}
-            enableFullscreen={true}
-            enableCollapse={true}
+            dropdownConfig={{
+              enableFullscreen: true,
+              enableCollapse: true
+            }}
             title="Variable Scores"
             body={
               <OptionScores
