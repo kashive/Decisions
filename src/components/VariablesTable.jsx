@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CustomSlider from "./shared/CustomSlider";
+import Card from "./shared/Card";
 import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
 import "../styles/table.less";
 import styled from "styled-components";
@@ -81,100 +82,112 @@ class VariablesTable extends Component {
     const currentDecisionId = this.props.currentDecisionId;
     const { byId, allIds } = this.props.variables;
     return (
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th style={{ width: "20%" }}>Name</th>
-              <th style={{ width: "30%" }}>Weight</th>
-              <th style={{ width: "45%" }}>Description</th>
-              <th style={{ borderLeft: "hidden" }}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {allIds
-              .map(id => byId[id])
-              .filter(variable => variable.decisionId === currentDecisionId)
-              .map(variable => {
-                return (
-                  <HighlightableRow
-                    key={variable.id}
-                    isHighlightOn={
-                      variable.id === this.state.rowNumWithHighlight
-                    }
-                  >
-                    <td>
-                      <BorderedInlineTextEdit
-                        text={variable.name}
-                        handleTextChange={this.props.onVariableNameChange.bind(
-                          this,
-                          variable.id
-                        )}
-                        placeholderText="Name"
-                        autoSelectOnFocus={false}
-                        padding="5px"
-                        expandWithContent={false}
-                        multiLine={false}
-                        onBorderVisible={this.handleHighlightOn.bind(
-                          this,
-                          variable.id
-                        )}
-                        onBorderInvisible={this.handleHighlightOff}
-                      />
-                    </td>
-                    <td>
-                      <CustomSlider
-                        value={variable.weight}
-                        onHandleMove={this.props.onVariableWeightChange.bind(
-                          this,
-                          variable.id
-                        )}
-                      />
-                    </td>
-                    <td>
-                      <BorderedInlineTextEdit
-                        text={variable.description}
-                        placeholderText="Description"
-                        handleTextChange={this.props.onVariableDescriptionChange.bind(
-                          this,
-                          variable.id
-                        )}
-                        padding="5px"
-                        expandWithContent={false}
-                        multiLine={true}
-                      />
-                    </td>
-                    <td style={{ textAlign: "center" }}>
-                      <Whisper
-                        placement="top"
-                        trigger="hover"
-                        speaker={<Tooltip>Remove variable</Tooltip>}
-                      >
-                        <Icon
-                          className="actionIcon"
-                          icon="trash"
-                          onClick={this.openRemoveVariablePopUp.bind(
+      <Card
+        title="Variables"
+        body={
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: "20%" }}>Name</th>
+                <th style={{ width: "30%" }}>Weight</th>
+                <th style={{ width: "45%" }}>Description</th>
+                <th style={{ borderLeft: "hidden" }}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {allIds
+                .map(id => byId[id])
+                .filter(variable => variable.decisionId === currentDecisionId) //todo: get variable ids directly from decision
+                .map(variable => {
+                  return (
+                    <HighlightableRow
+                      key={variable.id}
+                      isHighlightOn={
+                        variable.id === this.state.rowNumWithHighlight
+                      }
+                    >
+                      <td>
+                        <BorderedInlineTextEdit
+                          text={variable.name}
+                          handleTextChange={this.props.onVariableNameChange.bind(
+                            this,
+                            variable.id
+                          )}
+                          placeholderText="Name"
+                          autoSelectOnFocus={false}
+                          padding="5px"
+                          expandWithContent={false}
+                          multiLine={false}
+                          onBorderVisible={this.handleHighlightOn.bind(
+                            this,
+                            variable.id
+                          )}
+                          onBorderInvisible={this.handleHighlightOff}
+                        />
+                      </td>
+                      <td>
+                        <CustomSlider
+                          value={variable.weight}
+                          onHandleMove={this.props.onVariableWeightChange.bind(
                             this,
                             variable.id
                           )}
                         />
-                      </Whisper>
-                    </td>
-                    <RemoveVariablePopUp
-                      isVisible={this.state.variableDeletePopUpOpen}
-                      onCancel={this.closeRemoveVariablePopUp}
-                      onOk={this.onVariableRemovePromptOkClick.bind(
-                        this,
-                        currentDecisionId,
-                        variable.id
-                      )}
-                    />
-                  </HighlightableRow>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
+                      </td>
+                      <td>
+                        <BorderedInlineTextEdit
+                          text={variable.description}
+                          placeholderText="Description"
+                          handleTextChange={this.props.onVariableDescriptionChange.bind(
+                            this,
+                            variable.id
+                          )}
+                          padding="5px"
+                          expandWithContent={false}
+                          multiLine={true}
+                        />
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <Whisper
+                          placement="top"
+                          trigger="hover"
+                          speaker={<Tooltip>Remove variable</Tooltip>}
+                        >
+                          <Icon
+                            className="actionIcon"
+                            icon="trash"
+                            onClick={this.openRemoveVariablePopUp.bind(
+                              this,
+                              variable.id
+                            )}
+                          />
+                        </Whisper>
+                      </td>
+                      <RemoveVariablePopUp
+                        isVisible={this.state.variableDeletePopUpOpen}
+                        onCancel={this.closeRemoveVariablePopUp}
+                        onOk={this.onVariableRemovePromptOkClick.bind(
+                          this,
+                          currentDecisionId,
+                          variable.id
+                        )}
+                      />
+                    </HighlightableRow>
+                  );
+                })}
+            </tbody>
+          </table>
+        }
+        enableDropdown={true}
+        enableFullscreen={true}
+        enableCollapse={true}
+        additionalDropdowns={{
+          "Add new variable": this.props.onVariableCreate.bind(
+            this,
+            currentDecisionId
+          )
+        }}
+      />
     );
   }
 }

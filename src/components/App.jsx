@@ -8,8 +8,6 @@ import {
   Container,
   Header,
   Content,
-  PanelGroup,
-  Panel,
   ButtonToolbar,
   Icon,
   IconButton,
@@ -17,11 +15,9 @@ import {
   Tooltip
 } from "rsuite";
 
-import ContextTextEdit from "./ContextTextEdit";
-import VariablesTable from "./VariablesTable";
-import Options from "./Options";
+import { ContextCard } from "./ContextTextEdit";
 import Option from "./Option";
-import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
+import VariablesTable from "./VariablesTable";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
 import {
   onDecisionTitleChange,
@@ -32,7 +28,7 @@ import { onOptionCreate } from "../redux/actions/optionActions";
 import { appMountSuccess } from "../redux/actions/entitiesActions";
 import { connect } from "react-redux";
 import DecisionTitle from "./DecisionTitle";
-import Card, { StyledTitle } from "./shared/Card";
+import { StyledTitle } from "./shared/Card";
 import { ListGrouping } from "./shared/ListGrouping";
 
 class App extends React.Component {
@@ -103,21 +99,13 @@ class App extends React.Component {
         id: "1",
         items: [
           {
-            itemId: 1,
+            itemId: "contextCard",
             content: (
-              <Card
-                title="Context"
-                body={
-                  <ContextTextEdit
-                    model={decision.context}
-                    handleContextChange={context =>
-                      this.props.onDecisionContextChange(decision.id, context)
-                    }
-                  />
+              <ContextCard
+                model={decision.context}
+                onChange={context =>
+                  this.props.onDecisionContextChange(decision.id, context)
                 }
-                enableDropdown={true}
-                enableFullscreen={true}
-                enableCollapse={true}
               />
             )
           }
@@ -127,20 +115,8 @@ class App extends React.Component {
         id: "2",
         items: [
           {
-            itemId: 2,
-            content: (
-              <Card
-                title="Variables"
-                body={<VariablesTable />}
-                enableDropdown={true}
-                enableFullscreen={true}
-                enableCollapse={true}
-                additionalDropdowns={{
-                  "Add new variable": () =>
-                    console.log("add new variable clicked")
-                }}
-              />
-            )
+            itemId: "variablesTable",
+            content: <VariablesTable />
           }
         ]
       },
@@ -153,20 +129,16 @@ class App extends React.Component {
           additionalDropdowns: [
             {
               text: "Add new option",
-              onClick: () => console.log("Add new option clicked")
+              onClick: this.props.onOptionCreate.bind(this, decision.id)
             }
           ]
         },
-        items: [
-          {
-            itemId: 4,
-            content: <Option optionId="4" />
-          },
-          {
-            itemId: 5,
-            content: <Option optionId="5" />
-          }
-        ]
+        items: decision.optionIds.map(optId => {
+          return {
+            itemId: optId,
+            content: <Option key={optId} optionId={optId} />
+          };
+        })
       }
     ];
   };
@@ -235,98 +207,6 @@ class App extends React.Component {
               }}
             >
               <ListGrouping data={this.getListGroupingData(decision)} />
-              {/* <Card
-                title={
-                  <BorderedInlineTextEdit
-                    text="This is a description"
-                    placeholderText="Description"
-                    padding="5px"
-                    expandWithContent={false}
-                    multiLine={true}
-                  />
-                }
-                body={
-                  <div>
-                    <Card
-                      title={
-                        <BorderedInlineTextEdit
-                          text="This is a child 1"
-                          placeholderText="Description"
-                          padding="5px"
-                          expandWithContent={false}
-                          multiLine={true}
-                        />
-                      }
-                      body={
-                        <ContextTextEdit
-                          model={decision.context}
-                          handleContextChange={context =>
-                            this.props.onDecisionContextChange(
-                              decision.id,
-                              context
-                            )
-                          }
-                        />
-                      }
-                      enableDropdown={true}
-                      enableFullscreen={true}
-                      enableCollapse={true}
-                    />
-                    <Card
-                      title={
-                        <BorderedInlineTextEdit
-                          text="This is a child 2"
-                          placeholderText="Description"
-                          padding="5px"
-                          expandWithContent={false}
-                          multiLine={true}
-                        />
-                      }
-                      body={
-                        <ContextTextEdit
-                          model={decision.context}
-                          handleContextChange={context =>
-                            this.props.onDecisionContextChange(
-                              decision.id,
-                              context
-                            )
-                          }
-                        />
-                      }
-                      enableDropdown={true}
-                      enableFullscreen={true}
-                      enableCollapse={true}
-                    />
-                  </div>
-                }
-                enableDropdown={true}
-                enableFullscreen={true}
-                enableCollapse={true}
-              /> */}
-              {/* <PanelGroup
-                style={{
-                  background: "white",
-                  height: "85vh",
-                  overflowY: "scroll"
-                }}
-                // accordion
-                bordered
-              >
-                <Panel header="Context">
-                  <ContextTextEdit
-                    model={decision.context}
-                    handleContextChange={context =>
-                      this.props.onDecisionContextChange(decision.id, context)
-                    }
-                  />
-                </Panel>
-                <Panel ref={this.variablesPanelRef} header="Variables">
-                  <VariablesTable />
-                </Panel>
-                <Panel header="Options">
-                  <Options scrollToVariableTable={this.scrollToVariableTable} />
-                </Panel>
-              </PanelGroup> */}
             </Content>
           </Container>
         </Container>

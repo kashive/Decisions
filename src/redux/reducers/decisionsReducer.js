@@ -80,7 +80,7 @@ export function decisionsReducer(state = initialState, action) {
     case CREATE_OPTION: {
       const { optionId, decisionId } = action.payload;
       return produce(state, draft => {
-        draft.byId[decisionId].optionIds.push(optionId);
+        draft.byId[decisionId].optionIds.unshift(optionId);
       });
     }
     default:

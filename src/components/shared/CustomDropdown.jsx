@@ -21,7 +21,7 @@ export const CustomDropdown = ({ config }) => {
     >
       {config.map(dropdown => {
         return (
-          <Dropdown.Item onClick={dropdown.onClick}>
+          <Dropdown.Item key={dropdown.text} onClick={dropdown.onClick}>
             {dropdown.text}
           </Dropdown.Item>
         );

@@ -1,6 +1,5 @@
-import React, { Component } from "react";
-import { Icon, Dropdown, Modal } from "rsuite";
-import styled, { css } from "styled-components";
+import React from "react";
+import styled from "styled-components";
 import produce from "immer";
 import { useState } from "react";
 import { CustomDropdown } from "./CustomDropdown";
@@ -21,14 +20,8 @@ const GroupingContainer = styled.div`
 `;
 
 const StyledElementGrouping = styled.div`
-  //display: flex;
-  //flex-direction: column;
-  //justify-content: space-between;
   border: ${props => (props.hasTitle ? "1px solid" : "none")};
   padding: ${props => (props.hasTitle ? "1%" : "0%")};
-  // opacity: ${props => (props.isCollapsed ? 0 : 1)};
-  // max-height: ${props => (props.isCollapsed ? "0" : "1000px")};
-  // transition: all 0.4s ease 0.15s;
   background-color: ${props => props.backgroundColor || "transparent"};
   margin-top: 2%;
   &:nth-child(1) {
@@ -40,7 +33,6 @@ const StyledElementGrouping = styled.div`
 `;
 
 const Element = styled.div`
-    //order: ${prop => prop.order}
     flex-grow: 1
     border: 1px solid;
     margin-left: ${prop =>
@@ -132,7 +124,7 @@ const ElementGrouping = ({ id, title, config, elements }) => {
 
   const elementComponents = (isCollapsed ? [] : elements).map(item => {
     return (
-      <Element key={item.id} isInGroup={title && true}>
+      <Element key={item.itemId} isInGroup={title && true}>
         {item.content}
       </Element>
     );
@@ -171,6 +163,7 @@ export function ListGrouping(props) {
         );
         return (
           <ElementGrouping
+            key={entry.id}
             id={entry.id}
             title={title}
             config={entry.dropdownConfig}

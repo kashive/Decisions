@@ -1,4 +1,4 @@
-import { NORMALIZED_DUMMY_STATE } from "../../data/DummyState";
+import { NORMALIZED_DUMMY_STATE_V2 } from "../../data/DummyState";
 import {
   FETCH_DECISIONS_BEGIN,
   FETCH_DECISIONS_SUCCESS,
@@ -12,7 +12,9 @@ import uuid from "uuid";
 export function fetchDecisions(userId) {
   return dispatch => {
     dispatch(fetchDecisionsBegin());
-    dispatch(fetchDecisionsSuccess(NORMALIZED_DUMMY_STATE.entities.decisions));
+    dispatch(
+      fetchDecisionsSuccess(NORMALIZED_DUMMY_STATE_V2.entities.decisions)
+    );
   };
 }
 

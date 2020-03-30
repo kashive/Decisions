@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Icon, Dropdown, Modal } from "rsuite";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import produce from "immer";
 import "../../styles/card.less";
 
@@ -14,7 +14,6 @@ const StyledCard = styled.div`
   & + & {
     margin-top: 4%; //<StyledCard> next to <StyledCard>
   }
-  //margin-bottom: 15px;
 `;
 
 const CardBody = styled.div`
@@ -31,23 +30,6 @@ export const StyledTitle = styled.div`
   line-height: 1.3;
   font-size: 18px;
   color: #333;
-`;
-
-const CardFooter = styled.div`
-  position: absolute;
-  top: ${props => (props.isCollapsed ? "75%" : "100%")};
-  left: 50%;
-  transition: all 0.3s ease 0.15s;
-`;
-
-const ExpandIcon = styled(Icon)`
-  position: absolute;
-  left: 50%;
-  transition: all 0.2s ease 0.15s;
-  color: #333;
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const CardHeader = styled.div`
@@ -88,7 +70,7 @@ export const CardDropdown = ({ dropdownConfig }) => {
     >
       {Object.entries(dropdownConfig).map(entry => {
         return (
-          <Dropdown.Item onClick={entry[1]}>
+          <Dropdown.Item key={entry[0]} onClick={entry[1]}>
             {entry[0].charAt(0).toUpperCase() + entry[0].slice(1)}
           </Dropdown.Item>
         );
@@ -169,14 +151,6 @@ class Card extends Component {
         <CardBody isCollapsed={!this.state.isCollapsed}>
           {this.props.body}
         </CardBody>
-        {/* <CardFooter isCollapsed={this.state.isCollapsed}>
-          <ExpandIcon
-            onClick={this.toggleCollapse}
-            size="lg"
-            rotate={this.state.isCollapsed ? 0 : 180}
-            icon={"angle-double-down"}
-          />
-        </CardFooter> */}
       </StyledCard>
     );
   }

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
-import { Panel, Badge, Whisper, Tooltip, Icon, Button } from "rsuite";
+import { Badge, Whisper, Tooltip } from "rsuite";
 import FroalaEditor from "react-froala-wysiwyg";
 import OptionScores from "./OptionScores";
 import Card from "./shared/Card";
@@ -12,7 +12,7 @@ import {
   onOptionCreate
 } from "../redux/actions/optionActions";
 
-const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
+const OptionHeader = ({ headerText, score, onNameChange }) => {
   return (
     <div>
       <Badge
@@ -33,32 +33,36 @@ const OptionHeader = (headerText, score, onNameChange, onRemoveOption) => {
             text={headerText}
             handleTextChange={onNameChange}
             placeholderText="Option Name"
-            placeholderTextWidth="110px"
+            placeholderTextWidth="125px"
             expandWithContent={true}
             padding="5px"
             multiLine={false}
           />
         </div>
       </Badge>
-      <Icon className="actionIcon" onClick={onRemoveOption} icon="trash" />
     </div>
   );
 };
 
 function Option(props) {
-  const { allIds, byId } = props.options;
-  const option = byId[props.optionId]; //hard coding for now change later
+  const { byId } = props.options;
+  const option = byId[props.optionId];
+  if (!option) return false; //todo: fix this later: https://app.asana.com/0/1166509149726089/1168928353343516/f
   return (
     <Card
       enableDropdown={true}
       enableFullscreen={true}
       enableCollapse={true}
-      title={OptionHeader(
-        option.name,
-        props.optionScores[option.id],
-        props.onOptionNameChange.bind(this, option.id),
-        props.onOptionRemove.bind(this, option.id, option.decisionId)
-      )}
+      additionalDropdowns={{
+        Remove: props.onOptionRemove.bind(this, option.id, option.decisionId)
+      }}
+      title={
+        <OptionHeader
+          headerText={option.name}
+          score={props.optionScores[option.id]}
+          onNameChange={props.onOptionNameChange.bind(this, option.id)}
+        />
+      }
       body={
         <>
           <Card

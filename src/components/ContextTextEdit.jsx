@@ -1,19 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
+import Card from "./shared/Card";
 import FroalaEditor from "react-froala-wysiwyg";
 
-class ContextTextEdit extends Component {
-  render() {
-    return (
+export const ContextCard = ({ model, onChange }) => (
+  <Card
+    title="Context"
+    body={
       <FroalaEditor
-        model={this.props.model}
-        onModelChange={this.props.handleContextChange}
+        model={model}
+        onModelChange={onChange}
         config={{
           placeholderText:
             "Why do you need to make this decision? What triggred it? Why is this important?"
         }}
       />
-    );
-  }
-}
-
-export default ContextTextEdit;
+    }
+    enableDropdown={true}
+    enableFullscreen={true}
+    enableCollapse={true}
+  />
+);
