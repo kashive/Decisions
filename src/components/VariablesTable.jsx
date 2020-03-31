@@ -178,15 +178,17 @@ class VariablesTable extends Component {
             </tbody>
           </table>
         }
-        enableDropdown={true}
-        enableFullscreen={true}
-        enableCollapse={true}
-        additionalDropdowns={[
-          {
-            text: "Add new variable",
-            onClick: this.props.onVariableCreate.bind(this, currentDecisionId)
-          }
-        ]}
+        dropdownConfig={{
+          enableDropdown: true,
+          enableFullscreen: true,
+          enableCollapse: true,
+          additionalDropdowns: [
+            {
+              text: "Add new variable",
+              onClick: this.props.onVariableCreate.bind(this, currentDecisionId)
+            }
+          ]
+        }}
       />
     );
   }

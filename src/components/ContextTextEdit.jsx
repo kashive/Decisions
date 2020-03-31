@@ -15,8 +15,10 @@ export const ContextCard = ({ model, onChange }) => (
         }}
       />
     }
-    enableDropdown={true}
-    enableFullscreen={true}
-    enableCollapse={true}
+    dropdownConfig={{
+      enableDropdown: true,
+      enableFullscreen: true,
+      enableCollapse: true
+    }}
   />
 );
