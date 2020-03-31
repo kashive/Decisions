@@ -14,15 +14,12 @@ const GroupingContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid;
-  padding: 15px;
-  background-color: ${props => props.backgroundColor || "transparent"};
+  padding: 3%;
 `;
 
 const StyledElementGrouping = styled.div`
-  border: ${props => (props.hasTitle ? "1px solid" : "none")};
   padding: ${props => (props.hasTitle ? "1%" : "0%")};
-  background-color: ${props => props.backgroundColor || "transparent"};
+  background-color: white;
   margin-top: 2%;
   &:nth-child(1) {
     margin-top: 0%;
@@ -33,20 +30,18 @@ const StyledElementGrouping = styled.div`
 `;
 
 const Element = styled.div`
-    flex-grow: 1
-    border: 1px solid;
-    margin-left: ${prop =>
-      prop.isInGroup ? ITEM_GROUP_PADDING : DEFAULT_PADDING};
-    margin-right: ${prop =>
-      prop.isInGroup ? ITEM_GROUP_PADDING : DEFAULT_PADDING};
-    border: 1px solid black;
-    margin-top: 2%;
-    &:nth-child(1) {
-        margin-top: 0%;
-    };
-    & + & {
-        margin-top: 2%; //<Element> next to <Element>
-      };
+  flex-grow: 1;
+  margin-left: ${prop =>
+    prop.isInGroup ? ITEM_GROUP_PADDING : DEFAULT_PADDING};
+  margin-right: ${prop =>
+    prop.isInGroup ? ITEM_GROUP_PADDING : DEFAULT_PADDING};
+  margin-top: 2%;
+  &:nth-child(1) {
+    margin-top: 0%;
+  }
+  & + & {
+    margin-top: 2%; //<Element> next to <Element>
+  }
 `;
 const GroupingTitle = styled.div`
   margin-bottom: 1%;
@@ -134,6 +129,7 @@ const ElementGrouping = ({ id, title, config, elements }) => {
     <StyledElementGrouping
       key={id}
       hasTitle={title && true}
+      numberOfElements={elementComponents.length}
       isCollapsed={isCollapsed}
     >
       <FloatLeftAndRightInline>

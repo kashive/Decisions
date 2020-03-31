@@ -49,6 +49,7 @@ function Option(props) {
   if (!option) return false; //todo: fix this later: https://app.asana.com/0/1166509149726089/1168928353343516/f
   return (
     <Card
+      backgroundColor="#f8f9fa"
       dropdownConfig={{
         enableFullscreen: true,
         enableCollapse: true,

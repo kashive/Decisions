@@ -6,7 +6,7 @@ import produce from "immer";
 import "../../styles/card.less";
 
 const StyledCard = styled.div`
-  background-color: white;
+  background-color: ${props => props.backgroundColor || "white"};
   border: 1px solid #efefef;
   position: relative;
   &:nth-child(1) {
@@ -134,7 +134,7 @@ class Card extends Component {
 
   render() {
     return (
-      <StyledCard>
+      <StyledCard backgroundColor={this.props.backgroundColor}>
         <CardHeader isCollapsed={this.state.isCollapsed}>
           <StyledTitle>{this.props.title}</StyledTitle>
           <CustomDropdown
