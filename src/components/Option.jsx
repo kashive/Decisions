@@ -32,9 +32,9 @@ const OptionHeader = ({ headerText, score, onNameChange }) => {
           handleTextChange={onNameChange}
           placeholderText="Option Name"
           placeholderTextWidth="125px"
-          expandWithContent={true}
           padding="5px"
-          multiLine={false}
+          expandWithContent={false}
+          multiLine={true}
         />
       </Badge>
     </div>
