@@ -8,8 +8,7 @@ import Card from "./shared/Card";
 import {
   onOptionNameChange,
   onOptionDescriptionChange,
-  onOptionRemove,
-  onOptionCreate
+  onOptionRemove
 } from "../redux/actions/optionActions";
 
 const OptionHeader = ({ headerText, score, onNameChange }) => {
@@ -133,8 +132,7 @@ const mapStateToProps = (state, myProps) => {
 const actionCreators = {
   onOptionNameChange,
   onOptionDescriptionChange,
-  onOptionRemove,
-  onOptionCreate
+  onOptionRemove
 };
 
 export default connect(mapStateToProps, actionCreators)(Option);

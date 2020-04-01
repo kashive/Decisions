@@ -57,11 +57,12 @@ const buildPropsForCustomDropdown = (
   isCollapsed,
   setIsCollapsed,
   isFullscreen,
-  setIsFullscreen
+  setIsFullscreen,
+  numberOfElements
 ) => {
   if (!config) return;
   const output = [];
-  if (config.enableCollapse) {
+  if (config.enableCollapse && numberOfElements > 0) {
     output.push({
       text: isCollapsed ? "Expand" : "Collapse",
       onClick: () => {
@@ -80,7 +81,7 @@ const buildPropsForCustomDropdown = (
   return (config.additionalDropdowns || []).concat(output);
 };
 
-const ElementGrouping = ({ id, title, config, elements }) => {
+const ElementGrouping = ({ id, title, config, elements = [] }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const customDropdownProps = buildPropsForCustomDropdown(
@@ -88,7 +89,8 @@ const ElementGrouping = ({ id, title, config, elements }) => {
     isCollapsed,
     setIsCollapsed,
     isFullscreen,
-    setIsFullscreen
+    setIsFullscreen,
+    elements.length
   );
 
   const fullscreenConfig = config
