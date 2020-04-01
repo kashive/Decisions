@@ -16,7 +16,6 @@ const OptionHeader = ({ headerText, score, onNameChange }) => {
   return (
     <div>
       <Badge
-        style={{ visibility: score ? "inherit" : "hidden" }}
         maxCount={Number.MAX_VALUE}
         content={
           <Whisper
@@ -24,7 +23,7 @@ const OptionHeader = ({ headerText, score, onNameChange }) => {
             trigger="hover"
             speaker={<Tooltip>Weighted average</Tooltip>}
           >
-            <p>{score}</p>
+            <p>{score || false}</p>
           </Whisper>
         }
       >
