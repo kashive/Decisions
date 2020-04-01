@@ -19,12 +19,8 @@ const StyledCard = styled.div`
 `;
 
 const CardBody = styled.div`
-  padding: 10px;
-  padding-bottom: 15px;
-  // opacity: ${props => (props.isCollapsed ? 1 : 0)};
-  // max-height: ${props => (props.isCollapsed ? "1000px" : "0")};
-  // transition: all 0.4s ease 0.15s;
-  overflow: hidden;
+  padding: 2%;
+  padding-top: 0%;
 `;
 
 export const StyledTitle = styled.div`
