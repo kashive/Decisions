@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { onDecisionSelect } from "../redux/actions/controlStateActions";
-
 import { Sidenav, Nav, Dropdown, Icon, Navbar, Sidebar } from "rsuite";
+import "../styles/sidenav.less";
 
 const collapseWidth = 56;
 const expandWidth = 225;
@@ -17,7 +17,7 @@ const headerStyles = {
 };
 
 const blackBackground = {
-  background: "black"
+  background: "#141a25"
 };
 
 const sideBarStyles = {
@@ -27,7 +27,7 @@ const sideBarStyles = {
 
 const NavToggle = ({ expand, onChange }) => {
   return (
-    <Navbar className="nav-toggle">
+    <Navbar className="nav-toggle" style={{ backgroundColor: "#141a25" }}>
       <Navbar.Body>
         <Nav pullRight>
           <Nav.Item
@@ -80,14 +80,14 @@ class SideNavInternal extends React.Component {
             <span style={{ marginLeft: 12 }}> Decisions</span>
           </div>
         </Sidenav.Header>
-        <Sidenav expanded={expand} defaultOpenKeys={["3"]}>
+        <Sidenav expanded={expand} style={{ backgroundColor: "#141a25" }}>
           <Sidenav.Body>
             <Nav>
               <Dropdown
-                eventKey="4"
+                menuStyle={{ backgroundColor: "#141a25" }} //changes the right menu background
                 trigger="hover"
-                title="Decisions"
-                icon={<Icon icon="list" />}
+                title={<p style={{ color: "white" }}>Decisions</p>}
+                icon={<Icon icon="list" style={{ color: "white" }} />}
                 placement="rightStart"
               >
                 {this.props.decisionIdsAndTitles
@@ -95,16 +95,23 @@ class SideNavInternal extends React.Component {
                   .map(decision => {
                     return (
                       <Dropdown.Item
-                        style={{ color: "white" }}
                         key={decision.id}
                         active={decision.id === this.props.currentDecisionId}
-                        onSelect={this.props.onDecisionSelect.bind(
-                          this,
-                          decision.id
+                        renderItem={() => (
+                          <a
+                            className="dropdown-item rs-dropdown-item-content"
+                            style={{ backgroundColor: "#141a25" }}
+                            onClick={this.props.onDecisionSelect.bind(
+                              this,
+                              decision.id
+                            )}
+                          >
+                            <span style={{ color: "white" }}>
+                              {decision.title}
+                            </span>
+                          </a>
                         )}
-                      >
-                        {decision.title}
-                      </Dropdown.Item>
+                      />
                     );
                   })}
               </Dropdown>
