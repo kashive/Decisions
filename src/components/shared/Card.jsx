@@ -3,6 +3,7 @@ import { Modal } from "rsuite";
 import { CustomDropdown } from "./CustomDropdown";
 import styled from "styled-components";
 import produce from "immer";
+import { CSSTransition } from "react-transition-group";
 import "../../styles/card.less";
 
 const StyledCard = styled.div`
@@ -20,9 +21,9 @@ const StyledCard = styled.div`
 const CardBody = styled.div`
   padding: 10px;
   padding-bottom: 15px;
-  opacity: ${props => (props.isCollapsed ? 1 : 0)};
-  max-height: ${props => (props.isCollapsed ? "1000px" : "0")};
-  transition: all 0.4s ease 0.15s;
+  // opacity: ${props => (props.isCollapsed ? 1 : 0)};
+  // max-height: ${props => (props.isCollapsed ? "1000px" : "0")};
+  // transition: all 0.4s ease 0.15s;
   overflow: hidden;
 `;
 
@@ -36,11 +37,7 @@ export const StyledTitle = styled.div`
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding-top: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom: ${props => (props.isCollapsed ? "1px solid #efefef" : "none")};
-  transition: border-bottom 0.5s ease 0.5s;
+  padding: 1%;
 `;
 
 export const CardFocus = ({ isVisible, onCancel, content }) => {
@@ -160,9 +157,16 @@ class Card extends Component {
             />
           }
         />
-        <CardBody isCollapsed={!this.state.isCollapsed}>
-          {this.props.body}
-        </CardBody>
+        <CSSTransition
+          in={!this.state.isCollapsed}
+          timeout={800}
+          classNames="collapse"
+          unmountOnExit
+        >
+          <CardBody isCollapsed={!this.state.isCollapsed}>
+            {this.props.body}
+          </CardBody>
+        </CSSTransition>
       </StyledCard>
     );
   }

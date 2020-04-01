@@ -2,20 +2,42 @@
   opacity: 1 !important;
 }
 
-.example-enter {
-  opacity: 0.01;
+.collapse-enter {
+  opacity: 0;
+  max-height: 0;
 }
 
-.example-enter.example-enter-active {
+.collapse-enter-active {
   opacity: 1;
-  transition: opacity 800ms ease-in;
+  max-height: 1000px;
+  transition: all 800ms;
 }
 
-.example-leave {
+.collapse-exit {
   opacity: 1;
+  max-height: 1000px;
 }
 
-.example-leave.example-leave-active {
-  opacity: 0.01;
-  transition: opacity 500ms ease-in;
+.collapse-exit-active {
+  opacity: 0;
+  max-height: 0px;
+  transition: all 800ms;
 }
+
+// .alert-enter {
+//   opacity: 0;
+//   transform: scale(0.9);
+// }
+// .alert-enter-active {
+//   opacity: 1;
+//   transform: translateX(0);
+//   transition: opacity 300ms, transform 300ms;
+// }
+// .alert-exit {
+//   opacity: 1;
+// }
+// .alert-exit-active {
+//   opacity: 0;
+//   transform: scale(0.9);
+//   transition: opacity 300ms, transform 300ms;
+// }

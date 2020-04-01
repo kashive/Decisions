@@ -28,17 +28,15 @@ const OptionHeader = ({ headerText, score, onNameChange }) => {
           </Whisper>
         }
       >
-        <div style={{ margin: "10px", visibility: "visible" }}>
-          <BorderedInlineTextEdit
-            text={headerText}
-            handleTextChange={onNameChange}
-            placeholderText="Option Name"
-            placeholderTextWidth="125px"
-            expandWithContent={true}
-            padding="5px"
-            multiLine={false}
-          />
-        </div>
+        <BorderedInlineTextEdit
+          text={headerText}
+          handleTextChange={onNameChange}
+          placeholderText="Option Name"
+          placeholderTextWidth="125px"
+          expandWithContent={true}
+          padding="5px"
+          multiLine={false}
+        />
       </Badge>
     </div>
   );

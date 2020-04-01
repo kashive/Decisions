@@ -4,7 +4,7 @@ import produce from "immer";
 import { useState } from "react";
 import { CustomDropdown } from "./CustomDropdown";
 import { CardFocus } from "./Card";
-import { CSSTransitionGroup } from "react-transition-group";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 import "../../styles/card.less";
 
 const DEFAULT_PADDING = "0%";
@@ -119,9 +119,9 @@ const ElementGrouping = ({ id, title, config, elements }) => {
 
   const elementComponents = (isCollapsed ? [] : elements).map(item => {
     return (
-      <Element key={item.itemId} isInGroup={title && true}>
-        {item.content}
-      </Element>
+      <CSSTransition key={item.itemId} timeout={800} classNames="collapse">
+        <Element isInGroup={title && true}>{item.content}</Element>
+      </CSSTransition>
     );
   });
 
@@ -137,13 +137,7 @@ const ElementGrouping = ({ id, title, config, elements }) => {
         <CustomDropdown config={customDropdownProps} />
       </FloatLeftAndRightInline>
       {fullscreenCard}
-      <CSSTransitionGroup
-        transitionName="example"
-        transitionEnterTimeout={800}
-        transitionLeaveTimeout={500}
-      >
-        {elementComponents}
-      </CSSTransitionGroup>
+      <TransitionGroup>{elementComponents}</TransitionGroup>
     </StyledElementGrouping>
   );
 };
