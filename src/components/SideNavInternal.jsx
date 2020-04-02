@@ -17,15 +17,6 @@ const headerStyles = {
   color: "#f8f9fa"
 };
 
-const blackBackground = {
-  background: "#141a25"
-};
-
-const sideBarStyles = {
-  display: "flex",
-  flexDirection: "column"
-};
-
 const NavToggle = ({ expand, onChange }) => {
   return (
     <Navbar className="nav-toggle" style={{ backgroundColor: "#141a25" }}>
@@ -67,7 +58,11 @@ class SideNavInternal extends React.Component {
     const { expand } = this.state;
     return (
       <Sidebar
-        style={(sideBarStyles, blackBackground)}
+        style={{
+          backgroundColor: "#141a25",
+          position: "fixed",
+          height: "100%"
+        }}
         width={expand ? expandWidth : collapseWidth}
         collapsible
       >

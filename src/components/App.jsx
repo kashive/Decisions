@@ -201,7 +201,8 @@ class App extends React.Component {
           <Container
             style={{
               backgroundColor: "#f8f9fa",
-              minHeight: "100vh"
+              minHeight: "100vh",
+              marginLeft: "225px"
             }}
           >
             <Header
