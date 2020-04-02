@@ -16,6 +16,7 @@ import {
 } from "rsuite";
 
 import { ContextCard } from "./ContextTextEdit";
+import Metrics from "./Metrics";
 import Option from "./Option";
 import VariablesTable from "./VariablesTable";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
@@ -38,6 +39,7 @@ class App extends React.Component {
       addNewDecisionPopupActive: false
     };
     this.variablesPanelRef = React.createRef();
+    this.optionsRef = {};
   }
   componentDidMount() {
     this.props.appMountSuccess("dummyUserId");
@@ -88,6 +90,14 @@ class App extends React.Component {
     }
   };
 
+  scrollToOptions = optionId => {
+    const option = this.optionsRef[optionId];
+    if (option) {
+      const optionCurrent = option.current;
+      if (optionCurrent) ReactDOM.findDOMNode(optionCurrent).scrollIntoView();
+    }
+  };
+
   onDecisionCreate = title => {
     this.props.onDecisionCreate(title);
     this.hideAddNewDecision();
@@ -116,7 +126,12 @@ class App extends React.Component {
         items: [
           {
             itemId: "variablesTable",
-            content: <VariablesTable />
+
+            content: (
+              <div ref={this.variablesPanelRef}>
+                <VariablesTable />
+              </div>
+            )
           }
         ]
       },
@@ -136,9 +151,36 @@ class App extends React.Component {
         items: decision.optionIds.map(optId => {
           return {
             itemId: optId,
-            content: <Option key={optId} optionId={optId} />
+            content: (
+              <div
+                ref={
+                  this.optionsRef[optId] ||
+                  (this.optionsRef[optId] = React.createRef())
+                }
+              >
+                <Option
+                  key={optId}
+                  optionId={optId}
+                  scrollToVariableTable={this.scrollToVariableTable}
+                />
+              </div>
+            )
           };
         })
+      },
+      {
+        id: "4",
+        items: [
+          {
+            itemId: "metricsCard",
+            content: (
+              <Metrics
+                decisionId={decision.id}
+                scrollToOptions={this.scrollToOptions}
+              />
+            )
+          }
+        ]
       }
     ];
   };

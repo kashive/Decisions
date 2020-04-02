@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Button } from "rsuite";
 import { onDecisionSelect } from "../redux/actions/controlStateActions";
 import { Sidenav, Nav, Dropdown, Icon, Navbar, Sidebar } from "rsuite";
 import "../styles/sidenav.less";
@@ -98,9 +99,14 @@ class SideNavInternal extends React.Component {
                         key={decision.id}
                         active={decision.id === this.props.currentDecisionId}
                         renderItem={() => (
-                          <a
+                          <Button
+                            appearance="link"
                             className="dropdown-item rs-dropdown-item-content"
-                            style={{ backgroundColor: "#141a25" }}
+                            style={{
+                              backgroundColor: "#141a25",
+                              textAlign: "left",
+                              marginLeft: "5%"
+                            }}
                             onClick={this.props.onDecisionSelect.bind(
                               this,
                               decision.id
@@ -109,7 +115,7 @@ class SideNavInternal extends React.Component {
                             <span style={{ color: "white" }}>
                               {decision.title}
                             </span>
-                          </a>
+                          </Button>
                         )}
                       />
                     );

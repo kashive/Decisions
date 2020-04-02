@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
-import { Badge, Whisper, Tooltip } from "rsuite";
 import FroalaEditor from "react-froala-wysiwyg";
 import OptionScores from "./OptionScores";
 import Card from "./shared/Card";
@@ -13,30 +12,15 @@ import {
 
 const OptionHeader = ({ headerText, score, onNameChange }) => {
   return (
-    <div>
-      <Badge
-        maxCount={Number.MAX_VALUE}
-        content={
-          <Whisper
-            placement="top"
-            trigger="hover"
-            speaker={<Tooltip>Weighted average</Tooltip>}
-          >
-            <p>{score || false}</p>
-          </Whisper>
-        }
-      >
-        <BorderedInlineTextEdit
-          text={headerText}
-          handleTextChange={onNameChange}
-          placeholderText="Option Name"
-          placeholderTextWidth="125px"
-          padding="5px"
-          expandWithContent={false}
-          multiLine={true}
-        />
-      </Badge>
-    </div>
+    <BorderedInlineTextEdit
+      text={headerText}
+      handleTextChange={onNameChange}
+      placeholderText="Option Name"
+      placeholderTextWidth="125px"
+      padding="5px"
+      expandWithContent={false}
+      multiLine={true}
+    />
   );
 };
 

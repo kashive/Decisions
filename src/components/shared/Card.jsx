@@ -159,9 +159,7 @@ class Card extends Component {
           classNames="collapse"
           unmountOnExit
         >
-          <CardBody isCollapsed={!this.state.isCollapsed}>
-            {this.props.body}
-          </CardBody>
+          <CardBody>{this.props.body}</CardBody>
         </CSSTransition>
       </StyledCard>
     );
