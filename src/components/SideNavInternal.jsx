@@ -5,9 +5,6 @@ import { onDecisionSelect } from "../redux/actions/controlStateActions";
 import { Sidenav, Nav, Dropdown, Icon, Navbar, Sidebar } from "rsuite";
 import "../styles/sidenav.less";
 
-const collapseWidth = 56;
-const expandWidth = 225;
-
 const headerStyles = {
   padding: 18,
   fontSize: 16,
@@ -22,13 +19,7 @@ const NavToggle = ({ expand, onChange }) => {
     <Navbar className="nav-toggle" style={{ backgroundColor: "#141a25" }}>
       <Navbar.Body>
         <Nav pullRight>
-          <Nav.Item
-            onClick={onChange}
-            style={{
-              width: collapseWidth,
-              textAlign: "center"
-            }}
-          >
+          <Nav.Item onClick={onChange}>
             <Icon
               style={{ color: "white" }}
               icon={expand ? "angle-left" : "angle-right"}
@@ -43,19 +34,10 @@ const NavToggle = ({ expand, onChange }) => {
 class SideNavInternal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      expand: true
-    };
-    this.handleToggle = this.handleToggle.bind(this);
-  }
-  handleToggle() {
-    this.setState({
-      expand: !this.state.expand
-    });
   }
 
   render() {
-    const { expand } = this.state;
+    const { expand, expandWidth, collapseWidth } = this.props;
     return (
       <Sidebar
         style={{
@@ -80,7 +62,11 @@ class SideNavInternal extends React.Component {
           <Sidenav.Body>
             <Nav>
               <Dropdown
-                menuStyle={{ backgroundColor: "#141a25" }} //changes the right menu background
+                menuStyle={{
+                  backgroundColor: "#141a25",
+                  overflow: "hidden",
+                  borderRadius: "0px 6px 6px 0px"
+                }} //changes the right menu background
                 trigger="hover"
                 title={<p style={{ color: "white" }}>Decisions</p>}
                 icon={<Icon icon="list" style={{ color: "white" }} />}
@@ -119,7 +105,7 @@ class SideNavInternal extends React.Component {
             </Nav>
           </Sidenav.Body>
         </Sidenav>
-        <NavToggle expand={expand} onChange={this.handleToggle} />
+        <NavToggle expand={expand} onChange={this.props.handleToggle} />
       </Sidebar>
     );
   }

@@ -32,11 +32,15 @@ import DecisionTitle from "./DecisionTitle";
 import { StyledTitle } from "./shared/Card";
 import { ListGrouping } from "./shared/ListGrouping";
 
+const SIDENAV_COLLAPSE_WIDTH = 56;
+const SIDENAV_EXPAND_WIDTH = 225;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      addNewDecisionPopupActive: false
+      addNewDecisionPopupActive: false,
+      sidenavExpanded: true
     };
     this.variablesPanelRef = React.createRef();
     this.optionsRef = {};
@@ -51,6 +55,12 @@ class App extends React.Component {
 
   hideAddNewDecision = () => {
     this.setState({ addNewDecisionPopupActive: false });
+  };
+
+  toggleSidenavExpanded = () => {
+    this.setState({
+      sidenavExpanded: !this.state.sidenavExpanded
+    });
   };
 
   findCurrentDecisionInState(state) {
@@ -197,12 +207,20 @@ class App extends React.Component {
     return (
       <div>
         <Container>
-          <SideNavInternal />
+          <SideNavInternal
+            expand={this.state.sidenavExpanded}
+            handleToggle={this.toggleSidenavExpanded}
+            collapseWidth={SIDENAV_COLLAPSE_WIDTH}
+            expandWidth={SIDENAV_EXPAND_WIDTH}
+          />
           <Container
             style={{
               backgroundColor: "#f8f9fa",
               minHeight: "100vh",
-              marginLeft: "225px"
+              marginLeft: this.state.sidenavExpanded
+                ? SIDENAV_EXPAND_WIDTH
+                : SIDENAV_COLLAPSE_WIDTH,
+              transition: "margin-left 0.3s ease"
             }}
           >
             <Header
@@ -247,7 +265,7 @@ class App extends React.Component {
               style={{
                 marginTop: "2%",
                 marginLeft: "15%",
-                marginRight: "15%"
+                marginRight: "15%" //todo: add media query
               }}
             >
               <ListGrouping data={listGroupingData} />
