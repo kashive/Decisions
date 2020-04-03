@@ -9,6 +9,7 @@ import {
   Header,
   Content,
   ButtonToolbar,
+  Button,
   Icon,
   IconButton,
   Whisper,
@@ -114,6 +115,7 @@ class App extends React.Component {
   };
 
   getListGroupingData = decision => {
+    if (!decision) return [];
     return [
       {
         id: "1",
@@ -197,10 +199,6 @@ class App extends React.Component {
 
   render() {
     const currentDecisionId = this.props.currentDecisionId;
-    if (!currentDecisionId) {
-      //todo: show a spinner when integrated with the backend
-      return <div>Loading...</div>;
-    }
     const { byId } = this.props.decisions;
     const decision = byId[currentDecisionId];
     const listGroupingData = this.getListGroupingData(decision);
@@ -223,19 +221,64 @@ class App extends React.Component {
               transition: "margin-left 0.3s ease"
             }}
           >
-            <Header
-              style={{
-                backgroundColor: "white",
-                borderBottom: "1px solid",
-                borderColor: "#dbdce0"
-              }}
-            >
-              <DecisionTitle
-                decisionTitle={decision.title}
-                onDecisionTitleChange={title =>
-                  this.props.onDecisionTitleChange(decision.id, title)
-                }
-              />
+            {decision && (
+              <>
+                <Header
+                  style={{
+                    backgroundColor: "white",
+                    borderBottom: "1px solid",
+                    borderColor: "#dbdce0"
+                  }}
+                >
+                  <DecisionTitle
+                    decisionTitle={decision.title}
+                    onDecisionTitleChange={title =>
+                      this.props.onDecisionTitleChange(decision.id, title)
+                    }
+                  />
+                  <div
+                    style={{ borderTop: "1px solid", borderColor: "#dbdce0" }}
+                  >
+                    <ButtonToolbar>
+                      <Whisper
+                        placement="bottomStart"
+                        trigger="hover"
+                        speaker={<Tooltip>Add New Decision</Tooltip>}
+                      >
+                        <IconButton
+                          onClick={this.showAddNewDecision}
+                          className="actionIcon"
+                          icon={
+                            <Icon
+                              style={{ color: "black" }}
+                              icon="plus-circle"
+                            />
+                          }
+                          size="sm"
+                          appearance="link"
+                        />
+                      </Whisper>
+                    </ButtonToolbar>
+                    <CreateNewDecisionPopUp
+                      isVisible={this.state.addNewDecisionPopupActive}
+                      onCreate={this.onDecisionCreate}
+                      onCancel={this.hideAddNewDecision}
+                    />
+                  </div>
+                </Header>
+                <Content
+                  style={{
+                    marginTop: "2%",
+                    marginLeft: "15%",
+                    marginRight: "15%" //todo: add media query
+                  }}
+                >
+                  <ListGrouping data={listGroupingData} />
+                </Content>
+              </>
+            )}
+
+            {!decision && (
               <div style={{ borderTop: "1px solid", borderColor: "#dbdce0" }}>
                 <ButtonToolbar>
                   <Whisper
@@ -260,16 +303,7 @@ class App extends React.Component {
                   onCancel={this.hideAddNewDecision}
                 />
               </div>
-            </Header>
-            <Content
-              style={{
-                marginTop: "2%",
-                marginLeft: "15%",
-                marginRight: "15%" //todo: add media query
-              }}
-            >
-              <ListGrouping data={listGroupingData} />
-            </Content>
+            )}
           </Container>
         </Container>
       </div>
