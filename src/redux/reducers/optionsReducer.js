@@ -6,7 +6,8 @@ import {
   CREATE_VARIABLE,
   VARIABLE_REMOVE,
   OPTION_SCORE_CHANGE,
-  OPTION_SCORE_REASONING_CHANGE
+  OPTION_SCORE_REASONING_CHANGE,
+  DELETE_DECISION,
 } from "../actionTypes";
 import { produce } from "immer";
 
@@ -14,19 +15,19 @@ export function optionsReducer(state, action) {
   switch (action.type) {
     case OPTION_NAME_CHANGE: {
       const { id, name } = action.payload;
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.byId[id].name = name;
       });
     }
     case OPTION_DESCRIPTION_CHANGE: {
       const { id, description } = action.payload;
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.byId[id].description = description;
       });
     }
     case OPTION_SCORE_REASONING_CHANGE: {
       const { variableId, optionId, reasoning } = action.payload;
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.byId[optionId].variableScores.byId[
           variableId
         ].reasoning = reasoning;
@@ -34,31 +35,31 @@ export function optionsReducer(state, action) {
     }
     case OPTION_SCORE_CHANGE: {
       const { optionId, variableId, score } = action.payload;
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.byId[optionId].variableScores.byId[variableId].score = score;
       });
     }
     case OPTION_REMOVE: {
       const { optionId } = action.payload;
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         delete draft.byId[optionId];
-        draft.allIds = draft.allIds.filter(id => id !== optionId);
+        draft.allIds = draft.allIds.filter((id) => id !== optionId);
       });
     }
     case CREATE_OPTION: {
       const { optionId, decisionId, variableIds } = action.payload;
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.byId[optionId] = {
           id: optionId,
           decisionId,
           variableScores: {
             byId: variableIds
-              .map(id => {
+              .map((id) => {
                 return { [id]: { variableId: id } };
               })
               .reduce((obj, item) => Object.assign(obj, item), {}),
-            allIds: variableIds
-          }
+            allIds: variableIds,
+          },
         };
         draft.allIds.unshift(optionId);
       });
@@ -66,14 +67,14 @@ export function optionsReducer(state, action) {
     case CREATE_VARIABLE: {
       const { decisionId, variableId } = action.payload;
 
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         const { allIds, byId } = draft;
         allIds
-          .map(optId => byId[optId])
-          .filter(opt => opt.decisionId === decisionId)
-          .forEach(opt => {
+          .map((optId) => byId[optId])
+          .filter((opt) => opt.decisionId === decisionId)
+          .forEach((opt) => {
             opt.variableScores.byId[variableId] = {
-              variableId
+              variableId,
             };
             opt.variableScores.allIds.unshift(variableId);
           });
@@ -81,19 +82,33 @@ export function optionsReducer(state, action) {
     }
     case VARIABLE_REMOVE: {
       const { decisionId, variableId } = action.payload;
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         const { byId, allIds } = draft;
         allIds
-          .map(optId => byId[optId])
-          .filter(option => option.decisionId === decisionId)
-          .filter(option => option.variableScores.allIds.includes(variableId))
-          .forEach(option => {
+          .map((optId) => byId[optId])
+          .filter((option) => option.decisionId === decisionId)
+          .filter((option) => option.variableScores.allIds.includes(variableId))
+          .forEach((option) => {
             delete option.variableScores.byId[variableId];
             const variableScoresAllIds = option.variableScores.allIds;
             option.variableScores.allIds = variableScoresAllIds.filter(
-              id => id !== variableId
+              (id) => id !== variableId
             );
           });
+      });
+    }
+    case DELETE_DECISION: {
+      return produce(state, (draft) => {
+        const { decisionId } = action.payload;
+        const { allIds, byId } = draft;
+        const optionIdsToDelete = allIds
+          .map((id) => byId[id])
+          .filter((option) => option.decisionId === decisionId)
+          .map((option) => option.id);
+        optionIdsToDelete.forEach((optionId) => delete byId[optionId]);
+        draft.allIds = draft.allIds.filter(
+          (id) => !optionIdsToDelete.includes(id)
+        );
       });
     }
     default:

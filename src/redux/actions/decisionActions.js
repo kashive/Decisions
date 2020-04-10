@@ -5,12 +5,13 @@ import {
   DECISION_TITLE_CHANGE,
   CREATE_DECISION,
   DECISION_CONTEXT_CHANGE,
-  DECISION_SELECT
+  DECISION_SELECT,
+  DELETE_DECISION,
 } from "../actionTypes";
 import uuid from "uuid";
 
 export function fetchDecisions(userId) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(fetchDecisionsBegin());
     dispatch(
       fetchDecisionsSuccess(NORMALIZED_DUMMY_STATE_V2.entities.decisions)
@@ -19,34 +20,49 @@ export function fetchDecisions(userId) {
 }
 
 export const fetchDecisionsBegin = () => ({
-  type: FETCH_DECISIONS_BEGIN
+  type: FETCH_DECISIONS_BEGIN,
 });
 
-export const fetchDecisionsSuccess = decisions => ({
+export const fetchDecisionsSuccess = (decisions) => ({
   type: FETCH_DECISIONS_SUCCESS,
-  payload: { decisions }
+  payload: { decisions },
 });
 
 export function onDecisionTitleChange(id, title) {
-  return dispatch =>
+  return (dispatch) =>
     dispatch({ type: DECISION_TITLE_CHANGE, payload: { id, title } });
 }
 
 export function onDecisionContextChange(id, context) {
-  return dispatch =>
+  return (dispatch) =>
     dispatch({
       type: DECISION_CONTEXT_CHANGE,
-      payload: { id, context }
+      payload: { id, context },
     });
 }
 
 export function onDecisionCreate(title) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({ type: CREATE_DECISION, payload: { title, id: uuid.v4() } });
   };
 }
 
+export function onDecisionDelete(decisionId) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const currentDecisionId = state.controlState.decisionId;
+    const nextDecisionId =
+      currentDecisionId === decisionId
+        ? state.entities.decisions.allIds.find((id) => id !== decisionId)
+        : undefined;
+    dispatch({
+      type: DELETE_DECISION,
+      payload: { decisionId, nextDecisionId },
+    });
+  };
+}
+
 export function onCurrentDecisionChange(decisionId) {
-  return dispatch =>
+  return (dispatch) =>
     dispatch({ type: DECISION_SELECT, payload: { decisionId } });
 }

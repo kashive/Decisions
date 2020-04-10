@@ -1,7 +1,10 @@
 import React from "react";
 import { ButtonToolbar, Icon, IconButton, Whisper, Tooltip } from "rsuite";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
-import { onDecisionCreate } from "../redux/actions/decisionActions";
+import {
+  onDecisionCreate,
+  onDecisionDelete,
+} from "../redux/actions/decisionActions";
 import { connect } from "react-redux";
 
 const TopNavActionToolbar = ({
@@ -9,6 +12,8 @@ const TopNavActionToolbar = ({
   addNewDecisionPopupActive,
   hideAddNewDecision,
   onDecisionCreate,
+  onDecisionDelete,
+  currentDecisionId,
   style,
 }) => {
   const createDecisionHidePopUp = (title) => {
@@ -31,6 +36,21 @@ const TopNavActionToolbar = ({
             appearance="link"
           />
         </Whisper>
+        {currentDecisionId && (
+          <Whisper
+            placement="bottomStart"
+            trigger="hover"
+            speaker={<Tooltip>Delete current decision</Tooltip>}
+          >
+            <IconButton
+              onClick={() => onDecisionDelete(currentDecisionId)}
+              className="actionIcon"
+              icon={<Icon style={{ color: "black" }} icon="trash" />}
+              size="sm"
+              appearance="link"
+            />
+          </Whisper>
+        )}
       </ButtonToolbar>
       <CreateNewDecisionPopUp
         isVisible={addNewDecisionPopupActive}
@@ -43,6 +63,14 @@ const TopNavActionToolbar = ({
 
 const actionCreators = {
   onDecisionCreate,
+  onDecisionDelete,
 };
 
-export default connect(null, actionCreators)(TopNavActionToolbar);
+const mapStateToProps = (state) => {
+  const currentDecisionId = state.controlState.decisionId;
+  return {
+    currentDecisionId,
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(TopNavActionToolbar);
