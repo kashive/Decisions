@@ -46,6 +46,7 @@ const SideNavInternal = ({
         backgroundColor: "#141a25",
         position: "fixed",
         height: "100%",
+        zIndex: "12",
       }}
       width={expand ? expandWidth : collapseWidth}
       collapsible

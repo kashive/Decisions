@@ -15,34 +15,32 @@ const TopNav = ({
   hideAddNewDecision,
 }) => {
   return (
-    <div style={{ height: "100%" }}>
-      <Header
-        style={{
-          backgroundColor: "white",
-          borderBottom: "1px solid #dbdce0",
-          position: "fixed",
-          width: "100%",
-          top: 0,
-          zIndex: 11,
-          height: decision ? TopNavHeight : "auto",
-        }}
-      >
-        {decision && (
-          <DecisionTitle
-            decisionTitle={decision.title}
-            onDecisionTitleChange={(title) =>
-              onDecisionTitleChange(decision.id, title)
-            }
-          />
-        )}
-        <TopNavActionToolbar
-          style={{ borderTop: "1px solid #dbdce0" }}
-          showAddNewDecision={showAddNewDecision}
-          addNewDecisionPopupActive={addNewDecisionPopupActive}
-          hideAddNewDecision={hideAddNewDecision}
+    <Header
+      style={{
+        backgroundColor: "white",
+        borderBottom: "1px solid #dbdce0",
+        position: "fixed",
+        width: "100%",
+        top: 0,
+        zIndex: 11,
+        height: decision ? TopNavHeight : "auto",
+      }}
+    >
+      {decision && (
+        <DecisionTitle
+          decisionTitle={decision.title}
+          onDecisionTitleChange={(title) =>
+            onDecisionTitleChange(decision.id, title)
+          }
         />
-      </Header>
-    </div>
+      )}
+      <TopNavActionToolbar
+        style={{ borderTop: "1px solid #dbdce0" }}
+        showAddNewDecision={showAddNewDecision}
+        addNewDecisionPopupActive={addNewDecisionPopupActive}
+        hideAddNewDecision={hideAddNewDecision}
+      />
+    </Header>
   );
 };
 
