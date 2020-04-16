@@ -1,15 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
 import Card from "./shared/Card";
+import { calculate_metrics } from "../calculation/MetricsCalculation";
 
-const Metrics = props => {
+const Metrics = (props) => {
   return (
     <Card
       title="Metrics"
       dropdownConfig={{
         enableDropdown: true,
         enableFullscreen: true,
-        enableCollapse: true
+        enableCollapse: true,
       }}
       body={
         <table>
@@ -20,23 +21,25 @@ const Metrics = props => {
             </tr>
           </thead>
           <tbody>
-            {props.optionScores
-              .filter(optionScore => optionScore.optionName)
-              .map(optionScore => {
+            {props.optionMetrics
+              .filter((optionMetrics) => optionMetrics.name)
+              .map((optionMetrics) => {
                 return (
-                  <tr key={optionScore.optionId}>
+                  <tr key={optionMetrics.optionId}>
                     <td>
                       <span
                         className="pointerOnHover"
                         onClick={props.scrollToOptions.bind(
                           this,
-                          optionScore.optionId
+                          optionMetrics.optionId
                         )}
                       >
-                        {optionScore.optionName}
+                        {optionMetrics.name}
                       </span>
                     </td>
-                    <td>{optionScore.score}</td>
+                    <td style={{ textAlign: "center" }}>
+                      {optionMetrics.score}
+                    </td>
                   </tr>
                 );
               })}
@@ -49,23 +52,22 @@ const Metrics = props => {
 
 const mapStateToProps = (state, myProps) => {
   const { options, variables, decisions } = state.entities;
-  const optionIds = decisions.byId[myProps.decisionId].optionIds;
-  const optionScores = optionIds
-    .map(optId => options.byId[optId])
-    .map(option => {
-      const { allIds, byId } = option.variableScores;
-      const score = allIds
-        .map(variableId => byId[variableId])
-        .map(variableScore => {
-          const score = variableScore.score || 0;
-          const weight = variables.byId[variableScore.variableId].weight || 0;
-          return weight * score;
-        })
-        .reduce((a, b) => a + b, 0);
-      return { optionId: option.id, score, optionName: option.name };
-    });
+  const optionStructs = decisions.byId[myProps.decisionId].optionIds.map(
+    (optId) => options.byId[optId]
+  );
+  const variableStructs = decisions.byId[myProps.decisionId].variableIds.map(
+    (vId) => variables.byId[vId]
+  );
+  const metrics = calculate_metrics(optionStructs, variableStructs);
+  const optionMetrics = optionStructs.map((option) => {
+    return {
+      optionId: option.id,
+      score: metrics[option.id],
+      name: option.name,
+    };
+  });
   return {
-    optionScores
+    optionMetrics,
   };
 };
 

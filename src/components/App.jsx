@@ -18,6 +18,8 @@ import { connect } from "react-redux";
 import { StyledTitle } from "./shared/Card";
 import { ListGrouping } from "./shared/ListGrouping";
 import TopNav, { TopNavHeight } from "./TopNav";
+import TableView from "./TableView";
+import ViewTypes from "../redux/viewTypes";
 
 const SIDENAV_COLLAPSE_WIDTH = 56;
 const SIDENAV_EXPAND_WIDTH = 225;
@@ -219,7 +221,10 @@ class App extends React.Component {
                     marginRight: "15%", //todo: add media query
                   }}
                 >
-                  <ListGrouping data={listGroupingData} />
+                  {this.props.currentView === ViewTypes.TABLE && <TableView />}
+                  {this.props.currentView === ViewTypes.MAIN && (
+                    <ListGrouping data={listGroupingData} />
+                  )}
                 </Content>
               </>
             )}
@@ -241,9 +246,11 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   const decisions = state.entities.decisions;
   const currentDecisionId = state.controlState.decisionId;
+  const currentView = state.viewState.currentView;
   return {
     decisions,
     currentDecisionId,
+    currentView,
   };
 };
 

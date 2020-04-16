@@ -1,11 +1,20 @@
 import React from "react";
-import { ButtonToolbar, Icon, IconButton, Whisper, Tooltip } from "rsuite";
+import {
+  Button,
+  ButtonToolbar,
+  Icon,
+  IconButton,
+  Whisper,
+  Tooltip,
+} from "rsuite";
 import CreateNewDecisionPopUp from "./CreateNewDecisionPopUp";
 import {
   onDecisionCreate,
   onDecisionDelete,
 } from "../redux/actions/decisionActions";
+import { onChangeView } from "../redux/actions/viewActions";
 import { connect } from "react-redux";
+import ViewTypes from "../redux/viewTypes";
 
 const TopNavActionToolbar = ({
   showAddNewDecision,
@@ -14,6 +23,8 @@ const TopNavActionToolbar = ({
   onDecisionCreate,
   onDecisionDelete,
   currentDecisionId,
+  onChangeView,
+  currentView,
   style,
 }) => {
   const createDecisionHidePopUp = (title) => {
@@ -51,6 +62,28 @@ const TopNavActionToolbar = ({
             />
           </Whisper>
         )}
+        {currentDecisionId && (
+          <Whisper
+            placement="bottomStart"
+            trigger="hover"
+            speaker={<Tooltip>Switch to main view</Tooltip>}
+          >
+            <Button onClick={() => onChangeView(ViewTypes.MAIN)}>
+              Main View
+            </Button>
+          </Whisper>
+        )}
+        {currentDecisionId && (
+          <Whisper
+            placement="bottomStart"
+            trigger="hover"
+            speaker={<Tooltip>Switch to table view</Tooltip>}
+          >
+            <Button onClick={() => onChangeView(ViewTypes.TABLE)}>
+              Table View
+            </Button>
+          </Whisper>
+        )}
       </ButtonToolbar>
       <CreateNewDecisionPopUp
         isVisible={addNewDecisionPopupActive}
@@ -64,12 +97,15 @@ const TopNavActionToolbar = ({
 const actionCreators = {
   onDecisionCreate,
   onDecisionDelete,
+  onChangeView,
 };
 
 const mapStateToProps = (state) => {
   const currentDecisionId = state.controlState.decisionId;
+  const currentView = state.viewState.currentView;
   return {
     currentDecisionId,
+    currentView,
   };
 };
 

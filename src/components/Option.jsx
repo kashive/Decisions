@@ -7,10 +7,10 @@ import Card from "./shared/Card";
 import {
   onOptionNameChange,
   onOptionDescriptionChange,
-  onOptionRemove
+  onOptionRemove,
 } from "../redux/actions/optionActions";
 
-const OptionHeader = ({ headerText, score, onNameChange }) => {
+export const EditableOptionTitle = ({ headerText, onNameChange }) => {
   return (
     <BorderedInlineTextEdit
       text={headerText}
@@ -40,14 +40,13 @@ function Option(props) {
               this,
               option.id,
               option.decisionId
-            )
-          }
-        ]
+            ),
+          },
+        ],
       }}
       title={
-        <OptionHeader
+        <EditableOptionTitle
           headerText={option.name}
-          score={props.score}
           onNameChange={props.onOptionNameChange.bind(this, option.id)}
         />
       }
@@ -56,11 +55,8 @@ function Option(props) {
           <Card
             dropdownConfig={{
               enableFullscreen: true,
-              enableCollapse: true
+              enableCollapse: true,
             }}
-            enableDropdown={true}
-            enableFullscreen={true}
-            enableCollapse={true}
             title="Description"
             body={
               <FroalaEditor
@@ -70,7 +66,7 @@ function Option(props) {
                   option.id
                 )}
                 config={{
-                  placeholderText: "Tell us more about the option"
+                  placeholderText: "Tell us more about the option",
                 }}
               />
             }
@@ -78,7 +74,7 @@ function Option(props) {
           <Card
             dropdownConfig={{
               enableFullscreen: true,
-              enableCollapse: true
+              enableCollapse: true,
             }}
             title="Variable Scores"
             body={
@@ -100,8 +96,8 @@ const mapStateToProps = (state, myProps) => {
   if (!option) return;
   const { allIds, byId } = option.variableScores;
   const score = allIds
-    .map(variableId => byId[variableId])
-    .map(variableScore => {
+    .map((variableId) => byId[variableId])
+    .map((variableScore) => {
       const score = variableScore.score || 0;
       const weight = variables.byId[variableScore.variableId].weight || 0;
       return weight * score;
@@ -109,14 +105,14 @@ const mapStateToProps = (state, myProps) => {
     .reduce((a, b) => a + b, 0);
   return {
     option,
-    score
+    score,
   };
 };
 
 const actionCreators = {
   onOptionNameChange,
   onOptionDescriptionChange,
-  onOptionRemove
+  onOptionRemove,
 };
 
 export default connect(mapStateToProps, actionCreators)(Option);

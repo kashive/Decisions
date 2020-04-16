@@ -10,12 +10,12 @@ import {
   onVariableRemove,
   onVariableNameChange,
   onVariableDescriptionChange,
-  onVariableWeightChange
+  onVariableWeightChange,
 } from "../redux/actions/variableActions";
 import { connect } from "react-redux";
 
 const HighlightableRow = styled.tr`
-  background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
+  background-color: ${(props) => (props.isHighlightOn ? "#f0f8ff" : "none")};
 `;
 
 const RemoveVariablePopUp = ({ isVisible, onCancel, onOk }) => {
@@ -49,11 +49,11 @@ class VariablesTable extends Component {
     super(props);
     this.state = {
       rowNumWithHighlight: undefined,
-      variableDeletePopUpOpen: false
+      variableDeletePopUpOpen: false,
     };
   }
 
-  handleHighlightOn = rowId => {
+  handleHighlightOn = (rowId) => {
     this.setState({ rowNumWithHighlight: rowId });
   };
 
@@ -61,7 +61,7 @@ class VariablesTable extends Component {
     this.setState({ rowNumWithHighlight: undefined });
   };
 
-  openRemoveVariablePopUp = variableId => {
+  openRemoveVariablePopUp = (variableId) => {
     if (!this.props.variableIdRemovalConsent[variableId]) {
       this.props.onVariableRemove(this.props.currentDecisionId, variableId);
     } else {
@@ -90,15 +90,19 @@ class VariablesTable extends Component {
               <tr>
                 <th style={{ width: "20%" }}>Name</th>
                 <th style={{ width: "30%" }}>Weight</th>
-                <th style={{ width: "45%" }}>Description</th>
-                <th style={{ borderLeft: "hidden" }}></th>
+                {!this.props.hideDescription && (
+                  <th style={{ width: "45%" }}>Description</th>
+                )}
+                {!this.props.hideRemoveVariable && (
+                  <th style={{ borderLeft: "hidden" }}></th>
+                )}
               </tr>
             </thead>
             <tbody>
               {allIds
-                .map(id => byId[id])
-                .filter(variable => variable.decisionId === currentDecisionId) //todo: get variable ids directly from decision
-                .map(variable => {
+                .map((id) => byId[id])
+                .filter((variable) => variable.decisionId === currentDecisionId) //todo: get variable ids directly from decision
+                .map((variable) => {
                   return (
                     <HighlightableRow
                       key={variable.id}
@@ -134,44 +138,50 @@ class VariablesTable extends Component {
                           )}
                         />
                       </td>
-                      <td>
-                        <BorderedInlineTextEdit
-                          text={variable.description}
-                          placeholderText="Description"
-                          handleTextChange={this.props.onVariableDescriptionChange.bind(
-                            this,
-                            variable.id
-                          )}
-                          padding="5px"
-                          expandWithContent={false}
-                          multiLine={true}
-                        />
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        <Whisper
-                          placement="top"
-                          trigger="hover"
-                          speaker={<Tooltip>Remove variable</Tooltip>}
-                        >
-                          <Icon
-                            className="actionIcon"
-                            icon="trash"
-                            onClick={this.openRemoveVariablePopUp.bind(
+                      {!this.props.hideDescription && (
+                        <td>
+                          <BorderedInlineTextEdit
+                            text={variable.description}
+                            placeholderText="Description"
+                            handleTextChange={this.props.onVariableDescriptionChange.bind(
                               this,
                               variable.id
                             )}
+                            padding="5px"
+                            expandWithContent={false}
+                            multiLine={true}
                           />
-                        </Whisper>
-                      </td>
-                      <RemoveVariablePopUp
-                        isVisible={this.state.variableDeletePopUpOpen}
-                        onCancel={this.closeRemoveVariablePopUp}
-                        onOk={this.onVariableRemovePromptOkClick.bind(
-                          this,
-                          currentDecisionId,
-                          variable.id
-                        )}
-                      />
+                        </td>
+                      )}
+                      {!this.props.hideRemoveVariable && (
+                        <>
+                          <td style={{ textAlign: "center" }}>
+                            <Whisper
+                              placement="top"
+                              trigger="hover"
+                              speaker={<Tooltip>Remove variable</Tooltip>}
+                            >
+                              <Icon
+                                className="actionIcon"
+                                icon="trash"
+                                onClick={this.openRemoveVariablePopUp.bind(
+                                  this,
+                                  variable.id
+                                )}
+                              />
+                            </Whisper>
+                          </td>
+                          <RemoveVariablePopUp
+                            isVisible={this.state.variableDeletePopUpOpen}
+                            onCancel={this.closeRemoveVariablePopUp}
+                            onOk={this.onVariableRemovePromptOkClick.bind(
+                              this,
+                              currentDecisionId,
+                              variable.id
+                            )}
+                          />
+                        </>
+                      )}
                     </HighlightableRow>
                   );
                 })}
@@ -185,38 +195,41 @@ class VariablesTable extends Component {
           additionalDropdowns: [
             {
               text: "Add new variable",
-              onClick: this.props.onVariableCreate.bind(this, currentDecisionId)
-            }
-          ]
+              onClick: this.props.onVariableCreate.bind(
+                this,
+                currentDecisionId
+              ),
+            },
+          ],
         }}
       />
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const variables = state.entities.variables;
   const currentDecisionId = state.controlState.decisionId;
   const allOptions = state.entities.options.allIds;
   const byOption = state.entities.options.byId;
 
   const variableIdRemovalConsent = state.entities.variables.allIds
-    .map(variableId => {
+    .map((variableId) => {
       const optionHasScoreForVariableId =
         allOptions
-          .map(optId => byOption[optId])
-          .filter(option => variableId in option.variableScores.byId)
-          .filter(option => option.variableScores.byId[variableId].score)
+          .map((optId) => byOption[optId])
+          .filter((option) => variableId in option.variableScores.byId)
+          .filter((option) => option.variableScores.byId[variableId].score)
           .length > 0;
       return {
-        [variableId]: optionHasScoreForVariableId
+        [variableId]: optionHasScoreForVariableId,
       };
     })
     .reduce((obj, item) => Object.assign(obj, item), {});
   return {
     variables,
     currentDecisionId,
-    variableIdRemovalConsent
+    variableIdRemovalConsent,
   };
 };
 
@@ -225,7 +238,7 @@ const actionCreators = {
   onVariableRemove,
   onVariableNameChange,
   onVariableDescriptionChange,
-  onVariableWeightChange
+  onVariableWeightChange,
 };
 
 export default connect(mapStateToProps, actionCreators)(VariablesTable);

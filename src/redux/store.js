@@ -2,6 +2,7 @@ import { applyMiddleware, createStore } from "redux";
 import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 import ls from "local-storage";
+import ViewTypes from "./viewTypes";
 
 const middlewares = [thunk];
 
@@ -11,20 +12,23 @@ export default createStore(
     entities: {
       decisions: {
         byId: {},
-        allIds: []
+        allIds: [],
       },
       variables: {
         byId: {},
-        allIds: []
+        allIds: [],
       },
       options: {
         byId: {},
-        allIds: []
-      }
+        allIds: [],
+      },
     },
     controlState: {
-      decisionId: undefined
-    }
+      decisionId: undefined,
+    },
+    viewState: {
+      currentView: ViewTypes.MAIN,
+    },
   },
   applyMiddleware(...middlewares)
 );
