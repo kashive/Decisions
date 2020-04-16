@@ -5,17 +5,20 @@ import {
   onOptionNameChange,
   onOptionCreate,
   onOptionScoreChange,
+  onOptionRemove,
 } from "../redux/actions/optionActions";
 import { calculate_metrics } from "../calculation/MetricsCalculation";
 import Card from "./shared/Card";
 import CustomSlider from "./shared/CustomSlider";
 import { EditableOptionTitle } from "./Option";
+import { CustomDropdown } from "./shared/CustomDropdown";
 
 const VariablesOptionsMetricsTable = ({
   decisionId,
   onOptionNameChange,
   onOptionScoreChange,
   onOptionCreate,
+  onOptionRemove,
   tableData,
 }) => {
   return (
@@ -79,8 +82,27 @@ const VariablesOptionsMetricsTable = ({
                       }
                     />
                   </td>
-                  <td style={{ textAlign: "center" }} rowSpan={rowSpan}>
+                  <td
+                    style={{
+                      textAlign: "center",
+                      position: "relative",
+                      overflow: "visible",
+                    }}
+                    rowSpan={rowSpan}
+                  >
                     {data.metrics.score}
+                    <CustomDropdown
+                      iconText="ellipsis-v"
+                      style={{ position: "absolute", top: "5px", right: "5px" }}
+                      config={[
+                        {
+                          text: "Remove option",
+                          onClick: () =>
+                            onOptionRemove(data.optionId, decisionId),
+                        },
+                        { text: "Visit main view" },
+                      ]}
+                    />
                   </td>
                 </tr>
               );
@@ -165,6 +187,7 @@ const actionCreators = {
   onOptionNameChange,
   onOptionScoreChange,
   onOptionCreate,
+  onOptionRemove,
 };
 
 export default connect(

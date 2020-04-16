@@ -8,17 +8,18 @@ import { Dropdown, Icon } from "rsuite";
  *
  */
 
-export const CustomDropdown = ({ config }) => {
-  if ((config || []).length === 0) return <>{false}</>;
+export const CustomDropdown = ({ config, style, iconText }) => {
+  if ((config || []).length === 0) return false;
   return (
     <Dropdown
+      style={style}
       renderTitle={() => {
-        return <Icon icon="ellipsis-h" />;
+        return <Icon icon={iconText || "ellipsis-h"} />;
       }}
       trigger="hover"
       placement="rightStart"
     >
-      {config.map(dropdown => {
+      {config.map((dropdown) => {
         return (
           <Dropdown.Item key={dropdown.text} onClick={dropdown.onClick}>
             {dropdown.text}
