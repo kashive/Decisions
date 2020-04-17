@@ -186,59 +186,55 @@ class App extends React.Component {
     const decision = byId[currentDecisionId];
     const listGroupingData = this.getListGroupingData(decision);
     return (
-      <div>
-        <Container>
-          <SideNavInternal
-            expand={this.state.sidenavExpanded}
-            handleToggle={this.toggleSidenavExpanded}
-            collapseWidth={SIDENAV_COLLAPSE_WIDTH}
-            expandWidth={SIDENAV_EXPAND_WIDTH}
-          />
-          <Container
-            style={{
-              backgroundColor: "#f8f9fa",
-              minHeight: "100vh",
-              marginLeft: this.state.sidenavExpanded
-                ? SIDENAV_EXPAND_WIDTH
-                : SIDENAV_COLLAPSE_WIDTH,
-              transition: "margin-left 0.3s ease",
-            }}
-          >
-            {decision && (
-              <>
-                <TopNav
-                  decision={decision}
-                  showAddNewDecision={this.showAddNewDecision}
-                  addNewDecisionPopupActive={
-                    this.state.addNewDecisionPopupActive
-                  }
-                  hideAddNewDecision={this.hideAddNewDecision}
-                />
-                <Content
-                  style={{
-                    marginTop: TopNavHeight,
-                    marginLeft: "15%",
-                    marginRight: "15%", //todo: add media query
-                  }}
-                >
-                  {this.props.currentView === ViewTypes.TABLE && <TableView />}
-                  {this.props.currentView === ViewTypes.MAIN && (
-                    <ListGrouping data={listGroupingData} />
-                  )}
-                </Content>
-              </>
-            )}
-
-            {!decision && (
+      <Container>
+        <SideNavInternal
+          expand={this.state.sidenavExpanded}
+          handleToggle={this.toggleSidenavExpanded}
+          collapseWidth={SIDENAV_COLLAPSE_WIDTH}
+          expandWidth={SIDENAV_EXPAND_WIDTH}
+        />
+        <Container
+          style={{
+            backgroundColor: "#f8f9fa",
+            minHeight: "100vh",
+            marginLeft: this.state.sidenavExpanded
+              ? SIDENAV_EXPAND_WIDTH
+              : SIDENAV_COLLAPSE_WIDTH,
+            transition: "margin-left 0.3s ease",
+          }}
+        >
+          {decision && (
+            <>
               <TopNav
+                decision={decision}
                 showAddNewDecision={this.showAddNewDecision}
                 addNewDecisionPopupActive={this.state.addNewDecisionPopupActive}
                 hideAddNewDecision={this.hideAddNewDecision}
               />
-            )}
-          </Container>
+              <Content
+                style={{
+                  marginTop: TopNavHeight,
+                  marginLeft: "15%",
+                  marginRight: "15%", //todo: add media query
+                }}
+              >
+                {this.props.currentView === ViewTypes.TABLE && <TableView />}
+                {this.props.currentView === ViewTypes.MAIN && (
+                  <ListGrouping data={listGroupingData} />
+                )}
+              </Content>
+            </>
+          )}
+
+          {!decision && (
+            <TopNav
+              showAddNewDecision={this.showAddNewDecision}
+              addNewDecisionPopupActive={this.state.addNewDecisionPopupActive}
+              hideAddNewDecision={this.hideAddNewDecision}
+            />
+          )}
         </Container>
-      </div>
+      </Container>
     );
   }
 }

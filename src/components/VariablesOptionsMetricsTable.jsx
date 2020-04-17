@@ -12,6 +12,8 @@ import Card from "./shared/Card";
 import CustomSlider from "./shared/CustomSlider";
 import { EditableOptionTitle } from "./Option";
 import { CustomDropdown } from "./shared/CustomDropdown";
+import { onChangeView } from "../redux/actions/viewActions";
+import ViewTypes from "../redux/viewTypes";
 
 const VariablesOptionsMetricsTable = ({
   decisionId,
@@ -19,6 +21,7 @@ const VariablesOptionsMetricsTable = ({
   onOptionScoreChange,
   onOptionCreate,
   onOptionRemove,
+  onChangeView,
   tableData,
 }) => {
   return (
@@ -100,7 +103,17 @@ const VariablesOptionsMetricsTable = ({
                           onClick: () =>
                             onOptionRemove(data.optionId, decisionId),
                         },
-                        { text: "Visit main view" },
+                        {
+                          text: "See in main view",
+                          onClick: () => {
+                            const sectionId = "3"; //hard coding for the time being
+                            onChangeView(
+                              ViewTypes.MAIN,
+                              sectionId,
+                              data.optionId
+                            );
+                          },
+                        },
                       ]}
                     />
                   </td>
@@ -188,6 +201,7 @@ const actionCreators = {
   onOptionScoreChange,
   onOptionCreate,
   onOptionRemove,
+  onChangeView,
 };
 
 export default connect(

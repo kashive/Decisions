@@ -23,6 +23,7 @@ export function viewStateReducer(state, action) {
     case CHANGE_VIEW: {
       return produce(state, (draft) => {
         draft.currentView = action.payload.viewType;
+        draft.scrollInfo = action.payload.scrollInfo;
       });
     }
     default:
