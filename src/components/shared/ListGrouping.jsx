@@ -18,7 +18,7 @@ const GroupingContainer = styled.div`
 `;
 
 const StyledElementGrouping = styled.div`
-  padding: ${props => (props.hasTitle ? "1%" : "0%")};
+  padding: ${(props) => (props.hasTitle ? "1%" : "0%")};
   background-color: white;
   margin-top: 2%;
   &:nth-child(1) {
@@ -31,9 +31,9 @@ const StyledElementGrouping = styled.div`
 
 const Element = styled.div`
   flex-grow: 1;
-  margin-left: ${prop =>
+  margin-left: ${(prop) =>
     prop.isInGroup ? ITEM_GROUP_PADDING : DEFAULT_PADDING};
-  margin-right: ${prop =>
+  margin-right: ${(prop) =>
     prop.isInGroup ? ITEM_GROUP_PADDING : DEFAULT_PADDING};
   margin-top: 2%;
   &:nth-child(1) {
@@ -67,7 +67,7 @@ const buildPropsForCustomDropdown = (
       text: isCollapsed ? "Expand" : "Collapse",
       onClick: () => {
         isCollapsed ? setIsCollapsed(false) : setIsCollapsed(true);
-      }
+      },
     });
   }
   if (config.enableFullscreen) {
@@ -75,13 +75,13 @@ const buildPropsForCustomDropdown = (
       text: isFullscreen ? "Close" : "Focus",
       onClick: () => {
         isFullscreen ? setIsFullscreen(false) : setIsFullscreen(true);
-      }
+      },
     });
   }
   return (config.additionalDropdowns || []).concat(output);
 };
 
-const ElementGrouping = ({ id, title, config, elements = [] }) => {
+const ElementGrouping = ({ id, title, config, elements = [], scrollRef }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const customDropdownProps = buildPropsForCustomDropdown(
@@ -94,14 +94,14 @@ const ElementGrouping = ({ id, title, config, elements = [] }) => {
   );
 
   const fullscreenConfig = config
-    ? produce(config, draft => {
+    ? produce(config, (draft) => {
         draft.enableFullscreen = false;
         //need to add close as it won't be covered in buildPropsForCustomDropdown
         draft.additionalDropdowns = (draft.additionalDropdowns || []).concat([
           {
             text: "Close",
-            onClick: () => setIsFullscreen(false)
-          }
+            onClick: () => setIsFullscreen(false),
+          },
         ]);
       })
     : config;
@@ -119,16 +119,19 @@ const ElementGrouping = ({ id, title, config, elements = [] }) => {
     />
   );
 
-  const elementComponents = (isCollapsed ? [] : elements).map(item => {
+  const elementComponents = (isCollapsed ? [] : elements).map((item) => {
     return (
       <CSSTransition key={item.itemId} timeout={800} classNames="collapse">
-        <Element isInGroup={title && true}>{item.content}</Element>
+        <Element ref={item.scrollRef} isInGroup={title && true}>
+          {item.content}
+        </Element>
       </CSSTransition>
     );
   });
 
   return (
     <StyledElementGrouping
+      ref={scrollRef}
       key={id}
       hasTitle={title && true}
       numberOfElements={elementComponents.length}
@@ -147,7 +150,7 @@ const ElementGrouping = ({ id, title, config, elements = [] }) => {
 export function ListGrouping(props) {
   return (
     <GroupingContainer>
-      {props.data.map(entry => {
+      {props.data.map((entry) => {
         const title = entry.title ? (
           <GroupingTitle>{entry.title}</GroupingTitle>
         ) : (
@@ -155,6 +158,7 @@ export function ListGrouping(props) {
         );
         return (
           <ElementGrouping
+            scrollRef={entry.scrollRef}
             key={entry.id}
             id={entry.id}
             title={title}

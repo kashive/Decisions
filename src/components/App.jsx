@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import SideNavInternal from "./SideNavInternal";
 import uuid from "uuid";
 import produce from "immer";
@@ -31,11 +30,20 @@ class App extends React.Component {
       addNewDecisionPopupActive: false,
       sidenavExpanded: true,
     };
-    this.variablesPanelRef = React.createRef();
+    this.variablesRef = React.createRef();
     this.optionsRef = {};
   }
+
   componentDidMount() {
     this.props.appMountSuccess("dummyUserId");
+  }
+
+  componentDidUpdate() {
+    const { sectionId, itemId } = this.props.scrollInfo;
+    //hardcoding for now since we only need this scroll feature for optiions
+    if (sectionId === "3") {
+      this.scrollToRef(this.optionsRef[itemId]);
+    }
   }
 
   showAddNewDecision = () => {
@@ -54,6 +62,12 @@ class App extends React.Component {
 
   findCurrentDecisionInState(state) {
     return state.decisions.byId[state.currentDecisionId];
+  }
+
+  scrollToRef(ref) {
+    if (ref && ref.current) {
+      window.scrollTo(0, ref.current.offsetTop - TopNavHeight);
+    }
   }
 
   handleAddNewOption = () => {
@@ -83,20 +97,6 @@ class App extends React.Component {
     this.setState({ currentDecisionId: newDecisionId });
   };
 
-  scrollToVariableTable = () => {
-    if (this.variablesPanelRef.current) {
-      ReactDOM.findDOMNode(this.variablesPanelRef.current).scrollIntoView();
-    }
-  };
-
-  scrollToOptions = (optionId) => {
-    const option = this.optionsRef[optionId];
-    if (option) {
-      const optionCurrent = option.current;
-      if (optionCurrent) ReactDOM.findDOMNode(optionCurrent).scrollIntoView();
-    }
-  };
-
   getListGroupingData = (decision) => {
     if (!decision) return [];
     return [
@@ -118,15 +118,11 @@ class App extends React.Component {
       },
       {
         id: "2",
+        scrollRef: this.variablesRef,
         items: [
           {
             itemId: "variablesTable",
-
-            content: (
-              <div ref={this.variablesPanelRef}>
-                <VariablesTable />
-              </div>
-            ),
+            content: <VariablesTable />,
           },
         ],
       },
@@ -146,19 +142,17 @@ class App extends React.Component {
         items: decision.optionIds.map((optId) => {
           return {
             itemId: optId,
+            scrollRef:
+              this.optionsRef[optId] ||
+              (this.optionsRef[optId] = React.createRef()),
             content: (
-              <div
-                ref={
-                  this.optionsRef[optId] ||
-                  (this.optionsRef[optId] = React.createRef())
+              <Option
+                key={optId}
+                optionId={optId}
+                scrollToVariableTable={() =>
+                  this.scrollToRef(this.variablesRef)
                 }
-              >
-                <Option
-                  key={optId}
-                  optionId={optId}
-                  scrollToVariableTable={this.scrollToVariableTable}
-                />
-              </div>
+              />
             ),
           };
         }),
@@ -171,7 +165,9 @@ class App extends React.Component {
             content: (
               <Metrics
                 decisionId={decision.id}
-                scrollToOptions={this.scrollToOptions}
+                scrollToOptions={(optId) =>
+                  this.scrollToRef(this.optionsRef[optId])
+                }
               />
             ),
           },
@@ -213,7 +209,7 @@ class App extends React.Component {
               />
               <Content
                 style={{
-                  marginTop: TopNavHeight,
+                  marginTop: TopNavHeight + "px",
                   marginLeft: "15%",
                   marginRight: "15%", //todo: add media query
                 }}
@@ -243,10 +239,12 @@ const mapStateToProps = (state) => {
   const decisions = state.entities.decisions;
   const currentDecisionId = state.controlState.decisionId;
   const currentView = state.viewState.currentView;
+  const scrollInfo = state.viewState.scrollInfo;
   return {
     decisions,
     currentDecisionId,
     currentView,
+    scrollInfo,
   };
 };
 

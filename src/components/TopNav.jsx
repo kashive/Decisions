@@ -5,7 +5,7 @@ import { Header } from "rsuite";
 import { connect } from "react-redux";
 import TopNavActionToolbar from "./TopNavActionToolbar";
 
-export const TopNavHeight = "95px";
+export const TopNavHeight = 95;
 
 const TopNav = ({
   decision,
@@ -23,7 +23,7 @@ const TopNav = ({
         width: "100%",
         top: 0,
         zIndex: 11,
-        height: decision ? TopNavHeight : "auto",
+        height: decision ? TopNavHeight + "px" : "auto",
       }}
     >
       {decision && (
