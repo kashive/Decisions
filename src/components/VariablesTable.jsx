@@ -89,12 +89,17 @@ class VariablesTable extends Component {
             <thead>
               <tr>
                 <th style={{ width: "20%" }}>Name</th>
-                <th style={{ width: "30%" }}>Weight</th>
+                <th style={{ width: "25%" }}>Weight</th>
                 {!this.props.hideDescription && (
-                  <th style={{ width: "45%" }}>Description</th>
+                  <th style={{ width: "50%" }}>Description</th>
                 )}
                 {!this.props.hideRemoveVariable && (
-                  <th style={{ borderLeft: "hidden" }}></th>
+                  <th
+                    style={{
+                      borderLeft: "hidden",
+                      width: "5%",
+                    }}
+                  ></th>
                 )}
               </tr>
             </thead>

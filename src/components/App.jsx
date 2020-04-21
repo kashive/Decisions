@@ -42,6 +42,8 @@ class App extends React.Component {
     const { sectionId, itemId } = this.props.scrollInfo;
     //hardcoding for now since we only need this scroll feature for optiions
     if (sectionId === "3") {
+      //this does not quite when transiting from table view to main view
+      //https://app.asana.com/0/1166509149726089/1172265775837921
       this.scrollToRef(this.optionsRef[itemId]);
     }
   }
