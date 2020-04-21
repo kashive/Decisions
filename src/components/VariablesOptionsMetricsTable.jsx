@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { connect } from "react-redux";
 import {
@@ -14,6 +14,9 @@ import { EditableOptionTitle } from "./Option";
 import { CustomDropdown } from "./shared/CustomDropdown";
 import { onChangeView } from "../redux/actions/viewActions";
 import ViewTypes from "../redux/viewTypes";
+import { CardFocus } from "./shared/Card";
+import Option from "./Option";
+import { produce } from "immer";
 
 const VariablesOptionsMetricsTable = ({
   decisionId,
@@ -24,6 +27,16 @@ const VariablesOptionsMetricsTable = ({
   onChangeView,
   tableData,
 }) => {
+  const [fullscreenInfo, setFullscreenInfo] = useState({});
+
+  const setFullscreenInfoForOption = (optionId, isVisible) => {
+    setFullscreenInfo(
+      produce(fullscreenInfo, (draft) => {
+        draft[optionId] = isVisible;
+      })
+    );
+  };
+
   return (
     <Card
       title="Metrics"
@@ -114,9 +127,27 @@ const VariablesOptionsMetricsTable = ({
                             );
                           },
                         },
+                        {
+                          text: "Fullscreen",
+                          onClick: () => {
+                            setFullscreenInfoForOption(data.optionId, true);
+                          },
+                        },
                       ]}
                     />
                   </td>
+                  <CardFocus
+                    onCancel={() =>
+                      setFullscreenInfoForOption(data.optionId, false)
+                    }
+                    isVisible={fullscreenInfo[data.optionId]}
+                    content={
+                      <Option
+                        optionId={data.optionId}
+                        enableFullscreen={false}
+                      />
+                    }
+                  />
                 </tr>
               );
               const remainingRows = data.variableInfos.map((vi, idx) => {

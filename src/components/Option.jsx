@@ -31,7 +31,8 @@ function Option(props) {
     <Card
       backgroundColor="#f8f9fa"
       dropdownConfig={{
-        enableFullscreen: true,
+        enableFullscreen:
+          props.enableFullscreen !== undefined ? props.enableFullscreen : true,
         enableCollapse: true,
         additionalDropdowns: [
           {
