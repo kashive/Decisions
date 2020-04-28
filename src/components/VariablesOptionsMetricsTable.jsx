@@ -36,7 +36,6 @@ const VariablesOptionsMetricsTable = ({
       })
     );
   };
-
   return (
     <Card
       title="Metrics"
@@ -70,113 +69,107 @@ const VariablesOptionsMetricsTable = ({
           </thead>
           <tbody>
             {tableData.map((data) => {
-              const rowSpan =
-                data.variableInfos.length > 0 ? data.variableInfos.length : 1;
-              const firstVariableInfo = data.variableInfos[0] || {};
-              const firstRow = (
-                <tr key={data.optionId + "-" + firstVariableInfo.variableId}>
-                  <td rowSpan={rowSpan}>
-                    <EditableOptionTitle
-                      headerText={data.name}
-                      onNameChange={(name) =>
-                        onOptionNameChange(data.optionId, name)
-                      }
-                    />
-                  </td>
-                  <td>{firstVariableInfo.name}</td>
-                  <td>
-                    <CustomSlider
-                      preventRenderOnNoValue={!firstVariableInfo.name}
-                      value={firstVariableInfo.score}
-                      style={{ marginBottom: "5px" }}
-                      onHandleMove={(score) =>
-                        onOptionScoreChange(
-                          firstVariableInfo.variableId,
-                          data.optionId,
-                          score
-                        )
-                      }
-                    />
-                  </td>
-                  <td
-                    style={{
-                      textAlign: "center",
-                      position: "relative",
-                      overflow: "visible",
-                    }}
-                    rowSpan={rowSpan}
-                  >
-                    {data.metrics.score}
-                    <CustomDropdown
-                      iconText="ellipsis-v"
-                      style={{ position: "absolute", top: "5px", right: "5px" }}
-                      config={[
-                        {
-                          text: "Remove option",
-                          onClick: () =>
-                            onOptionRemove(data.optionId, decisionId),
-                        },
-                        {
-                          text: "See in main view",
-                          onClick: () => {
-                            const sectionId = "3"; //hard coding for the time being
-                            onChangeView(
-                              ViewTypes.MAIN,
-                              sectionId,
-                              data.optionId
-                            );
-                          },
-                        },
-                        {
-                          text: "Fullscreen",
-                          onClick: () => {
-                            setFullscreenInfoForOption(data.optionId, true);
-                          },
-                        },
-                      ]}
-                    />
-                  </td>
-                  <CardFocus
-                    onCancel={() =>
-                      setFullscreenInfoForOption(data.optionId, false)
-                    }
-                    isVisible={fullscreenInfo[data.optionId]}
-                    content={
-                      <Option
-                        optionId={data.optionId}
-                        enableFullscreen={false}
-                      />
-                    }
-                  />
-                </tr>
-              );
-              const remainingRows = data.variableInfos.map((vi, idx) => {
-                if (idx === 0) return false;
+              if (data.isFirst) {
                 return (
-                  <tr key={data.optionId + "-" + vi.variableId}>
-                    <td>{vi.name}</td>
+                  <tr key={data.optionId + "-" + data.variableId}>
+                    <td rowSpan={data.rowSpan}>
+                      <EditableOptionTitle
+                        headerText={data.optionName}
+                        onNameChange={(name) =>
+                          onOptionNameChange(data.optionId, name)
+                        }
+                      />
+                    </td>
+                    <td>{data.variableName}</td>
                     <td>
                       <CustomSlider
-                        preventRenderOnNoValue={!vi.name}
-                        value={vi.score}
+                        preventRenderOnNoValue={!data.variableName}
+                        value={data.score}
                         style={{ marginBottom: "5px" }}
                         onHandleMove={(score) =>
                           onOptionScoreChange(
-                            vi.variableId,
+                            data.variableId,
                             data.optionId,
                             score
                           )
                         }
                       />
                     </td>
+                    <td
+                      style={{
+                        textAlign: "center",
+                        position: "relative",
+                        overflow: "visible",
+                      }}
+                      rowSpan={data.rowSpan}
+                    >
+                      {data.metrics.score}
+                      <CustomDropdown
+                        iconText="ellipsis-v"
+                        style={{
+                          position: "absolute",
+                          top: "5px",
+                          right: "5px",
+                        }}
+                        config={[
+                          {
+                            text: "Remove option",
+                            onClick: () =>
+                              onOptionRemove(data.optionId, decisionId),
+                          },
+                          {
+                            text: "See in main view",
+                            onClick: () => {
+                              const sectionId = "3"; //hard coding for the time being
+                              onChangeView(
+                                ViewTypes.MAIN,
+                                sectionId,
+                                data.optionId
+                              );
+                            },
+                          },
+                          {
+                            text: "Fullscreen",
+                            onClick: () => {
+                              setFullscreenInfoForOption(data.optionId, true);
+                            },
+                          },
+                        ]}
+                      />
+                    </td>
+                    <CardFocus
+                      onCancel={() =>
+                        setFullscreenInfoForOption(data.optionId, false)
+                      }
+                      isVisible={fullscreenInfo[data.optionId]}
+                      content={
+                        <Option
+                          optionId={data.optionId}
+                          enableFullscreen={false}
+                        />
+                      }
+                    />
                   </tr>
                 );
-              });
+              }
               return (
-                <>
-                  {firstRow}
-                  {remainingRows}
-                </>
+                <tr key={data.optionId + "-" + data.variableId}>
+                  <td>{data.variableName}</td>
+                  <td>
+                    <CustomSlider
+                      preventRenderOnNoValue={!data.variableName}
+                      value={data.score}
+                      style={{ marginBottom: "5px" }}
+                      onHandleMove={(score) =>
+                        onOptionScoreChange(
+                          data.variableId,
+                          data.optionId,
+                          score
+                        )
+                      }
+                    />
+                  </td>
+                </tr>
               );
             })}
           </tbody>
@@ -186,16 +179,18 @@ const VariablesOptionsMetricsTable = ({
   );
 };
 
-// [
-//   // {
-//   //     optionId: '1',
-//   //     optionName: 'optionA'
-//   //     variableInfos: [{id: '2', name: 'time', score: 4},{id: '3', name: 'money', score: 5}, ],
-//   //     metrics: {
-//   //         score: 34
-//   //     }
-//   // }
-// ];
+//data format:
+// {
+//   isFirst: true
+//   optionId: "39499c5d-d0ee-4f2e-be02-c58daad88915"
+//   optionName: "asdf"
+//   rowSpan: 2
+//   variableId: "8bf7ee11-f60a-4a0e-985d-7f8733b7f2bd"
+//   variableName: "gvsafdas"
+//   score: 3
+//   metrics: {score: 39}
+// }
+
 const mapStateToProps = (state) => {
   const currentDecisionId = state.controlState.decisionId;
   const { options, variables, decisions } = state.entities;
@@ -206,21 +201,37 @@ const mapStateToProps = (state) => {
   const variableStructs = variableIds.map((vId) => variables.byId[vId]);
   const optionMetrics = calculate_metrics(optionStructs, variableStructs);
 
-  const tableData = optionStructs.map((option) => {
-    const { byId, allIds } = option.variableScores;
-    const variableInfos = allIds
-      .map((vId) => byId[vId])
-      .map((variableScore) => {
-        const variableId = variableScore.variableId;
-        const name = variables.byId[variableId].name;
-        const score = variableScore.score;
-        return { variableId, name, score };
-      });
-    const optionId = option.id;
-    const metrics = { score: optionMetrics[optionId] };
-    const name = option.name;
-    return { optionId, name, variableInfos, metrics };
-  });
+  const tableData = optionStructs
+    .map((option) => {
+      const { byId, allIds } = option.variableScores;
+      const optionId = option.id;
+      const metrics = { score: optionMetrics[optionId] };
+      const optionName = option.name;
+      if (allIds === undefined || allIds.length === 0) {
+        return [{ isFirst: true, optionId, optionName, rowSpan: 1, metrics }];
+      }
+      const rowSpan = allIds.length;
+      return allIds
+        .map((vId, idx) => [idx, byId[vId]])
+        .map((variableScoreIdx) => {
+          const variableScore = variableScoreIdx[1];
+          const variableId = variableScore.variableId;
+          const variableName = variables.byId[variableId].name;
+          const score = variableScore.score;
+          const index = variableScoreIdx[0];
+          return {
+            isFirst: index === 0,
+            optionId,
+            optionName,
+            rowSpan,
+            variableId,
+            variableName,
+            score,
+            metrics,
+          };
+        });
+    })
+    .flat(1);
   return {
     tableData,
     decisionId: currentDecisionId,
