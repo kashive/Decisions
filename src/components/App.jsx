@@ -45,6 +45,8 @@ class App extends React.Component {
       //this does not quite when transiting from table view to main view
       //https://app.asana.com/0/1166509149726089/1172265775837921
       this.scrollToRef(this.optionsRef[itemId]);
+    } else {
+      window.scrollTo(0, 0);
     }
   }
 
