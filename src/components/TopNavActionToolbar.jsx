@@ -15,6 +15,7 @@ import {
 import { onChangeView } from "../redux/actions/viewActions";
 import { connect } from "react-redux";
 import ViewTypes from "../redux/viewTypes";
+import { Divider } from "rsuite";
 
 const TopNavActionToolbar = ({
   showAddNewDecision,
@@ -37,7 +38,7 @@ const TopNavActionToolbar = ({
         <Whisper
           placement="bottomStart"
           trigger="hover"
-          speaker={<Tooltip>Add New Decision</Tooltip>}
+          speaker={<Tooltip>Create new decision</Tooltip>}
         >
           <IconButton
             onClick={showAddNewDecision}
@@ -63,24 +64,37 @@ const TopNavActionToolbar = ({
           </Whisper>
         )}
         {currentDecisionId && (
-          <Whisper
-            placement="bottomStart"
-            trigger="hover"
-            speaker={<Tooltip>Switch to main view</Tooltip>}
-          >
-            <Button onClick={() => onChangeView(ViewTypes.MAIN)}>
-              Main View
-            </Button>
-          </Whisper>
+          <>
+            <Divider vertical />
+            <Whisper
+              placement="bottomStart"
+              trigger="hover"
+              speaker={<Tooltip>Main view</Tooltip>}
+            >
+              <Button
+                style={{ fontWeight: 600 }}
+                active={currentView === ViewTypes.MAIN}
+                size="xs"
+                onClick={() => onChangeView(ViewTypes.MAIN)}
+              >
+                M
+              </Button>
+            </Whisper>
+          </>
         )}
         {currentDecisionId && (
           <Whisper
             placement="bottomStart"
             trigger="hover"
-            speaker={<Tooltip>Switch to table view</Tooltip>}
+            speaker={<Tooltip>Table view</Tooltip>}
           >
-            <Button onClick={() => onChangeView(ViewTypes.TABLE)}>
-              Table View
+            <Button
+              style={{ fontWeight: 600 }}
+              size="xs"
+              active={currentView === ViewTypes.TABLE}
+              onClick={() => onChangeView(ViewTypes.TABLE)}
+            >
+              T
             </Button>
           </Whisper>
         )}
