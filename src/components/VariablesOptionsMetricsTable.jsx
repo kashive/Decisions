@@ -25,6 +25,7 @@ const VariablesOptionsMetricsTable = ({
   onOptionCreate,
   onOptionRemove,
   onChangeView,
+  optionIds,
   tableData,
 }) => {
   const [fullscreenInfo, setFullscreenInfo] = useState({});
@@ -67,8 +68,8 @@ const VariablesOptionsMetricsTable = ({
               <th>Score</th>
             </tr>
           </thead>
-          <tbody>
-            {tableData.map((data) => {
+          {optionIds.map((optionId) => {
+            const rows = tableData[optionId].map((data) => {
               if (data.isFirst) {
                 return (
                   <tr key={data.optionId + "-" + data.variableId}>
@@ -171,8 +172,9 @@ const VariablesOptionsMetricsTable = ({
                   </td>
                 </tr>
               );
-            })}
-          </tbody>
+            });
+            return <tbody key={optionId}>{rows}</tbody>;
+          })}
         </table>
       }
     />
@@ -231,8 +233,15 @@ const mapStateToProps = (state) => {
           };
         });
     })
-    .flat(1);
+    .flat(1)
+    .reduce((obj, item) => {
+      const value = obj[item.optionId] || [];
+      value.push(item);
+      obj[item.optionId] = value;
+      return obj;
+    }, {});
   return {
+    optionIds,
     tableData,
     decisionId: currentDecisionId,
   };
