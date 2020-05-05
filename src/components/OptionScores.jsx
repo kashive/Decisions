@@ -6,22 +6,22 @@ import "../styles/table.less";
 import styled from "styled-components";
 import {
   onOptionScoreChange,
-  onOptionScoreReasoningChange
+  onOptionScoreReasoningChange,
 } from "../redux/actions/optionActions";
 
 const HighlightableRow = styled.tr`
-  background-color: ${props => (props.isHighlightOn ? "#f0f8ff" : "none")};
+  background-color: ${(props) => (props.isHighlightOn ? "#f0f8ff" : "none")};
 `;
 //todo: can potentially replace this with making the VariablesTable resuable
 class OptionScores extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rowNumWithHighlight: undefined
+      rowNumWithHighlight: undefined,
     };
   }
 
-  handleHighlightOn = rowId => {
+  handleHighlightOn = (rowId) => {
     this.setState({ rowNumWithHighlight: rowId });
   };
 
@@ -41,7 +41,7 @@ class OptionScores extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.variableScoresTableData.map(vs => {
+            {this.props.variableScoresTableData.map((vs) => {
               return (
                 <HighlightableRow
                   key={vs.variableId}
@@ -51,7 +51,6 @@ class OptionScores extends Component {
                 >
                   <td>
                     <span
-                      style={{ whiteSpace: "nowrap" }}
                       className="pointerOnHover"
                       onClick={this.props.scrollToVariableTable}
                     >
@@ -101,24 +100,24 @@ class OptionScores extends Component {
 const mapStateToProps = (state, myProps) => {
   const { options, variables } = state.entities;
   const variableScores = options.byId[myProps.optionId].variableScores;
-  const variableScoresTableData = variableScores.allIds.map(variableId => {
+  const variableScoresTableData = variableScores.allIds.map((variableId) => {
     const variableScore = variableScores.byId[variableId];
     return {
       variableId,
       variableName: variables.byId[variableId].name,
       score: variableScore.score,
-      reasoning: variableScore.reasoning
+      reasoning: variableScore.reasoning,
     };
   });
 
   return {
-    variableScoresTableData
+    variableScoresTableData,
   };
 };
 
 const actionCreators = {
   onOptionScoreChange,
-  onOptionScoreReasoningChange
+  onOptionScoreReasoningChange,
 };
 
 export default connect(mapStateToProps, actionCreators)(OptionScores);

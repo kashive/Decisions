@@ -126,7 +126,7 @@ class VariablesTable extends Component {
                           autoSelectOnFocus={false}
                           padding="5px"
                           expandWithContent={false}
-                          multiLine={false}
+                          multiLine={true}
                           onBorderVisible={this.handleHighlightOn.bind(
                             this,
                             variable.id
