@@ -6,13 +6,14 @@ const StyledTitle = styled.div`
   margin-left: 1%;
   margin-top: 1%;
   font-size: 18px;
+  font-weight: 500;
   max-width: 78vw;
   overflow: hidden; //ensures that the overflow hides after max-width is hit
 `;
 
 export default function DecisionTitle({
   decisionTitle,
-  onDecisionTitleChange
+  onDecisionTitleChange,
 }) {
   return (
     <StyledTitle>

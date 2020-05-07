@@ -1,4 +1,5 @@
 body {
+  font-size: 10px !important; /*important needed to override rsuite defaults*/
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -10,4 +11,23 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.appContent {
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+@media screen and (min-width: 700px) {
+  .appContent {
+    margin-left: 15%;
+    margin-right: 15%;
+  }
+  body {
+    font-size: 12px !important;
+  }
+}
+/* Required to override the default froala value of 14px */
+.fr-element {
+  font-size: inherit !important;
 }

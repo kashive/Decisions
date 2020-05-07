@@ -212,10 +212,9 @@ class App extends React.Component {
                 hideAddNewDecision={this.hideAddNewDecision}
               />
               <Content
+                className="appContent"
                 style={{
                   marginTop: TopNavHeight + "px",
-                  marginLeft: "15%",
-                  marginRight: "15%", //todo: add media query
                 }}
               >
                 {this.props.currentView === ViewTypes.TABLE && <TableView />}

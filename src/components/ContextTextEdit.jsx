@@ -9,16 +9,17 @@ export const ContextCard = ({ model, onChange }) => (
       <FroalaEditor
         model={model}
         onModelChange={onChange}
+        fontSizeDefaultSelection={12}
         config={{
           placeholderText:
-            "Why do you need to make this decision? What triggred it? Why is this important?"
+            "Why do you need to make this decision? What triggred it? Why is this important?",
         }}
       />
     }
     dropdownConfig={{
       enableDropdown: true,
       enableFullscreen: true,
-      enableCollapse: true
+      enableCollapse: true,
     }}
   />
 );

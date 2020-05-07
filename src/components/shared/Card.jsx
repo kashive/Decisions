@@ -7,7 +7,7 @@ import { CSSTransition } from "react-transition-group";
 import "../../styles/card.less";
 
 const StyledCard = styled.div`
-  background-color: ${props => props.backgroundColor || "white"};
+  background-color: ${(props) => props.backgroundColor || "white"};
   border: 1px solid #efefef;
   position: relative;
   &:nth-child(1) {
@@ -26,8 +26,11 @@ const CardBody = styled.div`
 export const StyledTitle = styled.div`
   font-weight: bold;
   line-height: 1.3;
-  font-size: 18px;
+  font-size: 14px;
   color: #333;
+  @media (min-width: 700px) {
+    font-size: 18px;
+  }
 `;
 
 const CardHeader = styled.div`
@@ -65,7 +68,7 @@ const buildPropsForCustomDropdown = (
       text: isCollapsed ? "Expand" : "Collapse",
       onClick: () => {
         isCollapsed ? setIsCollapsed(false) : setIsCollapsed(true);
-      }
+      },
     });
   }
   if (config.enableFullscreen) {
@@ -73,7 +76,7 @@ const buildPropsForCustomDropdown = (
       text: isFullscreen ? "Close" : "Focus",
       onClick: () => {
         isFullscreen ? setIsFullscreen(false) : setIsFullscreen(true);
-      }
+      },
     });
   }
   return (config.additionalDropdowns || []).concat(output);
@@ -81,14 +84,14 @@ const buildPropsForCustomDropdown = (
 
 const fullscreenConfig = (config, setIsFullscreen) =>
   config
-    ? produce(config, draft => {
+    ? produce(config, (draft) => {
         draft.enableFullscreen = false;
         //need to add close as it won't be covered in buildPropsForCustomDropdown
         draft.additionalDropdowns = (draft.additionalDropdowns || []).concat([
           {
             text: "Close",
-            onClick: () => setIsFullscreen(false)
-          }
+            onClick: () => setIsFullscreen(false),
+          },
         ]);
       })
     : config;
@@ -98,15 +101,15 @@ class Card extends Component {
     super(props);
     this.state = {
       isCollapsed: false,
-      isFullscreen: false
+      isFullscreen: false,
     };
   }
 
-  setIsCollapsed = isCollapsed => {
+  setIsCollapsed = (isCollapsed) => {
     this.setState({ isCollapsed });
   };
 
-  setIsFullscreen = isFullscreen => {
+  setIsFullscreen = (isFullscreen) => {
     this.setState({ isFullscreen });
   };
 
@@ -115,12 +118,12 @@ class Card extends Component {
   };
 
   getCardFocusParams = () => {
-    return produce(this.props, draft => {
+    return produce(this.props, (draft) => {
       draft.enableDropdown = true;
       draft.enableFullscreen = false;
       draft.enableCollapse = false;
       draft.additionalDropdowns = {
-        close: this.disableFullscreen
+        close: this.disableFullscreen,
       };
     });
   };
