@@ -11,6 +11,7 @@ export const ContextCard = ({ model, onChange }) => (
         onModelChange={onChange}
         fontSizeDefaultSelection={12}
         config={{
+          attribution: false,
           placeholderText:
             "Why do you need to make this decision? What triggred it? Why is this important?",
         }}

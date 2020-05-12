@@ -30,6 +30,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "deploy": "aws s3 sync build/ s3://decision.builders",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },

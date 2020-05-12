@@ -3,12 +3,12 @@ import FroalaEditor from "react-froala-wysiwyg";
 import styled from "styled-components";
 
 const CustomStyle = styled.div`
-  background-color: ${props => (props.isEditOn ? "white" : "unset")};
-  padding: ${props => props.padding || "2px"};
-  width: ${props =>
+  background-color: ${(props) => (props.isEditOn ? "white" : "unset")};
+  padding: ${(props) => props.padding || "2px"};
+  width: ${(props) =>
     props.width ||
     (props.isPlaceholderVisible ? props.placeholderTextWidth : "unset")};
-  white-space: ${props => (props.multiLine ? "wrap" : "nowrap")};
+  white-space: ${(props) => (props.multiLine ? "wrap" : "nowrap")};
 `;
 
 class CustomInlineFroalaEditor extends Component {
@@ -16,7 +16,7 @@ class CustomInlineFroalaEditor extends Component {
     super(props);
     this.state = {
       isPlaceholderVisible: false,
-      isEditOn: false
+      isEditOn: false,
     };
     this.editorRef = React.createRef();
   }
@@ -27,14 +27,14 @@ class CustomInlineFroalaEditor extends Component {
     }
   }
 
-  handleKeyUp = event => {
+  handleKeyUp = (event) => {
     const editor = this.getEditorFromReactRef();
     if (event.key === "Enter" && !this.props.multiLine) {
       this.handleEnter(editor);
     }
   };
 
-  handleEnter = editor => {
+  handleEnter = (editor) => {
     editor.edit.off();
     editor.edit.on();
     this.setState({ isEditOn: false });
@@ -53,7 +53,7 @@ class CustomInlineFroalaEditor extends Component {
   };
 
   //todo: consolidate the setState to one call as it renders everytime
-  handleFocus = event => {
+  handleFocus = (event) => {
     event.stopPropagation();
     this.setState({ isEditOn: true });
     this.handlePlaceholderVisibleOnFocus(this.getEditorFromReactRef());
@@ -80,7 +80,7 @@ class CustomInlineFroalaEditor extends Component {
     return this.editorRef.current.editor;
   }
 
-  handleTextChange = text => {
+  handleTextChange = (text) => {
     if (typeof this.props.handleTextChange === "function") {
       //needed this as the editor was adding <undefined>{text}</undefiend> also non-breaking spaces were adding &nbsp
       this.props.handleTextChange(
@@ -110,11 +110,12 @@ class CustomInlineFroalaEditor extends Component {
             initOnClick: true,
             toolbarButtons: [],
             placeholderText: this.props.placeholderText,
+            attribution: false,
             events: {
               blur: this.handleBlur,
               keyup: this.handleKeyUp,
-              click: this.handleFocus
-            }
+              click: this.handleFocus,
+            },
           }}
         />
       </CustomStyle>
@@ -123,7 +124,7 @@ class CustomInlineFroalaEditor extends Component {
 }
 
 CustomInlineFroalaEditor.defaultProps = {
-  autoSelectOnFocus: true
+  autoSelectOnFocus: true,
 };
 
 export default CustomInlineFroalaEditor;
