@@ -1,19 +1,22 @@
 import React from "react";
 import Card from "./shared/Card";
-import FroalaEditor from "react-froala-wysiwyg";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 export const ContextCard = ({ model, onChange }) => (
   <Card
     title="Context"
     body={
-      <FroalaEditor
-        model={model}
-        onModelChange={onChange}
-        fontSizeDefaultSelection={12}
+      <CKEditor
+        editor={ClassicEditor}
         config={{
-          attribution: false,
-          placeholderText:
+          placeholder:
             "Why do you need to make this decision? What triggred it? Why is this important?",
+        }}
+        data={model}
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          onChange(data);
         }}
       />
     }
