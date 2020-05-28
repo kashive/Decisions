@@ -89,9 +89,10 @@ const SideNavInternal = ({
                           }}
                           onClick={() => onDecisionSelect(decision.id)}
                         >
-                          <span style={{ color: "white" }}>
-                            {decision.title}
-                          </span>
+                          <span
+                            style={{ color: "white" }}
+                            dangerouslySetInnerHTML={{ __html: decision.title }}
+                          />
                         </Button>
                       )}
                     />

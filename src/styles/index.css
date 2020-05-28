@@ -18,7 +18,7 @@ code {
   margin-right: 2%;
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 800px) {
   .appContent {
     margin-left: 15%;
     margin-right: 15%;
@@ -27,7 +27,7 @@ code {
     font-size: 12px !important;
   }
 }
-/* Required to override the default froala value of 14px */
-.fr-element {
-  font-size: inherit !important;
+
+.ck-toolbar {
+  background-color: white !important;
 }

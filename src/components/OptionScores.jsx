@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import CustomSlider from "./shared/CustomSlider";
-import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
+import InlineEditor from "./shared/InlineEditor";
 import "../styles/table.less";
 import styled from "styled-components";
 import {
@@ -53,9 +53,10 @@ class OptionScores extends Component {
                     <span
                       className="pointerOnHover"
                       onClick={this.props.scrollToVariableTable}
-                    >
-                      {vs.variableName}
-                    </span>
+                      //this is required in order to render html as text safely
+                      //see: https://stackoverflow.com/questions/56928946/how-to-display-the-saved-content-of-ckeditor5-in-react-js
+                      dangerouslySetInnerHTML={{ __html: vs.variableName }}
+                    />
                   </td>
                   <td>
                     <CustomSlider
@@ -68,23 +69,16 @@ class OptionScores extends Component {
                     />
                   </td>
                   <td>
-                    <BorderedInlineTextEdit
-                      text={vs.reasoning}
-                      placeholderText="Please explain the reasoning behind the score"
-                      handleTextChange={this.props.onOptionScoreReasoningChange.bind(
+                    <InlineEditor
+                      data={vs.reasoning}
+                      onChange={this.props.onOptionScoreReasoningChange.bind(
                         this,
                         vs.variableId,
                         this.props.optionId
                       )}
-                      padding="5px"
-                      expandWithContent={false}
-                      multiLine={true}
-                      autoSelectOnFocus={false}
-                      onBorderVisible={this.handleHighlightOn.bind(
-                        this,
-                        vs.variableId
-                      )}
-                      onBorderInvisible={this.handleHighlightOff}
+                      placeholder="Please explain the reasoning behind the score"
+                      onFocus={this.handleHighlightOn.bind(this, vs.variableId)}
+                      onBlur={this.handleHighlightOff}
                     />
                   </td>
                 </HighlightableRow>

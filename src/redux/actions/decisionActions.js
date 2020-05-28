@@ -5,7 +5,6 @@ import {
   DECISION_TITLE_CHANGE,
   CREATE_DECISION,
   DECISION_CONTEXT_CHANGE,
-  DECISION_SELECT,
   DELETE_DECISION,
 } from "../actionTypes";
 import uuid from "uuid";
@@ -60,9 +59,4 @@ export function onDecisionDelete(decisionId) {
       payload: { decisionId, nextDecisionId },
     });
   };
-}
-
-export function onCurrentDecisionChange(decisionId) {
-  return (dispatch) =>
-    dispatch({ type: DECISION_SELECT, payload: { decisionId } });
 }

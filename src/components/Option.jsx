@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
-import FroalaEditor from "react-froala-wysiwyg";
+import InlineEditor from "./shared/InlineEditor";
 import OptionScores from "./OptionScores";
 import Card from "./shared/Card";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import CKEDITOR from "@ckeditor/ckeditor5-build-classic";
 import {
   onOptionNameChange,
   onOptionDescriptionChange,
@@ -12,14 +13,11 @@ import {
 
 export const EditableOptionTitle = ({ headerText, onNameChange }) => {
   return (
-    <BorderedInlineTextEdit
-      text={headerText}
-      handleTextChange={onNameChange}
-      placeholderText="Option Name"
-      placeholderTextWidth="125px"
-      padding="5px"
-      expandWithContent={false}
-      multiLine={true}
+    <InlineEditor
+      data={headerText}
+      onChange={onNameChange}
+      placeholder="Option Name"
+      isSingleLine={true}
     />
   );
 };
@@ -60,14 +58,15 @@ function Option(props) {
             }}
             title="Description"
             body={
-              <FroalaEditor
-                model={option.description}
-                onModelChange={props.onOptionDescriptionChange.bind(
-                  this,
-                  option.id
-                )}
+              <CKEditor
+                editor={CKEDITOR.ClassicEditor}
                 config={{
-                  placeholderText: "Tell us more about the option",
+                  placeholder: "Tell us more about the option",
+                }}
+                data={option.description}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  props.onOptionDescriptionChange(option.id, data);
                 }}
               />
             }

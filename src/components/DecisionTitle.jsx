@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
+import InlineEditor from "./shared/InlineEditor";
 
 const StyledTitle = styled.div`
-  margin-left: 1%;
-  margin-top: 1%;
-  font-size: 18px;
-  font-weight: 500;
-  max-width: 78vw;
+  margin-left: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  line-height: 0.5;
+  max-width: 95%;
+  white-space: nowrap;
   overflow: hidden; //ensures that the overflow hides after max-width is hit
 `;
 
@@ -17,15 +19,12 @@ export default function DecisionTitle({
 }) {
   return (
     <StyledTitle>
-      <BorderedInlineTextEdit
-        text={decisionTitle}
-        placeholderText="Untitled decision"
-        placeholderTextWidth="150px"
-        padding="5px"
-        multiLine={false}
-        handleTextChange={onDecisionTitleChange}
+      <InlineEditor
+        data={decisionTitle}
+        onChange={onDecisionTitleChange}
+        placeholder="Untitled decision"
         expandWithContent={true}
-        autoFocusOnInit={true}
+        isSingleLine={true}
       />
     </StyledTitle>
   );

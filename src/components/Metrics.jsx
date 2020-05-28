@@ -33,9 +33,8 @@ const Metrics = (props) => {
                           this,
                           optionMetrics.optionId
                         )}
-                      >
-                        {optionMetrics.name}
-                      </span>
+                        dangerouslySetInnerHTML={{ __html: optionMetrics.name }}
+                      />
                     </td>
                     <td style={{ textAlign: "center" }}>
                       {optionMetrics.score}

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import CustomSlider from "./shared/CustomSlider";
 import Card from "./shared/Card";
-import BorderedInlineTextEdit from "./shared/BorderedInlineTextEdit";
 import "../styles/table.less";
 import styled from "styled-components";
 import { Button, Icon, Tooltip, Whisper, Modal } from "rsuite";
@@ -13,6 +12,7 @@ import {
   onVariableWeightChange,
 } from "../redux/actions/variableActions";
 import { connect } from "react-redux";
+import InlineEditor from "./shared/InlineEditor";
 
 const HighlightableRow = styled.tr`
   background-color: ${(props) => (props.isHighlightOn ? "#f0f8ff" : "none")};
@@ -116,22 +116,19 @@ class VariablesTable extends Component {
                       }
                     >
                       <td>
-                        <BorderedInlineTextEdit
-                          text={variable.name}
-                          handleTextChange={this.props.onVariableNameChange.bind(
+                        <InlineEditor
+                          data={variable.name}
+                          onChange={this.props.onVariableNameChange.bind(
                             this,
                             variable.id
                           )}
-                          placeholderText="Name"
-                          autoSelectOnFocus={false}
-                          padding="5px"
-                          expandWithContent={false}
-                          multiLine={true}
-                          onBorderVisible={this.handleHighlightOn.bind(
+                          isSingleLine={true}
+                          placeholder="Name"
+                          onFocus={this.handleHighlightOn.bind(
                             this,
                             variable.id
                           )}
-                          onBorderInvisible={this.handleHighlightOff}
+                          onBlur={this.handleHighlightOff}
                         />
                       </td>
                       <td>
@@ -145,16 +142,18 @@ class VariablesTable extends Component {
                       </td>
                       {!this.props.hideDescription && (
                         <td>
-                          <BorderedInlineTextEdit
-                            text={variable.description}
-                            placeholderText="Description"
-                            handleTextChange={this.props.onVariableDescriptionChange.bind(
+                          <InlineEditor
+                            data={variable.description}
+                            onChange={this.props.onVariableDescriptionChange.bind(
                               this,
                               variable.id
                             )}
-                            padding="5px"
-                            expandWithContent={false}
-                            multiLine={true}
+                            placeholder="Description"
+                            onFocus={this.handleHighlightOn.bind(
+                              this,
+                              variable.id
+                            )}
+                            onBlur={this.handleHighlightOff}
                           />
                         </td>
                       )}

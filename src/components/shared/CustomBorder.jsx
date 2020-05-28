@@ -6,12 +6,12 @@ const DEFAULT_BORDER_ON_HOVER = "solid 1px #dbdce0";
 const PADDING_DEFAULT = "5px";
 
 const BorderStyling = styled.div`
-  display: ${props => (props.expandWithContent ? "inline-block" : "block")};
+  display: ${(props) => (props.expandWithContent ? "inline-block" : "block")};
   overflow: hidden;
-  background-color: ${props => (props.isInFocus ? "white" : "inherit")};
-  border: ${props => (props.isInFocus ? props.borderOnFocus : "none")};
+  background-color: ${(props) => (props.isInFocus ? "white" : "inherit")};
+  border: ${(props) => (props.isInFocus ? props.borderOnFocus : "none")};
   &:hover {
-    border: ${props =>
+    border: ${(props) =>
       props.isInFocus ? props.borderOnFocus : props.borderOnHover};
     cursor: text; //may need to make this configurable later on for now we only have the text box usecase
   }

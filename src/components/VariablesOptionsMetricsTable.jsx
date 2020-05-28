@@ -81,7 +81,9 @@ const VariablesOptionsMetricsTable = ({
                         }
                       />
                     </td>
-                    <td>{data.variableName}</td>
+                    <td
+                      dangerouslySetInnerHTML={{ __html: data.variableName }}
+                    ></td>
                     <td>
                       <CustomSlider
                         preventRenderOnNoValue={!data.variableName}
@@ -155,7 +157,9 @@ const VariablesOptionsMetricsTable = ({
               }
               return (
                 <tr key={data.optionId + "-" + data.variableId}>
-                  <td>{data.variableName}</td>
+                  <td
+                    dangerouslySetInnerHTML={{ __html: data.variableName }}
+                  ></td>
                   <td>
                     <CustomSlider
                       preventRenderOnNoValue={!data.variableName}

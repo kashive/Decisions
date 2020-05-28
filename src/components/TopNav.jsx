@@ -29,9 +29,9 @@ const TopNav = ({
       {decision && (
         <DecisionTitle
           decisionTitle={decision.title}
-          onDecisionTitleChange={(title) =>
-            onDecisionTitleChange(decision.id, title)
-          }
+          onDecisionTitleChange={(title) => {
+            onDecisionTitleChange(decision.id, title);
+          }}
         />
       )}
       <TopNavActionToolbar
