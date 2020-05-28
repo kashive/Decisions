@@ -28,16 +28,26 @@ export const fetchDecisionsSuccess = (decisions) => ({
 });
 
 export function onDecisionTitleChange(id, title) {
-  return (dispatch) =>
+  return (dispatch, getState) => {
+    const state = getState();
+    const currentDecisionId = state.controlState.decisionId;
+    //this is a hacky fix needed for https://app.asana.com/0/1166509149726089/1177419345434433
+    if (currentDecisionId !== id) return;
     dispatch({ type: DECISION_TITLE_CHANGE, payload: { id, title } });
+  };
 }
 
 export function onDecisionContextChange(id, context) {
-  return (dispatch) =>
+  return (dispatch, getState) => {
+    const state = getState();
+    const currentDecisionId = state.controlState.decisionId;
+    //this is a hacky fix needed for https://app.asana.com/0/1166509149726089/1177419345434433
+    if (currentDecisionId !== id) return;
     dispatch({
       type: DECISION_CONTEXT_CHANGE,
       payload: { id, context },
     });
+  };
 }
 
 export function onDecisionCreate(title) {
