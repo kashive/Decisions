@@ -66,7 +66,7 @@ const SideNavInternal = ({
                 overflow: "hidden",
                 borderRadius: "0px 6px 6px 0px",
               }} //changes the right menu background
-              trigger="hover"
+              trigger={["hover", "click"]}
               title={<p style={{ color: "white" }}>Decisions</p>}
               icon={<Icon icon="list" style={{ color: "white" }} />}
               placement="rightStart"
