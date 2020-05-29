@@ -26,10 +26,10 @@ const CardBody = styled.div`
 export const StyledTitle = styled.div`
   font-weight: bold;
   line-height: 1.3;
-  font-size: 14px;
+  font-size: 12px;
   color: #333;
   @media (min-width: 700px) {
-    font-size: 18px;
+    font-size: 15px;
   }
 `;
 

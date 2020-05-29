@@ -5,6 +5,7 @@ import styled from "styled-components";
 import InlineEditor from "./shared/InlineEditor";
 
 const StyledTitle = styled.div`
+  font-weight: bold;
   margin-left: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
