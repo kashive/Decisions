@@ -16,7 +16,7 @@ export const CustomDropdown = ({ config, style, iconText }) => {
       renderTitle={() => {
         return <Icon icon={iconText || "ellipsis-h"} />;
       }}
-      trigger="hover"
+      trigger={["hover", "click"]}
       placement="rightStart"
     >
       {config.map((dropdown) => {
