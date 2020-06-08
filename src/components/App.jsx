@@ -35,6 +35,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    document.title = "Decision Builders";
     this.props.appMountSuccess("dummyUserId");
   }
 
